@@ -38,6 +38,24 @@ def shot_at(t):
     return m
 CUTS = [s for s, _ in SHOTS[1:]]
 
+# ---------- B-roll photo shown full screen when Beyoncé is mentioned ----------
+BROLL_IMG = sys.argv[4] if len(sys.argv) > 4 else None
+BROLL = [(2.0, 4.4), (32.4, DUR)] if BROLL_IMG else []
+def in_broll(t): return any(a <= t < b for a, b in BROLL)
+CUTS += [b for a, b in BROLL if b < DUR] + [a for a, b in BROLL if a > 0]
+if BROLL_IMG:
+    photo = cv2.imread(BROLL_IMG)
+    ph, pw = photo.shape[:2]
+    pcx, pcy = pw * 0.42, ph * 0.40          # framing centre (face / torso)
+def broll_frame(t, a, b):
+    k = (t - a) / max(b - a, 1e-3)
+    zz = 1.0 + 0.10 * k                       # slow Ken Burns push-in
+    ch = ph / zz; cw = ch * W / H
+    x0 = np.clip(pcx - cw / 2, 0, pw - cw); y0 = np.clip(pcy - ch * 0.40 - 20 * k, 0, ph - ch)
+    M = np.array([[W / cw, 0, -x0 * W / cw], [0, H / ch, -y0 * H / ch]])
+    out = cv2.warpAffine(photo, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
+    return out.astype(np.float32) / 255
+
 # ---------- full-screen 3D text cards ----------
 CARDS = [  # start, end, top word, bottom word, kind
     (0.0, 2.0, "BEYONCÉ", "RIEN À PROUVER", "hook"),
@@ -131,7 +149,7 @@ for w in words:
         if w["s"] < c[0] < e: e = c[0]
     lw = w["w"].lower(); txt = w["w"].upper().rstrip(",.?")
     col = r"\c&H002A2AFF&" if lw in EMPH_RED else (r"\c&H00FFFFFF&" if lw in EMPH_WHITE else "")
-    y = 960 if shot_at(w["s"]) == "SPLIT" else 1380
+    y = 960 if shot_at(w["s"]) == "SPLIT" and not in_broll(w["s"]) else 1380
     ass.append(f"Dialogue: 0,{ts(w['s'])},{ts(e)},W,,0,0,0,,{{\\an5\\pos(540,{y}){col}\\fscx72\\fscy72\\t(0,90,\\fscx108\\fscy108)\\t(90,150,\\fscx100\\fscy100)}}{txt}")
 open(f"{WORK}/caps.ass", "w").write("\n".join(ass) + "\n")
 
@@ -167,11 +185,17 @@ for i in range(N):
     M = np.array([[W / cw, 0, -x0 * W / cw], [0, H / ch, -y0 * H / ch]])
     img = cv2.warpAffine(fr, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT).astype(np.float32) / 255
     t = ft[i]
+    for a, b in BROLL:
+        if a <= t < b:
+            img = broll_frame(t, a, b)
+            if t - a < 0.07: img = np.clip(img + 0.6, 0, 1)
     for ci, c in enumerate(CARDS):
         if not (c[0] <= t < c[1]): continue
         k = t - c[0]
         if c[4] == "hook":   # text over the live picture, darker backdrop
             img = img * 0.55
+        elif c[4] == "end" and in_broll(t):   # end card over the photo
+            img = np.clip(img * 0.5 * np.array([0.75, 0.75, 1.0]), 0, 1)
         else:                # full-screen card: blurred, red-tinted picture behind 3D text
             bg = cv2.GaussianBlur(img, (0, 0), 22)
             L = bg.mean(axis=2, keepdims=True)
