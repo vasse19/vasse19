@@ -7,7 +7,7 @@ from fx3d import text3d
 
 SRC, WORK, OUT, LOGO = sys.argv[1:5]
 W, H, FPS = 1080, 1920, 30
-END = 86.2
+END = 86.2                                   # source audio ends at 86.21
 
 # ---------- transcript + fixes (source time) ----------
 words = json.load(open(f"{WORK}/words.json"))
@@ -60,6 +60,8 @@ while i < len(keep):
         else: keep[i:i + 3] = True; keep[max(j - 3, i):j] = True
         i = j
     else: i += 1
+# the sign-off is spoken softly: keep it whole, from "Ça, c'est réel" to the last frame
+keep[int(82.4 / 0.02):] = True
 for a0, b0 in DROP: keep[int(a0 / 0.02):int(b0 / 0.02)] = False
 runs = []                                           # [first frame, last frame + 1], integer frames
 for k, v in enumerate(keep):
@@ -67,7 +69,7 @@ for k, v in enumerate(keep):
         if runs and runs[-1][1] == k: runs[-1][1] = k + 1
         else: runs.append([k, k + 1])
 segs = [[a0 * 0.02, b0 * 0.02] for a0, b0 in runs if (b0 - a0) * 0.02 >= 0.12]
-segs[-1][1] = min(segs[-1][1] + 0.3, END)
+segs[-1][1] = END
 def remap(t):
     acc = 0.0
     for a, b in segs:
@@ -321,8 +323,10 @@ enc.stdin.close(); enc.wait()
 dec.stdout.close(); dec.kill(); dec.wait()   # the decoder may still hold a frame or two past N
 # voice: very quiet source, so gain, then light compression, then loudness to about -14 LUFS
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
-    "[1:a]highpass=f=70,volume=11dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7[vo];"
-    "[vo][2:a]amix=inputs=2:normalize=0,alimiter=limit=0.75:level=false[a]",
+    # loudnorm runs at 192 kHz internally: resample and re-stamp before amix, or the voice drops out at the end
+    "[1:a]highpass=f=70,volume=11dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7,"
+    "aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
+    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.75:level=false[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
 print("done", OUT, len(SHOTS), "shots", flush=True)

@@ -261,8 +261,10 @@ enc.stdin.close(); enc.wait()
 dec.stdout.close(); dec.kill(); dec.wait()   # the decoder may still hold a frame or two past N
 # voice: very quiet source, so gain, then light compression, then loudness to about -14 LUFS
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
-    "[1:a]highpass=f=70,volume=18dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7[vo];"
-    "[vo][2:a]amix=inputs=2:normalize=0,alimiter=limit=0.75:level=false[a]",
+    # loudnorm runs at 192 kHz internally: resample and re-stamp before amix, or the voice drops out at the end
+    "[1:a]highpass=f=70,volume=18dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7,"
+    "aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
+    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.75:level=false[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
 print("done", OUT, len(SHOTS), "shots", flush=True)

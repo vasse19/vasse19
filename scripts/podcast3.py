@@ -201,7 +201,9 @@ dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", SRC, "-f", "rawvideo", "-
 VF = (f"unsharp=5:5:0.5,eq=contrast=1.06:saturation=1.1,vignette=angle=PI/6,noise=alls=4:allf=t+u,ass={WORK}/caps.ass,format=yuv420p")
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
     "-i", SRC, "-i", f"{WORK}/sfx.wav", "-filter_complex",
-    f"[0:v]{VF}[v];[1:a]loudnorm=I=-14.5:TP=-2:LRA=9[vo];[vo][2:a]amix=inputs=2:normalize=0,alimiter=limit=0.9[a]",
+    # loudnorm runs at 192 kHz internally: resample and re-stamp before amix, or the voice drops out at the end
+    f"[0:v]{VF}[v];[1:a]loudnorm=I=-14.5:TP=-2:LRA=9,aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
+    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.9[a]",
     "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], stdin=subprocess.PIPE)
 for i in range(N):
