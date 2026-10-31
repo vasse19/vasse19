@@ -1,0 +1,166 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    #sg-stage {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 46%;
+    }
+    #sg-logo-box {
+      position: absolute;
+      left: 610px;
+      top: 150px;
+      width: 700px;
+      height: 700px;
+      overflow: hidden;
+    }
+    #sg-logo {
+      width: 700px;
+      height: 700px;
+      display: block;
+    }
+    /* light band: overlay blending brightens the gold, does nothing on the black ground */
+    /* light band, masked to the logo's own shape */
+    #sg-shine {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      -webkit-mask-image: url(assets/logos/sgas-media.png);
+      mask-image: url(assets/logos/sgas-media.png);
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+    }
+    #sg-sweep {
+      position: absolute;
+      top: -200px;
+      left: 0;
+      width: 220px;
+      height: 1100px;
+      background: linear-gradient(90deg, transparent, rgba(255, 248, 220, 0.75), transparent);
+      transform: rotate(18deg);
+    }
+    #sg-ring {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+    }
+    #sg-tagline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 900px;
+      text-align: center;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      font-size: 34px;
+      letter-spacing: 0.32em;
+      color: #ffffff;
+    }
+    #sg-tagline span {
+      display: inline-block;
+      margin: 0 18px;
+    }
+    #sg-tagline .sg-dot {
+      color: #f5c542;
+    }
+    .sg-dust {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #ffd86b;
+      box-shadow: 0 0 8px 2px rgba(255, 196, 64, 0.6);
+    }
+    #sg-flash-fill {
+      position: absolute;
+      inset: 0;
+      background: #fff8e6;
+    }
+    #sg-tag,
+    #sg-flash,
+    #sg-world {
+      position: absolute;
+      inset: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="sgas" data-width="1920" data-height="1080">
+    <div id="sg-world" class="clip" data-start="0" data-duration="2.8125" data-track-index="0"
+      data-layout-allow-overflow data-layout-allow-overlap>
+      <div id="sg-stage">
+        <div id="sg-dust-field"></div>
+        <svg id="sg-ring" viewBox="0 0 1920 1080">
+          <ellipse id="sg-ring-path" cx="960" cy="520" rx="470" ry="170" fill="none" stroke="#f5c542"
+            stroke-width="5" stroke-linecap="round" transform="rotate(-16 960 520)" />
+        </svg>
+        <div id="sg-logo-box">
+          <img id="sg-logo" src="assets/logos/sgas-media.png" alt="SGAS Media" />
+          <div id="sg-shine"><div id="sg-sweep"></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="sg-tag" class="clip" data-start="0.75" data-duration="1.62" data-track-index="1">
+      <div id="sg-tagline"><span>PODCASTS</span><span class="sg-dot">•</span><span>SHORTS</span><span class="sg-dot">•</span><span>DOCUMENTAIRES</span></div>
+    </div>
+    <div id="sg-flash" class="clip" data-start="0" data-duration="0.3" data-track-index="2" data-layout-ignore>
+      <div id="sg-flash-fill"></div>
+    </div>
+  </div>
+  <script>
+    // gold dust: seeded positions so every render is identical
+    (function () {
+      let s = 7;
+      const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+      const field = document.getElementById("sg-dust-field");
+      for (let i = 0; i < 34; i++) {
+        const d = document.createElement("div");
+        d.className = "sg-dust";
+        d.id = "sg-dust-" + i;
+        d.style.left = 140 + rnd() * 1640 + "px";
+        d.style.top = 80 + rnd() * 920 + "px";
+        d.dataset.drift = (20 + rnd() * 60).toFixed(1);
+        d.dataset.alpha = (0.25 + rnd() * 0.65).toFixed(2);
+        field.appendChild(d);
+      }
+    })();
+
+    const tl = gsap.timeline({ paused: true });
+    // flash from the intro decays on the drop
+    tl.fromTo("#sg-flash-fill", { opacity: 1 }, { opacity: 0, duration: 0.28, ease: "power2.out" }, 0);
+
+    // iris reveal + settle
+    tl.fromTo("#sg-logo-box", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(75% at 50% 50%)", duration: 0.5, ease: "expo.out" }, 0.02);
+    tl.fromTo("#sg-logo", { scale: 1.35, filter: "blur(10px)" }, { scale: 1, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, 0.02);
+
+    // orbit ring draws around the logo, echoing its arc
+    const ring = document.getElementById("sg-ring-path");
+    const len = ring.getTotalLength();
+    tl.set(ring, { strokeDasharray: len, opacity: 0.9 }, 0);
+    tl.fromTo(ring, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.85, ease: "power3.out" }, 0.18);
+    tl.to(ring, { opacity: 0.25, duration: 0.6, ease: "power2.inOut" }, 1.0);
+
+    // light sweep across the gold
+    tl.fromTo("#sg-sweep", { x: -420 }, { x: 900, duration: 0.75, ease: "power2.inOut" }, 0.55);
+
+    // dust drifts up at constant speed
+    gsap.utils.toArray("#sg-dust-field .sg-dust").forEach((d) => {
+      tl.fromTo(d, { y: 0, opacity: 0 }, { y: -Number(d.dataset.drift), opacity: Number(d.dataset.alpha), duration: 0.6, ease: "power1.out" }, 0.05);
+      tl.to(d, { y: -Number(d.dataset.drift) * 3.2, duration: 2.1, ease: "none" }, 0.65);
+    });
+
+    // tagline: word by word from grey to white
+    tl.fromTo("#sg-tagline span", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out", stagger: 0.07 }, 0.75);
+    tl.to("#sg-tagline", { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, 2.2);
+
+    // zoom through the logo into the reel
+    tl.to("#sg-stage", { scale: 7, filter: "blur(18px)", duration: 0.5, ease: "power3.in" }, 2.3);
+    tl.to("#sg-stage", { opacity: 0, duration: 0.12, ease: "power2.in" }, 2.68);
+    window.__timelines["sgas"] = tl;
+  </script>
+</template>

@@ -1,0 +1,130 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse 60% 55% at 50% 52%, #2a1a05 0%, #0b0703 55%, #070504 100%);
+    }
+    .in-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .in-type {
+      font-family: "Archivo Black", sans-serif;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+    #in-streak-bar {
+      width: 1920px;
+      height: 6px;
+      background: linear-gradient(90deg, transparent 0%, #f5c542 30%, #fff8dc 50%, #f5c542 70%, transparent 100%);
+      box-shadow: 0 0 24px 6px rgba(245, 197, 66, 0.55);
+      transform-origin: 50% 50%;
+    }
+    #in-w1-word span,
+    #in-w3-word span {
+      display: inline-block;
+      background: linear-gradient(180deg, #fff6c8 0%, #f5c542 38%, #b9780f 62%, #ffe08a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    #in-w1-word {
+      font-size: 230px;
+      letter-spacing: 0.01em;
+    }
+    #in-w2-word {
+      font-size: 150px;
+      color: #ffffff;
+      font-family: "Archivo Black", sans-serif;
+      letter-spacing: 0.04em;
+    }
+    #in-w3-word {
+      font-size: 250px;
+      letter-spacing: 0.02em;
+    }
+
+    #in-label {
+      position: absolute;
+      left: 192px;
+      top: 118px;
+      font-family: "Space Mono", monospace;
+      font-size: 28px;
+      letter-spacing: 0.3em;
+      color: #c9a24a;
+    }
+    #in-flash-fill {
+      position: absolute;
+      inset: 0;
+      background: #fff8e6;
+    }
+    #in-label-wrap,
+    #in-flash {
+      position: absolute;
+      inset: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="intro" data-width="1920" data-height="1080">
+    <!-- gold light streak opening the film (beat 0) -->
+    <div id="in-streak" class="clip in-center" data-start="0" data-duration="1.875" data-track-index="0"
+      data-layout-allow-overflow data-layout-ignore>
+      <div id="in-streak-bar"></div>
+    </div>
+
+    <div id="in-label-wrap" class="clip" data-start="0" data-duration="1.875" data-track-index="1">
+      <div id="in-label">MONSIEUR VASS — 2026</div>
+    </div>
+
+    <!-- beat 1: MOTION, letter by letter -->
+    <div id="in-w1" class="clip in-center" data-start="0.469" data-duration="0.937" data-track-index="2">
+      <div id="in-w1-word" class="in-type"><span>M</span><span>O</span><span>T</span><span>I</span><span>O</span><span>N</span></div>
+    </div>
+    <!-- beat 2: DESIGN, whole line blurs in under MOTION -->
+    <div id="in-w2" class="clip in-center" data-start="0.9375" data-duration="0.469" data-track-index="3">
+      <div id="in-w2-word">DESIGN</div>
+    </div>
+    <!-- beat 3: SHOWREEL slams in, tracking collapses -->
+    <div id="in-w3" class="clip in-center" data-start="1.406" data-duration="0.469" data-track-index="4"
+      data-layout-allow-overflow>
+      <div id="in-w3-word" class="in-type"><span>S</span><span>H</span><span>O</span><span>W</span><span>R</span><span>E</span><span>E</span><span>L</span></div>
+    </div>
+    <!-- white flash into the first drop -->
+    <div id="in-flash" class="clip" data-start="1.74" data-duration="0.135" data-track-index="5"
+      data-layout-ignore>
+      <div id="in-flash-fill"></div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // streak: snaps open from the centre, then thins out behind the type
+    tl.fromTo("#in-streak-bar", { scaleX: 0.14, opacity: 1 }, { scaleX: 1, duration: 0.42, ease: "expo.out" }, 0);
+    tl.to("#in-streak-bar", { scaleY: 0.35, opacity: 0.35, duration: 0.5, ease: "power2.inOut" }, 0.45);
+    tl.to("#in-streak-bar", { scaleX: 1.6, opacity: 0.9, scaleY: 1, duration: 0.3, ease: "power3.in" }, 1.45);
+    tl.set("#in-label", { opacity: 1 }, 0);
+
+    // MOTION: letters one frame apart
+    tl.fromTo("#in-w1-word span",
+      { opacity: 0, y: 70, filter: "blur(12px)" },
+      { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.32, ease: "expo.out", stagger: 0.033 }, 0.469);
+    // on beat 2 MOTION rises and shrinks to make room for DESIGN
+    tl.to("#in-w1-word", { y: -125, scale: 0.62, duration: 0.3, ease: "expo.out" }, 0.9375);
+    tl.to("#in-w1-word", { opacity: 0, filter: "blur(10px)", duration: 0.07, ease: "power2.in" }, 1.33);
+
+    tl.fromTo("#in-w2-word",
+      { y: 95, opacity: 0, filter: "blur(14px)" },
+      { y: 95, opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power3.out" }, 0.9375);
+    tl.to("#in-w2-word", { opacity: 0, filter: "blur(10px)", duration: 0.07, ease: "power2.in" }, 1.33);
+
+    // tracking collapses: each letter slides in from a wide spread
+    tl.fromTo("#in-w3-word", { scale: 1.4, opacity: 0, filter: "blur(16px)" },
+      { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 1.406);
+    tl.fromTo("#in-w3-word span", { x: (i) => (i - 3.5) * 70 }, { x: 0, duration: 0.3, ease: "expo.out" }, 1.406);
+
+    tl.fromTo("#in-flash-fill", { opacity: 0 }, { opacity: 1, duration: 0.13, ease: "power2.in" }, 1.74);
+    window.__timelines["intro"] = tl;
+  </script>
+</template>

@@ -1,0 +1,172 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse 70% 60% at 50% 55%, #1d1306 0%, #070504 70%);
+    }
+    #rl-phone-stage {
+      position: absolute;
+      inset: 0;
+    }
+    .rl-phone {
+      position: absolute;
+      top: 238px;
+      width: 340px;
+      height: 604px;
+      border-radius: 40px;
+      border: 6px solid #17120a;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 0 2px rgba(245, 197, 66, 0.55), 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(245, 197, 66, 0.25);
+    }
+    #rl-phone-a { left: 420px; }
+    #rl-phone-b { left: 790px; }
+    #rl-phone-c { left: 1160px; }
+    .rl-phone video {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .rl-full {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .rl-full video,
+    .rl-full img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      object-fit: cover;
+    }
+    .rl-label {
+      position: absolute;
+      left: 192px;
+      top: 112px;
+      font-family: "Space Mono", monospace;
+      font-size: 30px;
+      letter-spacing: 0.24em;
+      color: #f5c542;
+      padding: 10px 18px;
+      background: rgba(7, 5, 4, 0.72);
+      border-left: 4px solid #f5c542;
+    }
+    #rl-dip-fill {
+      position: absolute;
+      inset: 0;
+      background: #000;
+    }
+    #rl-lab-1,
+    #rl-lab-2,
+    #rl-lab-3,
+    #rl-lab-4,
+    #rl-dip {
+      position: absolute;
+      inset: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="reel" data-width="1920" data-height="1080">
+    <!-- 1. three phones: two podcasts and a short (local beats 0-3) -->
+    <div id="rl-phone-stage" data-layout-allow-overflow>
+      <div id="rl-phone-a" class="rl-phone">
+        <video id="rl-v-beyonce" class="clip" src="assets/footage/podcast-beyonce.mp4" muted playsinline
+          data-start="0" data-duration="1.875" data-track-index="0"></video>
+      </div>
+      <div id="rl-phone-b" class="rl-phone">
+        <video id="rl-v-short" class="clip" src="assets/footage/short-tiktok.mp4" muted playsinline
+          data-start="0" data-duration="1.875" data-track-index="1"></video>
+      </div>
+      <div id="rl-phone-c" class="rl-phone">
+        <video id="rl-v-congo" class="clip" src="assets/footage/podcast-congo.mp4" muted playsinline
+          data-start="0" data-duration="1.875" data-track-index="2"></video>
+      </div>
+    </div>
+
+    <!-- 2. the YouTube cut, full frame with punch-ins (beats 4-6) -->
+    <div id="rl-yt-wrap" class="rl-full">
+      <video id="rl-v-youtube" class="clip" src="assets/footage/youtube-cardio.mp4" muted playsinline
+        data-start="1.875" data-duration="1.406" data-track-index="3"></video>
+    </div>
+    <!-- 3. flash cuts on the beat (beats 7, 8, 9) -->
+    <div id="rl-car-wrap" class="rl-full">
+      <video id="rl-v-car" class="clip" src="assets/footage/car-documentary.mp4" muted playsinline
+        data-start="3.281" data-duration="0.469" data-track-index="3"></video>
+    </div>
+    <div id="rl-th1-wrap" class="rl-full">
+      <img id="rl-thumb-1" class="clip" src="assets/footage/thumb-son-a-fond.jpg" alt="Miniature Le son à fond"
+        data-start="3.75" data-duration="0.469" data-track-index="3" />
+    </div>
+    <div id="rl-th2-wrap" class="rl-full">
+      <img id="rl-thumb-2" class="clip" src="assets/footage/thumb-cardio.jpg" alt="Miniature YouTube c'est cardio"
+        data-start="4.219" data-duration="0.469" data-track-index="3" />
+    </div>
+
+    <!-- chapter labels -->
+    <div id="rl-lab-1" class="clip" data-start="0.25" data-duration="1.55" data-track-index="5">
+      <div class="rl-label">01 · PODCASTS &amp; SHORTS</div>
+    </div>
+    <div id="rl-lab-2" class="clip" data-start="1.95" data-duration="1.331" data-track-index="5">
+      <div class="rl-label">02 · YOUTUBE</div>
+    </div>
+    <div id="rl-lab-3" class="clip" data-start="3.281" data-duration="0.469" data-track-index="5">
+      <div class="rl-label">03 · DOCUMENTAIRE</div>
+    </div>
+    <div id="rl-lab-4" class="clip" data-start="3.75" data-duration="0.9375" data-track-index="5">
+      <div class="rl-label">04 · MINIATURES 3D</div>
+    </div>
+
+    <div id="rl-dip" class="clip" data-start="4.57" data-duration="0.1175" data-track-index="6" data-layout-ignore>
+      <div id="rl-dip-fill"></div>
+    </div>
+  </div>
+  <script>
+    const B = 60 / 128;
+    const tl = gsap.timeline({ paused: true });
+
+    // phones land out of the zoom-through, fanned
+    const fan = [
+      ["#rl-phone-a", -6, 34],
+      ["#rl-phone-b", 0, 0],
+      ["#rl-phone-c", 6, 34],
+    ];
+    fan.forEach(([sel, rot, y], i) => {
+      tl.fromTo(sel,
+        { y: 900, rotation: rot * 2.6, scale: 0.82, filter: "blur(14px)" },
+        { y: y, rotation: rot, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 0.0 + i * 0.08);
+    });
+    // beat 2: the short steps forward, the podcasts fall back; beat 3: the Congo podcast answers
+    tl.to("#rl-phone-b", { scale: 1.1, duration: 0.25, ease: "expo.out" }, 2 * B);
+    tl.to(["#rl-phone-a", "#rl-phone-c"], { opacity: 0.55, duration: 0.2, ease: "power2.out" }, 2 * B);
+    tl.to("#rl-phone-b", { scale: 1, opacity: 0.6, duration: 0.25, ease: "expo.out" }, 3 * B);
+    tl.to("#rl-phone-c", { scale: 1.1, opacity: 1, y: 10, duration: 0.25, ease: "expo.out" }, 3 * B);
+    // whip left into the YouTube cut
+    tl.to("#rl-phone-stage", { x: -2300, filter: "blur(16px)", duration: 0.17, ease: "power3.in" }, 4 * B - 0.17);
+
+    tl.fromTo("#rl-yt-wrap", { x: 700, filter: "blur(16px)" }, { x: 0, filter: "blur(0px)", duration: 0.18, ease: "expo.out" }, 4 * B);
+    tl.fromTo("#rl-yt-wrap", { scale: 1 }, { scale: 1.12, duration: 0.14, ease: "expo.out" }, 5 * B);
+    tl.to("#rl-yt-wrap", { scale: 1.26, duration: 0.14, ease: "expo.out" }, 6 * B);
+
+    // flash cuts: each frame arrives slightly large and settles
+    tl.fromTo("#rl-car-wrap", { scale: 1.12 }, { scale: 1, duration: 0.4, ease: "expo.out" }, 7 * B);
+    tl.fromTo("#rl-th1-wrap", { scale: 1.2, rotation: -3 }, { scale: 1, rotation: 0, duration: 0.4, ease: "expo.out" }, 8 * B);
+    tl.fromTo("#rl-th2-wrap", { scale: 1.2, rotation: 3 }, { scale: 1, rotation: 0, duration: 0.4, ease: "expo.out" }, 9 * B);
+
+    // chapter labels: whole line blurs in
+    ["#rl-lab-1", "#rl-lab-2", "#rl-lab-3", "#rl-lab-4"].forEach((sel, i) => {
+      const at = [0.25, 1.95, 3.281, 3.75][i];
+      tl.fromTo(sel + " .rl-label", { opacity: 0, filter: "blur(8px)", x: -20 }, { opacity: 1, filter: "blur(0px)", x: 0, duration: 0.16, ease: "power3.out" }, at);
+    });
+    tl.to("#rl-lab-1 .rl-label", { opacity: 0, duration: 0.1, ease: "power2.in" }, 1.7);
+
+    // dip cut into the build
+    tl.fromTo("#rl-dip-fill", { opacity: 0 }, { opacity: 0.45, duration: 0.1, ease: "none" }, 4.57);
+    window.__timelines["reel"] = tl;
+  </script>
+</template>
