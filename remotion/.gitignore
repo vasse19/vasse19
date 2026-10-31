@@ -1,0 +1,7 @@
+
+# Ignore the output video from Git but not videos you import into src/.
+.DS_Store
+.env
+dist
+node_modules
+out

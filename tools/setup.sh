@@ -52,4 +52,6 @@ if [ ! -f $Y/.venv/bin/python ]; then
   uv sync --frozen -q
   cd - >/dev/null
 fi
-echo "Video toolkit ready: hyperframes, whisper, parakeet, youtube-mcp"
+# --- Remotion project dependencies
+[ -d "$REPO/remotion/node_modules" ] || (cd "$REPO/remotion" && npm ci --silent)
+echo "Video toolkit ready: hyperframes, whisper, parakeet, youtube-mcp, remotion"
