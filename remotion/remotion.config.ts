@@ -9,6 +9,8 @@ import fs from "node:fs";
 Config.setRspack(true);
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
+// No GPU in the sandbox: software WebGL for the 3D (Three.js) compositions
+Config.setChromiumOpenGlRenderer("swangle");
 
 // Cloud sandbox: remotion.media (Remotion's browser download) is blocked, so reuse the
 // Chrome Headless Shell preinstalled in the image when it exists. Elsewhere Remotion downloads its own.
