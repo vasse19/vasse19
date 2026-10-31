@@ -1,0 +1,43 @@
+#!/bin/bash
+# Installs the video toolkit: HyperFrames (+ Parakeet transcription), Whisper, and the Python libs used by scripts/.
+# Safe to re-run: every step is skipped when already done.
+# Models come from GitHub releases of k2-fsa/sherpa-onnx (Hugging Face is not reachable from the cloud sandbox).
+set -e
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
+REL=https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models
+mkdir -p ~/models ~/.local/bin
+
+# --- Python libs (transcription, face tracking, image work)
+[ -x ~/.venvs/media/bin/python ] || python3 -m venv ~/.venvs/media
+~/.venvs/media/bin/pip install -q sherpa-onnx soundfile numpy "opencv-python-headless<5" pillow
+
+# --- Parakeet (word-level timestamps, used by HyperFrames and scripts/)
+P=sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8
+[ -f ~/models/$P/encoder.int8.onnx ] || curl -sSL "$REL/$P.tar.bz2" | tar xj -C ~/models
+
+# --- Whisper small (OpenAI Whisper, ONNX export)
+W=sherpa-onnx-whisper-small
+[ -f ~/models/$W/small-encoder.onnx ] || curl -sSL "$REL/$W.tar.bz2" | tar xj -C ~/models
+cp "$REPO/tools/whisper.py" ~/.local/bin/whisper.py
+printf '#!/bin/sh\nexec "$HOME/.venvs/media/bin/python" -I "$HOME/.local/bin/whisper.py" "$@"\n' > ~/.local/bin/whisper
+chmod +x ~/.local/bin/whisper
+ln -sf ~/.local/bin/whisper /usr/local/bin/whisper 2>/dev/null || true
+
+# --- HyperFrames
+command -v hyperframes >/dev/null || npm install -g hyperframes
+hyperframes telemetry disable >/dev/null 2>&1 || true
+hyperframes browser ensure >/dev/null
+D=~/.cache/hyperframes/parakeet/parakeet-tdt-0.6b-v3-int8
+mkdir -p "$D"
+for f in encoder.int8.onnx decoder.int8.onnx joiner.int8.onnx tokens.txt; do
+  [ -e "$D/$f" ] || ln -s ~/models/$P/$f "$D/$f"
+done
+hyperframes models install parakeet >/dev/null
+# HyperFrames agent skills (installed by init into ~/.claude/skills)
+[ -d ~/.claude/skills/hyperframes ] || (cd /tmp && rm -rf _hf_skills && hyperframes init _hf_skills --non-interactive >/dev/null && rm -rf _hf_skills)
+# GSAP vendored locally: cdn.jsdelivr.net is not reachable from the sandbox, so compositions load ./gsap.min.js
+V=~/.cache/hyperframes/vendor
+if [ ! -f $V/gsap.min.js ]; then
+  mkdir -p $V && (cd $V && npm pack gsap@3.15.0 --silent >/dev/null && tar xzf gsap-3.15.0.tgz && cp package/dist/gsap.min.js . && rm -rf package gsap-3.15.0.tgz)
+fi
+echo "Video toolkit ready: hyperframes, whisper, parakeet"
