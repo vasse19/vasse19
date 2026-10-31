@@ -16,7 +16,7 @@ def sub(t0, t1, text):
     keep = [w for w in words if not (t0 - 0.01 <= w["s"] < t1)]
     new = text.split(); k = len(new)
     words = sorted(keep + [{"w": x, "s": t0 + (t1 - t0) * i / k} for i, x in enumerate(new)], key=lambda w: w["s"])
-sub(16.75, 17.85, "y a GTA 6 qui est là,")
+sub(16.75, 17.95, "y a GTA 6 qui est là,")
 sub(27.75, 28.45, "Manchester United")
 sub(31.7, 32.95, "tu connais, on est supporters de Chelsea.")
 sub(40.55, 41.0, "de l'actualité,")
@@ -30,15 +30,35 @@ for i, w in enumerate(words):
     est = 0.12 + 0.065 * len(w["w"])            # rough spoken length of the word
     w["e"] = min(nxt, w["s"] + est)
 
-# ---------- edit decision list: drop repeats, squeeze pauses ----------
-DROP = [(1.05, 1.55), (14.5, 15.45)]       # "je vous ai dit" x2, "je vais revenir" x2
+# ---------- edit decision list: drop repeats and filler, cut every silence (jump cuts) ----------
+DROP = [(1.05, 1.55),      # "je vous ai dit" said twice
+        (4.25, 7.15),      # "Et par rapport à plein de trucs, là"
+        (14.5, 15.45),     # "je vais revenir" said twice
+        (33.35, 36.0)]     # "Mais en tout cas les amis, c'est voilà quoi."
 def dropped(t): return any(a <= t < b for a, b in DROP)
-segs = []
-for w in words:
-    if dropped(w["s"]): continue
-    s, e = w["s"] - 0.06, w["e"] + 0.1
-    if segs and s - segs[-1][1] < 0.22: segs[-1][1] = max(segs[-1][1], e)
-    else: segs.append([max(s, 0), e])
+import soundfile as sf
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-ac", "1", "-ar", "16000", f"{WORK}/edl.wav"], check=True)
+au, sr = sf.read(f"{WORK}/edl.wav"); au = au[:int(END * sr)]; hop = int(0.02 * sr)
+db = 20 * np.log10(np.array([np.sqrt(np.mean(au[i:i + hop] ** 2)) for i in range(0, len(au) - hop, hop)]) + 1e-9)
+db = np.convolve(db, np.ones(3) / 3, mode="same")
+keep = db >= np.median(db) - 10                     # speech frames
+# a silence shorter than 0.16 s is part of speech; longer ones keep 0.05 s on each side
+i = 0
+while i < len(keep):
+    if not keep[i]:
+        j = i
+        while j < len(keep) and not keep[j]: j += 1
+        if (j - i) * 0.02 < 0.16: keep[i:j] = True
+        else: keep[i:i + 3] = True; keep[max(j - 3, i):j] = True
+        i = j
+    else: i += 1
+for a0, b0 in DROP: keep[int(a0 / 0.02):int(b0 / 0.02)] = False
+runs = []                                           # [first frame, last frame + 1], integer frames
+for k, v in enumerate(keep):
+    if v:
+        if runs and runs[-1][1] == k: runs[-1][1] = k + 1
+        else: runs.append([k, k + 1])
+segs = [[a0 * 0.02, b0 * 0.02] for a0, b0 in runs if (b0 - a0) * 0.02 >= 0.12]
 segs[-1][1] = min(segs[-1][1] + 0.3, END)
 def remap(t):
     acc = 0.0
@@ -57,7 +77,7 @@ subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-filter_complex", ";"
                 "-c:v", "libx264", "-crf", "14", "-preset", "fast", "-r", "30", "-c:a", "pcm_s16le", CUT], check=True)
 words = [dict(w, s=remap(w["s"]), e=remap(w["e"])) for w in words if not dropped(w["s"])]
 json.dump(words, open(f"{WORK}/words_final.json", "w"), ensure_ascii=False)
-print(f"{len(segs)} segments, {DUR:.1f}s (from {END}s)")
+print(f"{len(segs)} segments, {DUR:.1f}s (from {END}s)", flush=True)
 N = int(DUR * FPS); ft = np.arange(N) / FPS
 key = lambda w: w["w"].lower().strip(",.?!…")
 def at(text, nth=0): return [w for w in words if key(w) == text][nth]["s"]
@@ -200,11 +220,10 @@ subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", "48000", "-
 # ---------- render ----------
 dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", CUT, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
 VF = f"unsharp=5:5:0.5,eq=contrast=1.06:saturation=1.08,vignette=angle=PI/6,noise=alls=3:allf=t+u,ass={WORK}/caps.ass,format=yuv420p"
+# picture only here: mixing the audio in the same process as the piped frames can deadlock
+VIDEO_ONLY = f"{WORK}/video_only.mp4"
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-    "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
-    f"[0:v]{VF}[v];[1:a]highpass=f=70,volume=18dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7[vo];[vo][2:a]amix=inputs=2:normalize=0,alimiter=limit=0.75:level=false[a]",
-    "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
-    "-movflags", "+faststart", "-shortest", OUT], stdin=subprocess.PIPE)
+    "-vf", VF, "-c:v", "libx264", "-preset", "medium", "-crf", "19", VIDEO_ONLY], stdin=subprocess.PIPE)
 FR = SW * SH * 3
 for i in range(N):
     buf = dec.stdout.read(FR)
@@ -238,5 +257,12 @@ for i in range(N):
             paste(img, logo, W / 2, 700, min(k / 0.25, 1) * 0.15 + 0.85)
         paste(img, card_img[ci], W / 2 + shake[i, 0], c[5] + shake[i, 1], s)
     enc.stdin.write((np.clip(img, 0, 1) * 255).astype(np.uint8).tobytes())
-enc.stdin.close(); enc.wait(); dec.wait()
-print("done", OUT, len(SHOTS), "shots")
+enc.stdin.close(); enc.wait()
+dec.stdout.close(); dec.kill(); dec.wait()   # the decoder may still hold a frame or two past N
+# voice: very quiet source, so gain, then light compression, then loudness to about -14 LUFS
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
+    "[1:a]highpass=f=70,volume=18dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7[vo];"
+    "[vo][2:a]amix=inputs=2:normalize=0,alimiter=limit=0.75:level=false[a]",
+    "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+    "-movflags", "+faststart", "-shortest", OUT], check=True)
+print("done", OUT, len(SHOTS), "shots", flush=True)
