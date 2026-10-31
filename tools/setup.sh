@@ -40,4 +40,16 @@ V=~/.cache/hyperframes/vendor
 if [ ! -f $V/gsap.min.js ]; then
   mkdir -p $V && (cd $V && npm pack gsap@3.15.0 --silent >/dev/null && tar xzf gsap-3.15.0.tgz && cp package/dist/gsap.min.js . && rm -rf package gsap-3.15.0.tgz)
 fi
-echo "Video toolkit ready: hyperframes, whisper, parakeet"
+# --- YouTube MCP server (ia-programming/youtube-mcp), pinned to the audited commit.
+# eval() on search results is replaced by ast.literal_eval() (data only, never executes code).
+# Needs GOOGLE_API_KEY in the environment, and youtube.com allowed by the network policy.
+Y=~/mcp/youtube-mcp
+if [ ! -f $Y/.venv/bin/python ]; then
+  rm -rf $Y && mkdir -p $Y && cd $Y && git init -q && git remote add origin https://github.com/ia-programming/youtube-mcp
+  git fetch -q --depth 1 origin d881b90116700e5e00069a7a74aaf7c0d18693a1 && git checkout -q FETCH_HEAD
+  sed -i 's/^import os, sys$/import os, sys, ast/; s/parsed_results = eval(results)/parsed_results = ast.literal_eval(results)/' server.py
+  grep -q "ast.literal_eval(results)" server.py || { echo "youtube-mcp patch failed" >&2; exit 1; }
+  uv sync --frozen -q
+  cd - >/dev/null
+fi
+echo "Video toolkit ready: hyperframes, whisper, parakeet, youtube-mcp"
