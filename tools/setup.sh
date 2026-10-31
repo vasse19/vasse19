@@ -48,7 +48,10 @@ if [ ! -f $Y/.venv/bin/python ]; then
   rm -rf $Y && mkdir -p $Y && cd $Y && git init -q && git remote add origin https://github.com/ia-programming/youtube-mcp
   git fetch -q --depth 1 origin d881b90116700e5e00069a7a74aaf7c0d18693a1 && git checkout -q FETCH_HEAD
   sed -i 's/^import os, sys$/import os, sys, ast/; s/parsed_results = eval(results)/parsed_results = ast.literal_eval(results)/' server.py
+  # McpError takes an ErrorData in current mcp versions; the original call hid every real error
+  sed -i 's/^from mcp.types import Tool, TextContent, ListToolsResult, INVALID_PARAMS$/from mcp.types import Tool, TextContent, ListToolsResult, INVALID_PARAMS, ErrorData/; s/raise McpError(INVALID_PARAMS, str(e))/raise McpError(ErrorData(code=INVALID_PARAMS, message=str(e)))/' server.py
   grep -q "ast.literal_eval(results)" server.py || { echo "youtube-mcp patch failed" >&2; exit 1; }
+  grep -q "McpError(ErrorData" server.py || { echo "youtube-mcp patch failed" >&2; exit 1; }
   uv sync --frozen -q
   cd - >/dev/null
 fi
