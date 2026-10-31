@@ -107,7 +107,33 @@ BROLL = [
     (at("big"), at("big") + 0.8, "bigpoppa"),
     (at("black"), at("franchement"), "blackops"),
     (at("l'univers") - 0.1, at("l'univers") + 1.5, "artist"),
+    # Call of Duty footage: the Ghost mask clip on "ghost(s)", the Black Ops trailer on "Black Ops"
+    (at("guerre") + 0.55, at("ghost", 1) + 0.26, "vid:ghost:1.0"),
+    (at("call") - 0.15, at("sinon"), "vid:blackops:16.6"),
+    (at("sinon"), at("l'univers") - 0.1, "vid:ghost:3.0"),
+    (at("ghosts") - 0.2, at("ops", 2) - 0.25, "vid:ghost:3.3"),
+    (at("ops", 2) - 0.25, at("ops", 2) + 0.85, "vid:blackops:46.6"),
 ]
+VID = {"ghost": f"{WORK}/cod-ghost.mp4", "blackops": f"{WORK}/cod-blackops.mp4"}
+VID_VF = {
+    # 16:9 clips: the Ghost clip is cropped to a vertical frame around the soldier; the trailer
+    # sits full-width over a blurred, darkened copy of itself
+    "ghost": f"crop=ih*9/16:ih:iw*0.55-ih*9/32:0,scale={W}:{H}",
+    "blackops": f"split[a][b];[a]scale=-2:{H},crop={W}:{H},boxblur=20,eq=brightness=-0.25[bg];[b]scale={W}:-2[fg];[bg][fg]overlay=0:(H-h)/2",
+}
+_vid = {}
+def vid_frame(name, a, b, t):
+    """Frame of a footage B-roll span; one decoder per span, read in order."""
+    _, clip, src = name.split(":")
+    st = _vid.get(name + str(a))
+    if st is None:
+        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", src, "-t", f"{b - a + 0.2:.3f}", "-i", VID[clip], "-an",
+                              "-filter_complex", VID_VF[clip], "-r", str(FPS), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
+        st = _vid[name + str(a)] = {"p": p, "last": None}
+    buf = st["p"].stdout.read(W * H * 3)
+    if len(buf) == W * H * 3:
+        st["last"] = np.frombuffer(buf, np.uint8).reshape(H, W, 3).astype(np.float32) / 255
+    return st["last"]
 def in_broll(t):
     for a, b, n in BROLL:
         if a <= t < b: return (a, b, n)
@@ -142,9 +168,9 @@ PH = {
 CARDS = [  # start, end, top, bottom, kind, centre y
     (0.0, at("maintenant"), "PHILIPAYNE", "SES FANS =|LES GHOSTS ?", "hook", 1450),
     (at("créer", 1) - 0.1, at("malade") + 0.5, "UN UNIVERS", "DE MALADE", "card", 960),
-    (at("guerre") - 0.6, at("ghost", 1) + 0.3, "COMME À", "LA GUERRE", "card", 960),
-    (at("call"), at("ghost", 2) + 0.4, "CALL OF DUTY", "BLACK OPS|GHOST", "card", 960),
-    (at("ghosts") - 0.4, at("ops", 2) + 0.5, "LES GHOSTS", "OU LES|BLACK OPS ?", "card", 960),
+    (at("guerre") - 0.6, at("guerre") + 0.55, "COMME À", "LA GUERRE", "card", 960),
+    (at("call"), at("ghost", 2) + 0.4, "CALL OF DUTY", "BLACK OPS|GHOST", "over", 1420),
+    (at("ghosts") - 0.4, at("ops", 2) + 0.5, "LES GHOSTS", "OU LES|BLACK OPS ?", "over", 1420),
     (at("gradur") - 0.25, at("gradur") + 0.75, "À LA", "GRADUR", "card", 960),
     (at("deux") - 0.05, at("année") + 0.4, "2 PROJETS", "EN 1 AN", "card", 960),
     (at("dites-moi") - 0.1, DUR, "LE BIG", "VASS", "end", 1370),
@@ -158,7 +184,7 @@ def block(top, bot, width, maxh):
     im = im.rotate(5, expand=True, resample=Image.BICUBIC)
     sc = min(width / im.width, maxh / im.height)
     return np.asarray(im.resize((int(im.width * sc), int(im.height * sc)), Image.LANCZOS)).astype(np.float32) / 255
-card_img = [block(c[2], c[3], 1040, 700 if c[4] in ("hook", "end") else 1000) for c in CARDS]
+card_img = [block(c[2], c[3], 1040, {"hook": 700, "end": 700, "over": 600}.get(c[4], 1000)) for c in CARDS]
 logo = rgba(LOGO, 640)
 def paste(dst, img, cx, cy, scale=1.0):
     if scale != 1.0: img = cv2.resize(img, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR)
@@ -256,7 +282,11 @@ for i in range(N):
     if len(buf) < FR: break
     fr = np.frombuffer(buf, np.uint8).reshape(SH, SW, 3); t = ft[i]
     br = in_broll(t)
-    if br:
+    if br and br[2].startswith("vid:"):
+        a, b, n = br
+        img = vid_frame(n, a, b, t).copy()
+        if t - a < 0.07: img = np.clip(img + (0.07 - (t - a)) / 0.07 * 0.5, 0, 1)
+    elif br:
         a, b, n = br; bgi, card, cy = PH[n]; k = t - a
         img = bgi.copy()
         s = (1.14 - 0.14 * min(k / 0.3, 1) ** 0.4) * (1 + 0.04 * k / (b - a))
