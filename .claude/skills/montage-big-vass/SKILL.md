@@ -16,8 +16,10 @@ Sign-off: « C'était le Big Vass pour vous servir ».
 2. **Ask for the images** he wants on mentions (artist photo, covers, logos, clips). Never redraw a logo
    from memory; the sandbox cannot download them (most sites are blocked), so he sends them.
 3. **Edit** with `scripts/vlog3.py` (face-cam vertical, the current reference) or `scripts/podcast3.py`
-   (split-screen podcast). Copy the script, change only the transcript fixes, DROP list, B-roll,
-   cards and emphasis words. Render into the scratchpad, verify, then copy into the repo.
+   (split-screen podcast), or `scripts/longform.py` (YouTube 16:9 long-form: hook, his intro kept,
+   chapter cards, keyword captions, end screen, chapter list for the description). Copy the script,
+   change only the transcript fixes, DROP list, B-roll, cards and keywords. Render into the scratchpad,
+   verify, then copy into the repo.
 4. **Verify before sending**: contact sheet of key frames, loudness, and a scan for digital-silence
    windows (`< -100 dB`) over the whole file, especially the last 3 s.
 5. Commit + push, send the file, then a short French recap with what to check
@@ -57,3 +59,9 @@ no heavy sharpening). 3D gold intro: `remotion/` composition `GoldIntro` (Remoti
 - Background renders: never `pkill -f` a pattern that appears in your own command line; when piping
   frames, close and kill the decoder after the loop.
 - Mention copyright risk once when he supplies press photos, logos or trailers.
+- Long sources (> 2 min): extract each kept segment to its own file with an exact frame count
+  (`-frames:v N -t N/30`, audio padded/trimmed to the same length), then the concat demuxer. One filter
+  graph with dozens of `trim`s is killed for memory, and `-t` alone adds a frame here and there, which
+  drifted lip sync by 0.8 s over 86 segments. Always compare the cut file's video and audio durations.
+- Long-form captions: he prefers **keywords only** (pertinent words, names: « BALOO », « INCROYABLE »),
+  not full subtitles; keep his own intro as is.
