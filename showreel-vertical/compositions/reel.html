@@ -1,0 +1,153 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse 80% 55% at 50% 50%, #1d1306 0%, #070504 70%);
+    }
+    .rl-full {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .rl-full video,
+    .rl-full img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      object-fit: cover;
+    }
+    .rl-card {
+      position: absolute;
+      left: 70px;
+      width: 940px;
+      height: 529px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 0 0 3px rgba(245, 197, 66, 0.7), 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 70px rgba(245, 197, 66, 0.25);
+    }
+    .rl-card img {
+      width: 940px;
+      height: 529px;
+      object-fit: cover;
+      display: block;
+    }
+    #rl-card-a { top: 420px; }
+    #rl-card-b { top: 1010px; }
+    .rl-label {
+      position: absolute;
+      left: 108px;
+      top: 210px;
+      font-family: "Space Mono", monospace;
+      font-size: 34px;
+      letter-spacing: 0.22em;
+      color: #f5c542;
+      padding: 12px 20px;
+      background: rgba(7, 5, 4, 0.72);
+      border-left: 5px solid #f5c542;
+    }
+    #rl-dip-fill {
+      position: absolute;
+      inset: 0;
+      background: #000;
+    }
+    #rl-thumbs,
+    #rl-lab-1,
+    #rl-lab-2,
+    #rl-lab-3,
+    #rl-lab-4,
+    #rl-dip {
+      position: absolute;
+      inset: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="reel" data-width="1080" data-height="1920">
+    <!-- 02 podcasts & shorts, full screen (local beats 0-3) -->
+    <div id="rl-p1-wrap" class="rl-full">
+      <video id="rl-v-beyonce" class="clip" src="assets/footage/podcast-beyonce-v.mp4" muted playsinline
+        data-start="0" data-duration="0.9375" data-track-index="0"></video>
+    </div>
+    <div id="rl-p2-wrap" class="rl-full">
+      <video id="rl-v-short" class="clip" src="assets/footage/short-v.mp4" muted playsinline
+        data-start="0.9375" data-duration="0.469" data-track-index="0"></video>
+    </div>
+    <div id="rl-p3-wrap" class="rl-full">
+      <video id="rl-v-congo" class="clip" src="assets/footage/podcast-congo-v.mp4" muted playsinline
+        data-start="1.406" data-duration="0.469" data-track-index="0"></video>
+    </div>
+
+    <!-- 03 thumbnails: two YouTube covers stacked (beats 4-5) -->
+    <div id="rl-thumbs" class="clip" data-start="1.875" data-duration="0.9375" data-track-index="1"
+      data-layout-allow-overflow>
+      <div id="rl-card-a" class="rl-card"><img src="assets/footage/thumb-famille-business.jpg" alt="Miniature Famille et Business" /></div>
+      <div id="rl-card-b" class="rl-card"><img src="assets/footage/thumb-moteur-coupe.jpg" alt="Miniature Moteur coupé" /></div>
+    </div>
+
+    <!-- 04 vertical posters full screen (beats 6, 7) -->
+    <div id="rl-poster-wrap" class="rl-full">
+      <img id="rl-poster" class="clip" src="assets/footage/poster-big-vass-movie.jpg" alt="Affiche The Big Vass Movie 10K abonnés"
+        data-start="2.8125" data-duration="0.469" data-track-index="0" />
+    </div>
+    <div id="rl-gaming-wrap" class="rl-full">
+      <img id="rl-gaming" class="clip" src="assets/footage/portrait-gaming.jpg" alt="Portrait studio gaming"
+        data-start="3.281" data-duration="0.469" data-track-index="0" />
+    </div>
+    <!-- 05 the gold poster reveal, motion design (beats 8-9) -->
+    <div id="rl-gold-wrap" class="rl-full">
+      <video id="rl-v-gold" class="clip" src="assets/footage/gold-reveal.mp4" muted playsinline
+        data-start="3.75" data-duration="0.9375" data-track-index="0"></video>
+    </div>
+
+    <!-- chapter labels -->
+    <div id="rl-lab-1" class="clip" data-start="0.1" data-duration="1.7" data-track-index="5">
+      <div class="rl-label">02 · PODCASTS &amp; SHORTS</div>
+    </div>
+    <div id="rl-lab-2" class="clip" data-start="1.95" data-duration="0.8625" data-track-index="5">
+      <div class="rl-label">03 · MINIATURES</div>
+    </div>
+    <div id="rl-lab-3" class="clip" data-start="2.8125" data-duration="0.9375" data-track-index="5">
+      <div class="rl-label">04 · AFFICHES</div>
+    </div>
+    <div id="rl-lab-4" class="clip" data-start="3.75" data-duration="0.9375" data-track-index="5">
+      <div class="rl-label">05 · MOTION DESIGN</div>
+    </div>
+
+    <div id="rl-dip" class="clip" data-start="4.57" data-duration="0.1175" data-track-index="6" data-layout-ignore>
+      <div id="rl-dip-fill"></div>
+    </div>
+  </div>
+  <script>
+    const B = 60 / 128;
+    const tl = gsap.timeline({ paused: true });
+
+    // podcasts & shorts: arrive from the whip, then cut on the beat
+    tl.fromTo("#rl-p1-wrap", { y: 900, filter: "blur(16px)" }, { y: 0, filter: "blur(0px)", duration: 0.2, ease: "expo.out" }, 0);
+    tl.fromTo("#rl-p1-wrap", { scale: 1 }, { scale: 1.1, duration: 0.14, ease: "expo.out" }, B);
+    tl.fromTo("#rl-p2-wrap", { scale: 1.18, rotation: -2 }, { scale: 1, rotation: 0, duration: 0.4, ease: "expo.out" }, 2 * B);
+    tl.fromTo("#rl-p3-wrap", { scale: 1.18, rotation: 2 }, { scale: 1, rotation: 0, duration: 0.4, ease: "expo.out" }, 3 * B);
+
+    // thumbnails: one card per beat, from opposite sides
+    tl.fromTo("#rl-card-a", { x: -1200, rotation: -9, filter: "blur(14px)" },
+      { x: 0, rotation: -2.5, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 4 * B);
+    tl.fromTo("#rl-card-b", { x: 1200, rotation: 9, filter: "blur(14px)" },
+      { x: 0, rotation: 2.5, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 5 * B);
+
+    // posters: each frame arrives large and settles
+    tl.fromTo("#rl-poster-wrap", { scale: 1.25 }, { scale: 1, duration: 0.42, ease: "expo.out" }, 6 * B);
+    tl.fromTo("#rl-gaming-wrap", { scale: 1.2, rotation: -2 }, { scale: 1, rotation: 0, duration: 0.42, ease: "expo.out" }, 7 * B);
+    tl.fromTo("#rl-gold-wrap", { scale: 1.15 }, { scale: 1, duration: 0.6, ease: "expo.out" }, 8 * B);
+
+    ["#rl-lab-1", "#rl-lab-2", "#rl-lab-3", "#rl-lab-4"].forEach((sel, i) => {
+      const at = [0.1, 1.95, 2.8125, 3.75][i];
+      tl.fromTo(sel + " .rl-label", { opacity: 0, filter: "blur(8px)", x: -20 },
+        { opacity: 1, filter: "blur(0px)", x: 0, duration: 0.16, ease: "power3.out" }, at);
+    });
+
+    // dip cut into the build
+    tl.fromTo("#rl-dip-fill", { opacity: 0 }, { opacity: 0.45, duration: 0.1, ease: "none" }, 4.57);
+    window.__timelines["reel"] = tl;
+  </script>
+</template>

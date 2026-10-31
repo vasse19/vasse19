@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- GSAP is vendored locally: the CDN is not reachable from the render sandbox -->
+    <script src="gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #070504;
+        --gold: #f5c542;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #ground {
+        position: absolute;
+        inset: 0;
+        background: var(--ground);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="15"
+      data-width="1080"
+      data-height="1920"
+      data-motion-blur="on"
+    >
+      <div id="ground"></div>
+
+      <!-- Scenes: 128 BPM, one beat = 0.46875 s, 32 beats = 15 s -->
+      <div id="intro" data-composition-id="intro" data-composition-src="compositions/intro.html"
+        data-start="0" data-duration="1.875" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920" style="z-index: 2"></div>
+      <div id="cine" data-composition-id="cine" data-composition-src="compositions/cine.html"
+        data-start="1.875" data-duration="2.8125" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920" style="z-index: 2"></div>
+      <div id="reel" data-composition-id="reel" data-composition-src="compositions/reel.html"
+        data-start="4.6875" data-duration="4.6875" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920" style="z-index: 2"></div>
+      <div id="build" data-composition-id="build" data-composition-src="compositions/build.html"
+        data-start="9.375" data-duration="1.875" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920" style="z-index: 2"></div>
+      <div id="finale" data-composition-id="finale" data-composition-src="compositions/finale.html"
+        data-start="11.25" data-duration="3.75" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920" style="z-index: 2"></div>
+
+      <!-- Music bed (synthesized for this film, tools/music.py) -->
+      <audio id="music" class="clip" src="assets/music/showreel-bed.mp3"
+        data-start="0" data-duration="15" data-track-index="10" data-volume="1"></audio>
+
+      <!-- Sound effects: each placed so its peak lands one frame after the picture -->
+      <audio id="sfx-impact-cine" class="clip" src="assets/sfx/impact-bass-1.mp3"
+        data-start="1.835" data-track-index="11" data-duration="2.116" data-volume="0.55"></audio>
+      <audio id="sfx-whip-reel" class="clip" src="assets/sfx/whoosh.mp3"
+        data-start="4.558" data-track-index="12" data-duration="0.575" data-volume="0.9"></audio>
+      <audio id="sfx-whip-thumbs" class="clip" src="assets/sfx/whoosh-short.mp3"
+        data-start="6.45" data-track-index="13" data-duration="0.479" data-volume="0.75" data-playback-rate="1.2"></audio>
+      <audio id="sfx-glitch-portrait" class="clip" src="assets/sfx/glitch-1.mp3"
+        data-start="7.80" data-track-index="14" data-duration="1.200" data-volume="0.3" data-fade-out="0.3"></audio>
+      <audio id="sfx-whoosh-gold" class="clip" src="assets/sfx/whoosh.mp3"
+        data-start="8.32" data-track-index="15" data-duration="0.411" data-volume="0.55" data-playback-rate="1.4"></audio>
+      <audio id="sfx-whoosh-build" class="clip" src="assets/sfx/whoosh-short.mp3"
+        data-start="9.23" data-track-index="16" data-duration="0.639" data-volume="0.55" data-playback-rate="0.9"></audio>
+      <audio id="sfx-impact-finale" class="clip" src="assets/sfx/impact-bass-2.mp3"
+        data-start="9.297" data-track-index="17" data-duration="2.592" data-volume="0.6"></audio>
+      <audio id="sfx-sparkle" class="clip" src="assets/sfx/sparkle.mp3"
+        data-start="12.156" data-track-index="18" data-duration="1.802" data-volume="0.55"></audio>
+      <audio id="sfx-pop-lockup" class="clip" src="assets/sfx/pop.mp3"
+        data-start="12.763" data-track-index="19" data-duration="0.720" data-volume="0.9"></audio>
+    </div>
+    <script>
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

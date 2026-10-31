@@ -1,0 +1,117 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #070504;
+    }
+    #bd-glow-fill {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 75% 30% at 50% 50%, rgba(245, 197, 66, 0.55) 0%, rgba(120, 70, 5, 0.25) 45%, transparent 75%);
+    }
+    #bd-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 790px;
+      text-align: center;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 82px;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+      line-height: 1;
+    }
+    #bd-slot {
+      position: absolute;
+      left: 0;
+      width: 1080px;
+      top: 905px;
+      height: 170px;
+      overflow: hidden;
+    }
+    #bd-strip {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+    }
+    .bd-word {
+      height: 170px;
+      line-height: 170px;
+      text-align: center;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 104px;
+      white-space: nowrap;
+      background: linear-gradient(180deg, #fff6c8 0%, #f5c542 40%, #b9780f 64%, #ffe08a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    #bd-flash-fill {
+      position: absolute;
+      inset: 0;
+      background: #fff8e6;
+    }
+    #bd-glow,
+    #bd-type,
+    #bd-flash {
+      position: absolute;
+      inset: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="build" data-width="1080" data-height="1920">
+    <div id="bd-glow" class="clip" data-start="0" data-duration="1.875" data-track-index="0" data-layout-ignore>
+      <div id="bd-glow-fill"></div>
+    </div>
+    <div id="bd-type" class="clip" data-start="0" data-duration="1.875" data-track-index="1">
+      <div id="bd-line">JE MONTE DES</div>
+      <div id="bd-slot" data-layout-allow-overflow>
+        <div id="bd-strip">
+          <div class="bd-word">PODCASTS</div>
+          <div class="bd-word">SHORTS</div>
+          <div class="bd-word">VLOGS</div>
+          <div class="bd-word">MINIATURES</div>
+          <div class="bd-word">DOCUS</div>
+          <div class="bd-word">CLIPS</div>
+          <div class="bd-word">PODCASTS</div>
+          <div class="bd-word">SHORTS</div>
+          <div class="bd-word">VLOGS</div>
+          <div class="bd-word">MINIATURES</div>
+          <div class="bd-word">HISTOIRES.</div>
+        </div>
+      </div>
+    </div>
+    <div id="bd-flash" class="clip" data-start="1.76" data-duration="0.115" data-track-index="2" data-layout-ignore>
+      <div id="bd-flash-fill"></div>
+    </div>
+  </div>
+  <script>
+    const B = 60 / 128;
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#bd-glow-fill", { opacity: 0.08, scale: 0.85 }, { opacity: 0.85, scale: 1.15, duration: 1.75, ease: "power2.in" }, 0);
+
+    // per word from grey to white, no position change
+    tl.fromTo("#bd-line", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power3.out" }, 0.02);
+    tl.fromTo("#bd-slot", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "power2.out" }, 0.1);
+
+    // slot machine: rolls accelerate with the snare roll and land on beat 3
+    const steps = 10, t0 = 0.22, t1 = 3 * B;
+    for (let k = 1; k <= steps; k++) {
+      const at = t0 + (t1 - t0) * Math.pow((k - 1) / (steps - 1), 0.62);
+      const next = k < steps ? t0 + (t1 - t0) * Math.pow(k / (steps - 1), 0.62) : at + 0.2;
+      const last = k === steps;
+      tl.to("#bd-strip", {
+        y: -170 * k,
+        duration: last ? 0.22 : Math.min(0.09, (next - at) * 0.8),
+        ease: last ? "back.out(1.6)" : "power2.out",
+      }, at);
+    }
+    tl.fromTo("#bd-slot", { scale: 1 }, { scale: 1.08, duration: 0.12, ease: "expo.out" }, t1);
+    tl.to("#bd-slot", { scale: 1, duration: 0.25, ease: "power2.out" }, t1 + 0.12);
+
+    tl.fromTo("#bd-flash-fill", { opacity: 0 }, { opacity: 1, duration: 0.11, ease: "power2.in" }, 1.76);
+    window.__timelines["build"] = tl;
+  </script>
+</template>
