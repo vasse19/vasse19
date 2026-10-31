@@ -9,7 +9,7 @@ mkdir -p ~/models ~/.local/bin
 
 # --- Python libs (transcription, face tracking, image work)
 [ -x ~/.venvs/media/bin/python ] || python3 -m venv ~/.venvs/media
-~/.venvs/media/bin/pip install -q sherpa-onnx soundfile numpy "opencv-python-headless<5" pillow
+~/.venvs/media/bin/pip install -q sherpa-onnx soundfile numpy scipy "opencv-python-headless<5" pillow fonttools brotli
 
 # --- Parakeet (word-level timestamps, used by HyperFrames and scripts/)
 P=sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8
@@ -55,6 +55,19 @@ if [ ! -f $Y/.venv/bin/python ]; then
   uv sync --frozen -q
   cd - >/dev/null
 fi
+# --- Caption fonts (Fontsource on npm -> TTF for libass/PIL): Montserrat Black, Luckiest Guy, Anton,
+# Bebas Neue, Poppins Black, Archivo Black
+mkdir -p ~/.fonts
+if [ ! -f ~/.fonts/anton-latin-400.ttf ]; then
+  T=$(mktemp -d)
+  for f in montserrat:900 luckiest-guy:400 anton:400 bebas-neue:400 poppins:900 archivo-black:400; do
+    n=${f%%:*}; w=${f##*:}
+    (cd "$T" && npm pack --silent "@fontsource/$n" >/dev/null && tar xzf fontsource-$n-*.tgz && \
+      ~/.venvs/media/bin/python -I -c "from fontTools.ttLib import TTFont; f=TTFont('package/files/$n-latin-$w-normal.woff2'); f.flavor=None; f.save('$HOME/.fonts/$n-latin-$w.ttf')" && rm -rf package fontsource-$n-*.tgz)
+  done
+  rm -rf "$T"; fc-cache -f >/dev/null
+fi
+
 # --- Remotion project dependencies
 [ -d "$REPO/remotion/node_modules" ] || (cd "$REPO/remotion" && npm ci --silent)
 echo "Video toolkit ready: hyperframes, whisper, parakeet, youtube-mcp, remotion"
