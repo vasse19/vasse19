@@ -20,7 +20,7 @@ def ren(t, txt): near(t)["w"] = txt
 def rm(t):
     global words; x = near(t); words = [w for w in words if w is not x]
 def add(t, txt): words.append({"w": txt, "s": t}); words.sort(key=lambda w: w["s"])
-ren(7.76, "Platinum"); ren(8.16, "Trapper.")
+ren(1.28, "Wantché,"); ren(7.76, "Platinum"); ren(8.16, "Trapper.")
 ren(14.08, "Et"); ren(15.68, "ses"); ren(15.92, "hits,")
 ren(17.04, "FLB,"); rm(17.20); rm(17.28)
 ren(18.78, "gars,"); ren(19.66, "taf,"); ren(21.70, "feat"); ren(22.42, "Bilouki"); rm(22.74)
@@ -36,7 +36,8 @@ for i, w in enumerate(words):
 NOCAP_SRC = [(54.7, 55.7), (68.3, END)]          # unclear words: audio kept, no caption
 
 # ---------- jump cuts ----------
-DROP = [(0.0, 4.6),        # hesitant opening ("je vous ai dit, je vous ai dit")
+DROP = [(1.55, 2.52),      # repeat "vous avez parlé du Wantché"
+        (3.0, 3.42),       # repeat "je vous ai dit"
         (24.12, 26.76),    # unclear line after the feat
         (37.93, 44.72),    # "tu vois, you know I'm saying bro ... petit à petit. Et uh"
         (60.0, 61.5)]      # unclear "mais sinon là ..."
@@ -214,7 +215,7 @@ def block(top, bot, width, maxh):
     return np.asarray(im.resize((int(im.width * sc), int(im.height * sc)), Image.LANCZOS)).astype(np.float32) / 255
 T_PLAT, T_ALORS2 = at("platinum"), at("alors", 1)
 CARDS = [  # start, end, top, bottom, kind, centre y
-    (0.0, at("il") - 0.02, "WANTCHÉ", "6 MILLIONS|DE STREAMS", "hook", 1180),
+    (0.0, at("ça", 0) - 0.02, "WANTCHÉ", "6 MILLIONS|DE STREAMS", "hook", 1180),
     (at("dise", 0) - 0.35, at("quoi", 1) + 0.35, "QU'ON DISE", "QUOI ?", "card", 960),
     (at("va", 0) - 0.25, at("allez") - 0.05, "ÇA VA FAIRE", "UN BOOM", "over", 1000),
     (at("allez") - 0.05, DUR, "LE BIG", "VASS", "end", 1370),
@@ -224,7 +225,7 @@ def in_card(t): return any(c[0] <= t < c[1] for c in CARDS)
 
 # ---------- scenes: (start, end, background, captions?) ; everything else is the face-cam ----------
 SCENES = [
-    (0.0, T_PLAT - 0.05, "intro", False),
+    (at("alors", 0) - 0.15, T_PLAT - 0.05, "intro", False),
     (T_PLAT - 0.05, T_ALORS2, "platinum", False),
     (T_ALORS2, at("comment") - 0.1, "streams", False),
     (at("lui"), at("américanisé") + 0.9, "ivoirien", False),
@@ -237,6 +238,8 @@ def scene_at(t):
     return None
 # overlays on the face-cam: (start, end, dim, tunnel, draw fn)
 OVER = [
+    (at("ça", 0) - 0.02, at("alors", 0) - 0.15, 0.4, False,
+     lambda img, t: stack(img, t, [(at("ça", 0), "ÇA VIENT", YEL), (at("petit", 0), "PETIT À PETIT", YEL)], 170, 640, 200)),
     (at("hits") - 0.4, at("franchement", 0), 0.0, False,
      lambda img, t: stack(img, t, [(at("hits") - 0.1, "• SES HITS", YEL), (at("go"), "• GO", YEL), (at("flb"), "• FLB", YEL)], 120, 430, 150)),
     (at("brand", 0) - 0.05, at("mais", 0), 0.45, False,
@@ -261,7 +264,8 @@ def over_at(t): return [o for o in OVER if o[0] <= t < o[1]]
 def draw_scene(name, t, k):
     if name == "intro":
         img = bg("red", t)
-        paste(img, ARTIST, W / 2, 1180, 1.0 + 0.05 * t / max(T_PLAT, 1))
+        paste(img, ARTIST, W / 2, 1180, 1.0 + 0.05 * k / max(T_PLAT, 1))
+        typewriter(img, t, at("alors", 0) - 0.1, "POUR CEUX QUI NE SAVENT PAS", 80, WHT, 240, 26)
         stack(img, t, [(at("il"), "IL A SORTI", YEL), (at("dernier"), "SON DERNIER", YEL), (at("projet"), "PROJET", WHT)], 150, 360, 175)
     elif name == "platinum":
         img = bg("red", t)
