@@ -29,6 +29,7 @@ ren(7.16, "dans"); ren(8.36, "d'autre"); ren(9.08, "in"); ren(9.24, "Lagos.")
 ren(22.40, "Cardi"); add(22.75, "B")
 add(27.35, "Thee")
 ren(31.10, "2025 ?"); rm(31.18); rm(31.34); rm(31.50)
+ren(40.26, "l'APRODEMCI."); rm(40.34); rm(40.74)
 rm(34.66); rm(36.70); ren(44.48, "SNEP,"); ren(56.56, "tes"); ren(59.56, "Y'en")
 words = [w for w in words if w["s"] < END]
 for i, w in enumerate(words):
@@ -37,8 +38,7 @@ for i, w in enumerate(words):
 NOCAP_SRC = [(15.55, 15.9), (43.7, 44.38), (62.15, END)]   # unclear words: audio kept, no caption
 
 # ---------- jump cuts ----------
-DROP = [(18.15, 20.42),    # unclear line about a concert next week
-        (39.9, 41.08)]     # unclear "c'est plus la problème ..."
+DROP = [(18.15, 20.42)]    # unclear line about a concert next week
 def dropped(t): return any(a <= t < b for a, b in DROP)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-ac", "1", "-ar", "16000", f"{WORK}/edl.wav"], check=True)
 au, sr = sf.read(f"{WORK}/edl.wav"); au = au[:int(END * sr)]; hop = int(0.02 * sr)
@@ -243,8 +243,10 @@ OVER = [
     (R(10.45), R(14.45), 0.45, False,
      lambda img, t: (stack(img, t, [(R(10.86), "PAS DE LA", YEL), (R(11.34), "TRICHE", RED)], 170, 560, 200),
                      typewriter(img, t, R(12.38), "UNE STRATÉGIE", 150, YEL, 1000, 20))),
-    (R(38.55), R(39.9), 0.45, False,
-     lambda img, t: stack(img, t, [(R(38.84), "PAS LA FAUTE", WHT), (R(39.40), "DES ARTISTES", YEL)], 160, 600, 190)),
+    (R(38.55), R(41.08), 0.45, False,
+     lambda img, t: (stack(img, t, [(R(38.84), "PAS LA FAUTE", WHT), (R(39.40), "DES ARTISTES", YEL)], 160, 600, 190),
+                     stack(img, t, [(R(39.94), "C'EST PLUS", WHT)], 120, 1000, 0),
+                     typewriter(img, t, R(40.26), "L'APRODEMCI", 180, RED, 1170, 22))),
     (R(41.08), R(42.75), 0.45, False,
      lambda img, t: stack(img, t, [(R(41.12), "C'EST EUX QUI", WHT), (R(41.60), "DOIVENT FIXER", YEL), (R(42.16), "LES RÈGLES", RED)], 150, 520, 180)),
     (R(44.35), R(45.10), 0.4, False,
@@ -322,7 +324,7 @@ def punch(t0, amt, hold=0.3, rel=0.45):
     r = np.clip((ft - t0 - hold) / rel, 0, 1); r = r * r * (3 - 2 * r)
     return amt * a * (1 - r)
 EMPH_RED = {"triche", "mort", "zéro", "règles", "faute", "stratégie"}
-EMPH_WHITE = {"didi", "b", "shogun", "lagos", "nigeria", "cardi", "wap", "megan", "thee", "stallion", "snep", "côte", "d'ivoire", "2020", "2025"}
+EMPH_WHITE = {"l'aprodemci", "didi", "b", "shogun", "lagos", "nigeria", "cardi", "wap", "megan", "thee", "stallion", "snep", "côte", "d'ivoire", "2020", "2025"}
 for w in words:
     if key(w) in EMPH_RED: z += punch(w["s"], 0.1)
 z += punch(R(46.84), 0.14, 0.5, 0.4)
@@ -389,7 +391,7 @@ for s in SCENES: place(whoosh, s[0] - 0.2, 0.22)
 for c in CARDS: place(hit, c[0], 0.45); place(whoosh, c[0] - 0.25, 0.2)
 place(hit, R(46.84), 0.45); place(hit, R(51.48), 0.4)
 for t0, txt, cps in [(R(8.68), "SHOGUN IN LAGOS", 20), (R(12.38), "UNE STRATÉGIE", 20), (R(22.24), "MÊME CARDI B", 16),
-                     (R(26.60), "WAP", 10), (R(44.40), "LE SNEP", 14),
+                     (R(26.60), "WAP", 10), (R(44.40), "LE SNEP", 14), (R(40.26), "L'APRODEMCI", 22),
                      (R(1.92), "DES GENS SE PLAIGNENT", 24), (R(28.38), "QU'EST-CE QUI S'EST PASSÉ ?", 24)]:
     for j, ch in enumerate(txt):
         if ch != " ": place(click, t0 + j / cps, 0.25)
