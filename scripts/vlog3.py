@@ -6,6 +6,11 @@ sys.path.insert(0, os.path.dirname(__file__))
 from fx3d import text3d
 
 SRC, WORK, OUT, LOGO = sys.argv[1:5]
+# his library (assets/): copied into the work folder unless a file of that name is already there
+import shutil
+LIB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets")
+for _n, _p in {'burn.mp4': 'transitions/burn-transition-12.mp4'}.items():
+    if not os.path.exists(f"{WORK}/{_n}"): shutil.copy(os.path.join(LIB, _p), f"{WORK}/{_n}")
 W, H, FPS = 1080, 1920, 30
 END = 86.2                                   # source audio ends at 86.21
 

@@ -25,6 +25,15 @@ Sign-off: « C'était le Big Vass pour vous servir ».
 5. Commit + push, send the file, then a short French recap with what to check
    (words guessed by ear, passages removed, copyright notes).
 
+## His library (`assets/`)
+
+Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/README.md`); `vlog3.py` and
+`vlog_kali.py` copy them into the work folder automatically. Add every new element he sends there too.
+
+- `assets/transitions/burn-transition-12.mp4`: his « Burn Transition » (peak frame 11, then black)
+- `assets/sfx/riser-metallic-transition.mp3`: suspense riser (peak 2.95 s), plus `synth-whoosh/hit/click.wav`
+- `assets/backgrounds/red-gradient.mp4`: animated red gradient for neon text screens
+
 ## Style parameters
 
 | Element | Setting |

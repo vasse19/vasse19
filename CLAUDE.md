@@ -7,5 +7,5 @@ The owner is a French creator (« le Big Vass »). Reply in French.
 - Tools: run `bash tools/setup.sh` if `whisper`, `hyperframes` or the Python venv are missing (see `tools/README.md`).
 - Scripts: `scripts/` (Python + ffmpeg pipelines), `showreel/` and `showreel-vertical/` (HyperFrames),
   `remotion/` (Remotion + Three.js 3D intro).
-- Brand assets: `showreel/assets/logos/monsieur-vass.png`.
+- Brand assets: `showreel/assets/logos/monsieur-vass.png`; his transitions, sounds and backgrounds: `assets/`.
 - Finished videos live at the repository root.
