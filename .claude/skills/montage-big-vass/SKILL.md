@@ -15,11 +15,15 @@ Sign-off: « C'était le Big Vass pour vous servir ».
    transcript table with timestamps, strengths, weaknesses, what the edit would do. Then wait.
 2. **Ask for the images** he wants on mentions (artist photo, covers, logos, clips). Never redraw a logo
    from memory; the sandbox cannot download them (most sites are blocked), so he sends them.
-3. **Edit** with `scripts/vlog3.py` (face-cam vertical, the current reference) or `scripts/podcast3.py`
-   (split-screen podcast), or `scripts/longform.py` (YouTube 16:9 long-form: hook, his intro kept,
-   chapter cards, keyword captions, end screen, chapter list for the description). Copy the script,
-   change only the transcript fixes, DROP list, B-roll, cards and keywords. Render into the scratchpad,
-   verify, then copy into the repo.
+3. **Edit**: vertical Shorts now default to the **Kali Muscle style** (`scripts/vlog_kali.py`, reference:
+   `wantche_platinum_trapper.mp4`, chosen by him on 2026-11-01: « on va rester sur ce genre de style »).
+   Copy the script and change only the transcript fixes, DROP list, SCENES, OVER overlays, CARDS, emphasis
+   words, burns and risers. Ask for a clean artist cut-out (PNG) when an artist is the topic: he prefers his
+   own cut-outs to GrabCut. Older looks stay available: `scripts/vlog3.py` (plain face-cam),
+   `scripts/podcast3.py` (split-screen podcast), `scripts/longform.py` (YouTube 16:9 long-form: hook, his
+   intro kept, chapter cards, keyword captions, end screen, chapter list). Render into the scratchpad,
+   verify, then copy into the repo. Keep his opening line (« Les amis… ») unless it is unclear; only cut
+   repeats inside it.
 4. **Verify before sending**: contact sheet of key frames, loudness, and a scan for digital-silence
    windows (`< -100 dB`) over the whole file, especially the last 3 s.
 5. Commit + push, send the file, then a short French recap with what to check
@@ -52,7 +56,7 @@ Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/R
 | Grade | unsharp 0.5, contrast 1.06, saturation 1.08, light vignette, fine grain |
 | Audio | gain to taste (+11 to +18 dB for quiet phone audio), compressor 4:1 at −22 dB, `loudnorm I=-14`, then **`aresample=48000,asetpts=N/SR/TB` before `amix`** (else the voice drops out at the end), limiter 0.75 → about −14 LUFS, peak ≤ −2 dB |
 
-## « Style Kali Muscle » variant (`scripts/vlog_kali.py`)
+## Kali Muscle style (`scripts/vlog_kali.py`): the default for Shorts
 
 When he asks for « la même » as the Kali Muscle shorts: motion-design intro over his voice on his red gradient
 clip (`Copy_of_Red.mp4`) + drifting grid + embers; neon text in Anton (light core, coloured glow): lines that

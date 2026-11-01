@@ -4,6 +4,7 @@ The owner is a French creator (« le Big Vass »). Reply in French.
 
 - Editing style, workflow and parameters: `.claude/skills/montage-big-vass/SKILL.md` — use it whenever he
   asks to edit or analyse a video, or says « comme d'habitude ».
+  Shorts default to the Kali Muscle style (`scripts/vlog_kali.py`, reference `wantche_platinum_trapper.mp4`).
 - Tools: run `bash tools/setup.sh` if `whisper`, `hyperframes` or the Python venv are missing (see `tools/README.md`).
 - Scripts: `scripts/` (Python + ffmpeg pipelines), `showreel/` and `showreel-vertical/` (HyperFrames),
   `remotion/` (Remotion + Three.js 3D intro).
