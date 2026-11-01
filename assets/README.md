@@ -15,4 +15,14 @@
 | `3d/lightning-white.png`, `lightning-orange.png`, `lightning-gradient.png`, `lightning-gold.png` | éclairs 3D (blanc, orange, dégradé violet, or), PNG transparents 2000×2000 | « pop » sur les mots forts (ex. « BOOM », « C'EST MORT »), en coin ou derrière un titre |
 | `3d/paper-peel-dark.png` | carte sombre au coin replié, PNG transparent | fond de carte pour un texte ou une pochette |
 
+## Extraits classés par pilier (`extraits/`)
+
+| Fichier | Pilier | Contenu |
+|---|---|---|
+| `extraits/musique/tv-big-up-monsieur-vass.mp4` | MUSIQUE | Émission TV (repost TikTok, image 16:9 au centre, y 318–642) : collab avec Z de 13 Block, « un gros big up à Monsieur Vass, c'est un influenceur TikTok » à 13,5 s |
+| `extraits/musique/sortie-concert-nuit.mp4` | MUSIQUE | Sortie de concert de nuit avec les artistes, photo de groupe à 9 s |
+| `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
+| `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
+| `extraits/sport/cote-divoire-coupe-du-monde.mp4` | SPORT | Sa vidéo Côte d'Ivoire / Coupe du monde : Infantino, Éléphants, poule avec l'Allemagne, « restez concentrés » à 36,9 s |
+
 Logo : `showreel/assets/logos/monsieur-vass.png`.

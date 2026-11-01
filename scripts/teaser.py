@@ -6,7 +6,7 @@ usage: teaser.py REPO_DIR WORK_DIR OUT.mp4"""
 import sys, os, subprocess, numpy as np, cv2
 from scipy.signal import butter, sosfilt
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from kali_fx import W, H, FPS, LIB, YEL, RED, WHT, GOLD, paste, neon, stack, typewriter, rgba_file, glow_rgba, bg, block
+from kali_fx import W, H, FPS, LIB, YEL, RED, WHT, GOLD, GRN, paste, neon, stack, typewriter, rgba_file, glow_rgba, bg, block
 
 REPO, WORK, OUT = sys.argv[1:4]
 os.makedirs(WORK, exist_ok=True)
@@ -14,24 +14,34 @@ SR = 48000
 BPM = 140; B = 60 / BPM
 V = lambda n: os.path.join(REPO, n)
 WAN, DID, SUS, KHA = V("wantche_platinum_trapper.mp4"), V("didib_triche_ou_strategie.mp4"), V("suspect95_ou_est_il.mp4"), V("djkhaled_rap_ivoire.mp4")
-RAW = V("00662_redresse.mp4")                    # upright face-cam: « En tout cas, moi, il y a un truc que j'aimerais voir un jour »
+X = lambda n: os.path.join(LIB, "extraits", n)
+MUS_TV, MUS_LIVE = X("musique/tv-big-up-monsieur-vass.mp4"), X("musique/sortie-concert-nuit.mp4")
+CUL_RED, CUL_ITW = X("culture/tapis-rouge-evenement.mp4"), X("culture/interview-monsieur-vass.mp4")
+SPO_CIV = X("sport/cote-divoire-coupe-du-monde.mp4")
+RAW = CUL_ITW                                    # his interview: « Et c'est là que je me suis dit : je vais continuer à faire du contenu »
+FULL = "scale=1080:1920"
+BAND = "crop=576:324:0:318,scale=-2:1920,crop=1080:1920"          # 16:9 picture band of a TikTok repost, filled to 9:16
+LETTER = "crop=310:310:133:334,scale=1080:1080,pad=1080:1920:0:380:black"   # square crop on him, cinematic black bars
 
 # ---------- timeline ----------
-T_COLD = 1.82                                    # cold open ends on « ...voir un jour »
-T_CD = 3.40                                      # countdown screen
+T_COLD = 3.30                                    # cold open ends on « ...faire du contenu »
+T_CD = T_COLD + 1.58                             # countdown screen
 TD = T_CD + 4 * B                                # the drop
+# the three pillars of the channel; clip = (file, start, keep voice, beats, crop)
 GROUPS = [
-    ("LE RAP IVOIRE", [(WAN, 9.6, False), (WAN, 23.6, False), (DID, 13.6, False), (KHA, 12.6, False)]),
-    ("LES ARTISTES",  [(DID, 22.5, False), (KHA, 3.4, False), (KHA, 38.6, False), (KHA, 57.6, False)]),
-    ("LES DÉBATS",    [(SUS, 9.2, False), (DID, 45.0, False), (KHA, 21.2, False), (SUS, 38.85, False)]),
-    ("LES VÉRITÉS",   [(WAN, 44.0, True), (SUS, 50.9, False), (WAN, 48.2, False), (KHA, 42.4, True)]),
+    ("MUSIQUE", YEL, [(WAN, 9.6, False, 2, FULL), (DID, 22.5, False, 2, FULL), (KHA, 3.4, False, 2, FULL),
+                      (MUS_LIVE, 9.2, False, 2, FULL), (MUS_TV, 13.45, True, 4, BAND)]),
+    ("CULTURE", WHT, [(CUL_RED, 6.5, False, 2, FULL), (CUL_ITW, 34.0, False, 2, BAND), (SUS, 9.2, False, 2, FULL),
+                      (KHA, 21.2, False, 2, FULL), (WAN, 44.0, True, 2, FULL)]),
+    ("SPORT", GRN,   [(SPO_CIV, 12.5, False, 2, FULL), (SPO_CIV, 20.5, False, 2, FULL), (SPO_CIV, 41.5, False, 2, FULL),
+                      (SPO_CIV, 33.2, False, 2, FULL), (SPO_CIV, 36.35, True, 4, FULL)]),
 ]
 SEGS = []                                        # (start, end, kind, data)
 t = TD
-for title, clips in GROUPS:
-    SEGS.append((t, t + B, "card", title)); t += B
+for title, col, clips in GROUPS:
+    SEGS.append((t, t + B, "card", (title, col))); t += B
     for c in clips:
-        SEGS.append((t, t + 2 * B, "clip", c)); t += 2 * B
+        SEGS.append((t, t + c[3] * B, "clip", c)); t += c[3] * B
 TE = t                                           # beat stops
 T_STOP = TE + 2.6                                # « VOUS N'ÊTES PAS PRÊTS. » ends
 T_LOGO_END = T_STOP + 4.0
@@ -44,11 +54,11 @@ def frames(path, start, dur, vf="scale=1080:1920"):
     p = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{start:.3f}", "-t", f"{dur:.3f}", "-i", path, "-an", "-vf", vf, "-r", str(FPS),
                         "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
     return np.frombuffer(p, np.uint8).reshape(-1, H, W, 3)
-COLD = frames(RAW, 0.0, T_COLD + 0.1)
+COLD = frames(RAW, 0.0, T_COLD + 0.1, LETTER)
 FREEZE = COLD[min(len(COLD) - 1, int(T_COLD * FPS) - 1)].astype(np.float32) / 255
 CLIPF = {}
 for s, e, kind, d in SEGS:
-    if kind == "clip": CLIPF[(d[0], d[1])] = frames(d[0], d[1], e - s + 0.1)
+    if kind == "clip": CLIPF[(d[0], d[1])] = frames(d[0], d[1], e - s + 0.1, d[4])
 INTRO = frames(V("intro_3d_monsieur_vass.mp4"), 0.0, 4.0, "crop=1560:1080,scale=1080:-2,pad=1080:1920:0:(oh-ih)/2:black")
 logo = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 560)
 burn = frames(os.path.join(LIB, "transitions/burn-transition-12.mp4"), 0, 0.68, "scale=-2:1920,crop=1080:1920")
@@ -84,8 +94,8 @@ def render(i):
         img = np.dstack([g, g, g])
         img = cv2.warpAffine(img, cv2.getRotationMatrix2D((W / 2, H * 0.4), 0, 1.06 + 0.03 * k), (W, H), borderMode=cv2.BORDER_REFLECT)
         img = flash(img, k, 0.1, 0.9)
-        typewriter(img, t, T_COLD + 0.12, "OUI, C'EST MOI.", 120, WHT, 1420, 18)
-        stack(img, t, [(T_COLD + 0.85, "LE BIG VASS", YEL)], 150, 1600, 0)
+        typewriter(img, t, T_COLD + 0.12, "OUI, C'EST MOI.", 110, WHT, 1545, 18)
+        stack(img, t, [(T_COLD + 0.85, "LE BIG VASS", YEL)], 125, 1680, 0)
         return bars(img)
     if t < TD:                                                        # countdown
         img = bg("black", t)
@@ -99,7 +109,7 @@ def render(i):
         k = t - s
         if kind == "card":
             img = bg("red", t) * 0.55
-            im, _ = neon(d, 190, YEL if "IVOIRE" in d or "VÉRITÉS" in d else WHT)
+            im, _ = neon(d[0], 230, d[1])
             paste(img, im, W / 2 + np.random.default_rng(i).normal(0, 6 * max(0, 1 - k / 0.15)), H / 2, 1 + 0.4 * max(0, 1 - k / 0.12) ** 2)
             return flash(img, k, 0.08, 0.9)
         fr = CLIPF[(d[0], d[1])]
@@ -179,7 +189,7 @@ place(vox, cold / (np.abs(cold).max() + 1e-6) * 0.6, 0, 1.0)
 place(fx, scratch(), T_COLD - 0.03, 1.0)                               # record scratch on the freeze
 place(fx, s808(55, 0.5), T_COLD, 0.5)
 place(mus, pad(T_CD - T_COLD + 0.1, (55, 65.41, 82.41)), T_COLD + 0.15, 2.2)   # low drone + heartbeat under the freeze
-for hb in (2.45, 2.70, 3.05, 3.30): place(fx, s808(48, 0.28), hb, 0.45)
+for hb in (T_COLD + 0.63, T_COLD + 0.88, T_COLD + 1.23, T_COLD + 1.48): place(fx, s808(48, 0.28), hb, 0.45)
 place(mus, pad(TD - T_CD + 0.3), T_CD, 1.4)
 riser = load(os.path.join(LIB, "sfx/riser-metallic-transition.mp3")); place(fx, riser, TD - 2.95, 0.6)
 for n in range(3): place(fx, s808(41.2, 0.35), TD - (3 - n) * B, 0.6)

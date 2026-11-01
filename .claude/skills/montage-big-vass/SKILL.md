@@ -71,8 +71,8 @@ before big reveals; neon yellow Anton 172 captions elsewhere; 3D cards and the e
 
 ## Teaser (US-creator style): `scripts/teaser.py`
 
-Reference `teaser_le_big_vass.mp4` (30 s vertical; v1 chapters were music-only, the next version uses the three
-pillars MUSIQUE / CULTURE / SPORT with his interview, culture and sport clips): cold open with his voice in letterbox, record-scratch freeze
+Reference `teaser_le_big_vass.mp4` (30 s vertical; chapters MUSIQUE / CULTURE / SPORT, cold open on his
+interview line, clips from `assets/extraits/<pilier>/`): cold open with his voice in letterbox, record-scratch freeze
 frame in B&W (« OUI, C'EST MOI. / LE BIG VASS »), countdown 3-2-1 with the riser into a drop, four chapters
 (card on 1 beat + four 2-beat flashes from his finished edits, punch-in + RGB split + flash on each cut, two
 punchlines with his voice and the beat ducked), hard stop « VOUS N'ÊTES PAS PRÊTS. », gold 3D intro, end card
