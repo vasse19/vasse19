@@ -166,6 +166,19 @@ US = [(n, cover_card(f"{WORK}/{f}", 320, (255, 255, 255)), lbl) for n, f, lbl in
 CI = [(n, cover_card(f"{WORK}/{f}", 320, (255, 170, 60)), lbl) for n, f, lbl in [
     ("himra", "himra.jpg", "HIMRA"), ("didib", "didib.jpg", "DIDI B"), ("suspect", "suspect.jpg", "SUSPECT 95"),
     ("kadja", "kadja.jpg", "KADJA"), ("dopelym", "dopelym.jpg", "DOPELYM")]]
+_vc = {}
+def vclip(key, path, vf, src_t):
+    """Frames of a footage clip cropped to 9:16 (TikTok watermark cropped out), read in order."""
+    st = _vc.get(key)
+    if st is None:
+        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(src_t), "-i", path, "-an", "-vf", f"{vf},scale={W}:{H},eq=contrast=1.05:saturation=1.08",
+                              "-r", str(FPS), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
+        st = _vc[key] = {"p": p, "last": None}
+    buf = st["p"].stdout.read(W * H * 3)
+    if len(buf) == W * H * 3: st["last"] = np.frombuffer(buf, np.uint8).reshape(H, W, 3).astype(np.float32) / 255
+    return st["last"].copy()
+DK1 = (f"{WORK}/dk1.mp4", "crop=iw*0.7:ih*0.7:iw*0.2:ih*0.15")
+DK2 = (f"{WORK}/dk2.mp4", "crop=405:720:60:152")
 _l = rgba_file(os.path.join(LIB, "3d/lightning-gold.png"), 380)
 BOLT = glow_rgba(_l, (255, 200, 60), 14, 1.0)
 def flag(kind):
@@ -237,6 +250,7 @@ SCENES = [
     (R(11.26), R(17.95), "rapci", False),
     (R(28.30), R(38.95), "certifs", False),
     (R(38.95), R(46.00), "us", False),
+    (R(53.30), R(55.90), "khaled2", False),
     (R(58.60), R(68.85), "ci", False),
 ]
 def scene_at(t):
@@ -248,8 +262,6 @@ OVER = [
      lambda img, t: typewriter(img, t, R(10.44), "DES COMPILATIONS", 130, YEL, 640, 22)),
     (R(24.36), R(26.90), 0.15, True,
      lambda img, t: stack(img, t, [(R(24.44), "GUERRE", RED), (R(24.60), "D'EGO", RED)], 210, 560, 240)),
-    (R(53.30), R(55.90), 0.45, False,
-     lambda img, t: stack(img, t, [(R(53.38), "UN DJ KHALED", YEL), (R(54.26), "IVOIRIEN ?", WHT)], 160, 580, 190)),
     (R(56.30), R(57.50), 0.45, False,
      lambda img, t: typewriter(img, t, R(56.34), "PRÊT À INVESTIR", 140, GOLD, 640, 20)),
 ]
@@ -263,9 +275,17 @@ def grid(img, t, items, times, pos):
         paste(img, im, x, y, popk(t, t0))
         lab, _ = neon(lbl, 72, WHT); paste(img, lab, x, y + im.shape[0] / 2 - 10)
 def draw_scene(name, t, k):
+    if name == "khaled" and t < R(5.10):
+        img = vclip("dk1", *DK1, 0.3) * 0.8
+        stack(img, t, [(R(3.28), "DJ KHALED", WHT)], 150, 300, 0)
+        return img
+    if name == "khaled2":
+        img = vclip("dk2", *DK2, 7.9) * 0.75
+        stack(img, t, [(R(53.38), "UN DJ KHALED", YEL), (R(54.26), "IVOIRIEN ?", WHT)], 160, 380, 190)
+        return img
     img = bg("black" if name in ("us", "ci") else "red", t)
     if name == "khaled":
-        paste(img, KHAL, W / 2, 1260, settle(k))
+        paste(img, KHAL, W / 2, 1260, settle(t - R(5.10)))
         stack(img, t, [(R(3.28), "DJ KHALED", WHT), (R(5.14), "DJ", YEL), (R(6.34), "PRODUCTEUR", YEL), (R(7.54), "SON LABEL", YEL)], 120, 260, 140)
     elif name == "rapci":
         if t >= R(11.40): paste(img, FLAG_CI, W / 2, 1180, 1.8 * popk(t, R(11.40)))
@@ -386,7 +406,7 @@ for t0, txt, cps in [(R(10.44), "DES COMPILATIONS", 22), (R(28.64), "DJ KHALED",
 place(riser, R(40.98) - RISER_PEAK, 0.5)
 place(riser, R(58.82) - RISER_PEAK, 0.5)
 BURN_PEAK = 11 / FPS
-BURN_AT = [R(3.26), R(28.30), R(48.62), R(58.60), R(68.85)]
+BURN_AT = [R(3.26), R(28.30), R(48.62), R(53.30), R(58.60), R(68.85)]
 for b_ in BURN_AT: place(burn_snd, b_ - BURN_PEAK, 0.6)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", f"{WORK}/sfx.wav"], input=sfx[:int(DUR * SR)].tobytes(), check=True)
 
@@ -439,7 +459,7 @@ dec.stdout.close(); dec.kill(); dec.wait()
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
     "[1:a]highpass=f=70,volume=-2dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7,"
     "aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
-    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.75:level=false[a]",
+    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.75:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
 print("done", OUT, len(SHOTS), "shots", flush=True)

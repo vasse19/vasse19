@@ -88,5 +88,7 @@ no heavy sharpening). 3D gold intro: `remotion/` composition `GoldIntro` (Remoti
   (`-frames:v N -t N/30`, audio padded/trimmed to the same length), then the concat demuxer. One filter
   graph with dozens of `trim`s is killed for memory, and `-t` alone adds a frame here and there, which
   drifted lip sync by 0.8 s over 86 segments. Always compare the cut file's video and audio durations.
+- Audio mux: end the chain with `aformat=sample_fmts=s16:channel_layouts=stereo` before the AAC encoder; with float input a
+  stereo source came out at +1.6 dBFS true peak despite the 0.75 limiter. Always check `ebur128=peak=true` (≤ -0.5 dBFS).
 - Long-form captions: he prefers **keywords only** (pertinent words, names: « BALOO », « INCROYABLE »),
   not full subtitles; keep his own intro as is.
