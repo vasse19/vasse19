@@ -263,7 +263,7 @@ def draw_scene(name, t, k):
     if name == "didib":
         paste(img, DIDI, W / 2, 1260, settle(k))
         typewriter(img, t, R(1.92), "DES GENS SE PLAIGNENT", 80, WHT, 180, 24)
-        stack(img, t, [(R(2.96), "L'ALBUM DE DIDI B", WHT), (R(5.20), "UNE EXCLU", YEL), (R(6.16), "DÉJÀ ÉCOUTÉE", RED)], 125, 300, 165)
+        stack(img, t, [(R(2.96), "L'ALBUM DE DIDI B", WHT), (R(5.20), "7 EXCLUS", YEL), (R(6.16), "DÉJÀ ÉCOUTÉES", RED)], 125, 300, 165)
     elif name == "shogun":
         paste(img, SHOG, W / 2, 880, settle(k))
         stack(img, t, [(R(7.40), "SON PROCHAIN ALBUM", WHT)], 100, 330, 0)
