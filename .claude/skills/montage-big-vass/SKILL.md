@@ -37,6 +37,8 @@ Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/R
 - `assets/transitions/burn-transition-12.mp4`: his « Burn Transition » (peak frame 11, then black)
 - `assets/sfx/riser-metallic-transition.mp3`: suspense riser (peak 2.95 s), plus `synth-whoosh/hit/click.wav`
 - `assets/backgrounds/red-gradient.mp4`: animated red gradient for neon text screens
+- `assets/overlays/torn-paper-banner-{red,blue}.mp4`: green-screen torn-paper header (key `colorkey=0x1DDA0B:0.25:0.08`, covers y < 640, turns black at 9.8 s): use for a neon title over the face-cam
+- `assets/3d/lightning-{white,orange,gradient,gold}.png`, `paper-peel-dark.png`: transparent 3D elements to pop on strong words or behind titles
 
 ## Style parameters
 
