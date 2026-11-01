@@ -68,6 +68,15 @@ covers with glowing rim; counter for numbers (« 6 MILLIONS »); flags drawn in 
 `Burn_Transition_12.mp4` (peak frame 11, then black) and `SFX - Riser Metallic Transition.mp3` (peak 2.95 s)
 before big reveals; neon yellow Anton 172 captions elsewhere; 3D cards and the end card as usual.
 
+## Teaser (US-creator style): `scripts/teaser.py`
+
+Reference `teaser_le_big_vass.mp4` (30 s vertical): cold open with his voice in letterbox, record-scratch freeze
+frame in B&W (« OUI, C'EST MOI. / LE BIG VASS »), countdown 3-2-1 with the riser into a drop, four chapters
+(card on 1 beat + four 2-beat flashes from his finished edits, punch-in + RGB split + flash on each cut, two
+punchlines with his voice and the beat ducked), hard stop « VOUS N'ÊTES PAS PRÊTS. », gold 3D intro, end card
+« BIENTÔT. / ACTIVE LES NOTIFS ». Beat synthesized in the script (trap 140 BPM, A minor): no copyright claim.
+Shared graphics live in `scripts/kali_fx.py`.
+
 ## Thumbnails and titles
 
 `scripts/thumb3d.py` style (like his « MOTEUR COUPÉ » reference): two words, one chrome one glossy red,
