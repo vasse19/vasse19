@@ -5,7 +5,8 @@ description: House editing style of Monsieur Vass / "le Big Vass" (French music,
 
 # Montage « comme d'habitude » — Monsieur Vass
 
-Speak French to him. He films face-cam (car, home studio, hoodie and glasses) and a split-screen
+Speak French to him. **His channel has three pillars: MUSIQUE, CULTURE, SPORT** (decided 2026-11-01). Teasers,
+showreels and chapter cards are organised around them; classify every video or clip he sends into one pillar. He films face-cam (car, home studio, hoodie and glasses) and a split-screen
 podcast with a guest; topics are rap, music culture, celebrities, sport (he supports Chelsea).
 Sign-off: « C'était le Big Vass pour vous servir ».
 
@@ -70,7 +71,8 @@ before big reveals; neon yellow Anton 172 captions elsewhere; 3D cards and the e
 
 ## Teaser (US-creator style): `scripts/teaser.py`
 
-Reference `teaser_le_big_vass.mp4` (30 s vertical): cold open with his voice in letterbox, record-scratch freeze
+Reference `teaser_le_big_vass.mp4` (30 s vertical; v1 chapters were music-only, the next version uses the three
+pillars MUSIQUE / CULTURE / SPORT with his interview, culture and sport clips): cold open with his voice in letterbox, record-scratch freeze
 frame in B&W (« OUI, C'EST MOI. / LE BIG VASS »), countdown 3-2-1 with the riser into a drop, four chapters
 (card on 1 beat + four 2-beat flashes from his finished edits, punch-in + RGB split + flash on each cut, two
 punchlines with his voice and the beat ducked), hard stop « VOUS N'ÊTES PAS PRÊTS. », gold 3D intro, end card

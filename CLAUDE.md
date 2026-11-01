@@ -1,6 +1,6 @@
 # vasse19 — video editing for Monsieur Vass
 
-The owner is a French creator (« le Big Vass »). Reply in French.
+The owner is a French creator (« le Big Vass »). Reply in French. Channel pillars: MUSIQUE, CULTURE, SPORT.
 
 - Editing style, workflow and parameters: `.claude/skills/montage-big-vass/SKILL.md` — use it whenever he
   asks to edit or analyse a video, or says « comme d'habitude ».
