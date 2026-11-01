@@ -43,6 +43,16 @@ Sign-off: « C'était le Big Vass pour vous servir ».
 | Grade | unsharp 0.5, contrast 1.06, saturation 1.08, light vignette, fine grain |
 | Audio | gain to taste (+11 to +18 dB for quiet phone audio), compressor 4:1 at −22 dB, `loudnorm I=-14`, then **`aresample=48000,asetpts=N/SR/TB` before `amix`** (else the voice drops out at the end), limiter 0.75 → about −14 LUFS, peak ≤ −2 dB |
 
+## « Style Kali Muscle » variant (`scripts/vlog_kali.py`)
+
+When he asks for « la même » as the Kali Muscle shorts: motion-design intro over his voice on his red gradient
+clip (`Copy_of_Red.mp4`) + drifting grid + embers; neon text in Anton (light core, coloured glow): lines that
+stack and pop, typewriter with a white cursor and key clicks; cut-out artist (GrabCut + hole fill, white glow);
+covers with glowing rim; counter for numbers (« 6 MILLIONS »); flags drawn in code; face-cam punch-ins every
+~2 s, overlays on the dimmed face instead of captions, tunnel vignette on the strongest line; his
+`Burn_Transition_12.mp4` (peak frame 11, then black) and `SFX - Riser Metallic Transition.mp3` (peak 2.95 s)
+before big reveals; neon yellow Anton 172 captions elsewhere; 3D cards and the end card as usual.
+
 ## Thumbnails and titles
 
 `scripts/thumb3d.py` style (like his « MOTEUR COUPÉ » reference): two words, one chrome one glossy red,
