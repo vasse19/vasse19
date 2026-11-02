@@ -70,6 +70,26 @@ covers with glowing rim; counter for numbers (« 6 MILLIONS »); flags drawn in 
 `Burn_Transition_12.mp4` (peak frame 11, then black) and `SFX - Riser Metallic Transition.mp3` (peak 2.95 s)
 before big reveals; neon yellow Anton 172 captions elsewhere; 3D cards and the end card as usual.
 
+How a new Short is built (copy the closest script, change only its data blocks):
+- References: `kali_didib.py` (portrait phone source), `kali_suspect95.py` (tweet card with highlighted
+  lines, video clip span), `kali_djkhaled.py` and `kali_dopelym.py` (**sideways 1080p50 camera source**:
+  `transpose=1` in the cut, `SW, SH = 1080, 1920`, loud source so `volume=-2dB`; artist grids; `vclip()` for
+  his supplied clips). All times in SCENES / OVER / CARDS are written in **source seconds** through `R = remap`.
+- Blocks to edit: transcript fixes (`ren/rm/add` by time), `NOCAP_SRC` (unclear words: audio kept, no
+  caption), `DROP` (repeats/unclear only — he wants his opening line and his sign-off kept), images, SCENES,
+  OVER, CARDS (hook on frame 1, one or two 3D cards, end card), emphasis words, sounds (clicks, risers, burns).
+- His camera files (`00xxx_compresse.mp4`) arrive lying on their side: rotate with `transpose=1` (head to the
+  top) and send him the upright copy as `00xxx_redresse.mp4` when he asks « ajuste la rotation ».
+- Artist grids: 2×2 or 3+2 cards of 320–370 px with the name under each, popping when he says the name;
+  never the same artist twice. Photos with TikTok/GQ/watermarks: crop them out (bottom 10 %, or 70 % centre
+  crop for TikTok reposts, whose 16:9 band sits at y 318–642 in 576×1024). He sends artist photos in the order
+  he names them; if a photo looks mismatched, say so.
+- Before sending: contact sheet at 2 fps (text overflow at 1080 px: keep neon lines ≤ ~15 characters at
+  size 190, smaller beyond), loudness −14 LUFS, true peak ≤ −0.5 dBFS, no digital silence, words_final check
+  for duplicated words where two transcripts were merged.
+- Finished files at the repo root with a short slug (`didib_triche_ou_strategie.mp4`, `dopelym_concert_paris.mp4`…);
+  commit, push, send, then a French recap with what to check.
+
 ## Teaser (US-creator style): `scripts/teaser.py`
 
 Reference `teaser_le_big_vass.mp4` (30 s vertical; chapters MUSIQUE / CULTURE / SPORT, cold open on his
