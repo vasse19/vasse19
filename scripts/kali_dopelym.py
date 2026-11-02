@@ -155,8 +155,8 @@ def cover_card(path, width, rim):
 def crop_file(src, dst, bottom=1.0):
     im = cv2.imread(f"{WORK}/{src}"); cv2.imwrite(f"{WORK}/{dst}", im[:int(im.shape[0] * bottom)]); return dst
 AFF = cover_card(f"{WORK}/affiche.jpg", 700, (255, 40, 50))
-NW = [(n, cover_card(f"{WORK}/{f}", 330, (255, 170, 60)), lbl) for n, f, lbl in [
-    ("dope1", "dope1.jpg", "DOPELYM"), ("dope2", "dope2.jpg", "DOPELYM"), ("wantche", "wantche.jpg", "WANTCHÉ"),
+NW = [(n, cover_card(f"{WORK}/{f}", 370, (255, 170, 60)), lbl) for n, f, lbl in [
+    ("dope1", "dope1.jpg", "DOPELYM"), ("wantche", "wantche.jpg", "WANTCHÉ"),
     ("trk", "trk.jpg", "TRK"), ("ogmahilet", "ogmahilet.jpg", "OG MAHILET")]]
 _vc = {}
 def vclip(key, path, vf, src_t):
@@ -286,7 +286,7 @@ def draw_scene(name, t, k):
         stack(img, t, [(R(24.60), "LA MACHINE DU", WHT), (R(24.92), "MOULIN ROUGE", RED)], 105, 760, 130)
     elif name == "newwave":
         stack(img, t, [(R(31.24), "D'AUTRES ARTISTES", WHT), (R(32.28), "DE LA NEW WAVE", YEL)], 110, 230, 140)
-        grid(img, t, NW, [R(x) for x in (30.12, 30.68, 31.24, 31.64, 32.28)], [(185, 700), (540, 700), (895, 700), (360, 1280), (720, 1280)])
+        grid(img, t, NW, [R(x) for x in (30.12, 30.68, 31.24, 31.64)], [(330, 720), (750, 720), (330, 1320), (750, 1320)])
     return img
 
 # ---------- shots: punch-in reframing about every 2 s ----------
@@ -373,7 +373,7 @@ for c, _ in SHOTS[1:]:
 for s in SCENES: place(whoosh, s[0] - 0.2, 0.22)
 for c in CARDS: place(hit, c[0], 0.45); place(whoosh, c[0] - 0.25, 0.2)
 place(hit, R(13.04), 0.45); place(hit, R(23.80), 0.5); place(hit, R(19.24), 0.3)
-for t0 in (30.12, 30.68, 31.24, 31.64, 32.28): place(whoosh, R(t0) - 0.12, 0.18); place(hit, R(t0), 0.18)
+for t0 in (30.12, 30.68, 31.24, 31.64): place(whoosh, R(t0) - 0.12, 0.18); place(hit, R(t0), 0.18)
 for t0, txt, cps in [(R(20.28), "IL SAIT CE QU'IL FAIT", 22), (R(23.80), "5 DÉCEMBRE", 12)]:
     for j, ch in enumerate(txt):
         if ch != " ": place(click, t0 + j / cps, 0.25)
