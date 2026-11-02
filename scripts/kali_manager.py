@@ -35,7 +35,9 @@ for i, w in enumerate(words):
 NOCAP_SRC = [(0.40, 0.85), (87.1, END)]          # unclear word on line 1; the sign-off (he asked: no caption)
 
 # ---------- jump cuts ----------
-DROP = []
+DROP = [(11.62, 12.45),    # drawn-out hesitation between « Non » and « c'est trop »
+        (39.28, 39.60),    # « en... » hesitation before « et en disant »
+        (41.02, 41.36)]    # « euh » before « Syly »
 def dropped(t): return any(a <= t < b for a, b in DROP)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-ac", "1", "-ar", "16000", f"{WORK}/edl.wav"], check=True)
 au, sr = sf.read(f"{WORK}/edl.wav"); au = au[:int(END * sr)]; hop = int(0.02 * sr)
