@@ -30,6 +30,8 @@
 | `extraits/musique/dopelym-clip-voiture.mp4` | MUSIQUE | Extrait de clip de Dopelym (voitures, lui dans la voiture), 0–22 s |
 | `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
 | `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
+| `extraits/sport/yan-diomande-but-montage.mov` | SPORT | Montage du but de Yan Diomandé (Real Madrid, n°25) : frappe 0,6–4 s, célébration 6 s, gros plans 19–22 s ; filigrane TikTok : recadrer à 78 % |
+| `extraits/sport/yan-diomande-but-tribune.mp4` | SPORT | Le même match filmé en tribune, célébration 14–18 s |
 | `extraits/sport/cote-divoire-coupe-du-monde.mp4` | SPORT | Sa vidéo Côte d'Ivoire / Coupe du monde : Infantino, Éléphants, poule avec l'Allemagne, « restez concentrés » à 36,9 s |
 
 Logo : `showreel/assets/logos/monsieur-vass.png`.
