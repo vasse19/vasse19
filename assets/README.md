@@ -21,6 +21,8 @@
 |---|---|---|
 | `extraits/musique/tv-big-up-monsieur-vass.mp4` | MUSIQUE | Émission TV (repost TikTok, image 16:9 au centre, y 318–642) : collab avec Z de 13 Block, « un gros big up à Monsieur Vass, c'est un influenceur TikTok » à 13,5 s |
 | `extraits/musique/sortie-concert-nuit.mp4` | MUSIQUE | Sortie de concert de nuit avec les artistes, photo de groupe à 9 s |
+| `extraits/musique/dopelym-live-afrique.mp4` | MUSIQUE | Dopelym en live en Afrique (foule, fumigènes), 0–20 s ; filigrane TikTok : recadrer 15 % de chaque côté |
+| `extraits/musique/dopelym-clip-voiture.mp4` | MUSIQUE | Extrait de clip de Dopelym (voitures, lui dans la voiture), 0–22 s |
 | `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
 | `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
 | `extraits/sport/cote-divoire-coupe-du-monde.mp4` | SPORT | Sa vidéo Côte d'Ivoire / Coupe du monde : Infantino, Éléphants, poule avec l'Allemagne, « restez concentrés » à 36,9 s |
