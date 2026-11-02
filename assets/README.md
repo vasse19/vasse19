@@ -12,6 +12,11 @@
 | `backgrounds/red-gradient.mp4` | « Copy of Red », dégradé rouge animé, 1080×1920, 12,6 s | fond des écrans texte façon Kali Muscle (en boucle), avec grille et étincelles |
 | `overlays/torn-paper-banner-red.mp4` | bandeau papier déchiré, grille rouge, sur fond vert, 1080×1920, 25,5 s, muet | incrustation `colorkey=0x1DDA0B:0.25:0.08` ; le papier arrive en se dépliant (0–0,3 s), couvre le haut jusqu'à y ≈ 640 ; vers 9,8 s la grille passe au noir. Zone pour un titre néon |
 | `overlays/torn-paper-banner-blue.mp4` | même bandeau, grille bleue | idem |
+| `overlays/eye-tear-paper.mp4` | œil (maquillage violet) qui apparaît en **déchirant du papier**, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; déchirure 0–1,2 s puis tenu. Pour « regardez bien », un regard, un mystère |
+| `overlays/eye-shatter.mp4` | œil bleu qui se reconstitue **en éclats**, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; éclats 0–1,6 s puis tenu |
+| `overlays/hand-tear-paper.mp4` | **main qui traverse le papier** et se tend, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; 0–1,2 s ; pour « je vous tends la main », appel au soutien, un artiste qui débarque |
+| `overlays/tape-strip-flat.mp4` | **morceau de scotch** qui se colle, fond vert, 1080×1920, 5 s, muet | `colorkey=0x00AF3F:0.25:0.08` ; arrive en 0,3 s, zone x 369–710, y 863–1055 ; à poser sur le bord d'une photo ou d'une pochette (effet collage). Lire sans `-ss` avant l'entrée (seek = image vide) |
+| `overlays/tape-strip-wide.mp4` | scotch plus large et froissé | `colorkey=0x00AF3F:0.25:0.08` ; zone x 306–753, y 853–1070 ; idem |
 | `3d/lightning-white.png`, `lightning-orange.png`, `lightning-gradient.png`, `lightning-gold.png` | éclairs 3D (blanc, orange, dégradé violet, or), PNG transparents 2000×2000 | « pop » sur les mots forts (ex. « BOOM », « C'EST MORT »), en coin ou derrière un titre |
 | `3d/paper-peel-dark.png` | carte sombre au coin replié, PNG transparent | fond de carte pour un texte ou une pochette |
 
