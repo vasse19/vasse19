@@ -91,6 +91,17 @@ How a new Short is built (copy the closest script, change only its data blocks):
 - Finished files at the repo root with a short slug (`didib_triche_ou_strategie.mp4`, `dopelym_concert_paris.mp4`…);
   commit, push, send, then a French recap with what to check.
 
+## Video from a voice note: `scripts/kali_vocal.py`
+
+Reference `kadja_ou_est_il.mp4`. No face-cam: every moment has a scene (photos, covers, his clips), neon captions all
+along at y 1660, his Monsieur Vass logo top-left pulsing with his voice, a waveform under the captions, burns at
+chapter changes, 3D hook/cards/end card. Same transcript workflow (send him the numbered lines to correct first).
+
+## Watermarks on other people's clips
+
+He asked to blur them: blur the TikTok zones in the source frame before cropping and **credit the account on screen**
+(« SOURCE TIKTOK : @compte », small, bottom) — never remove the attribution entirely.
+
 ## Teaser (US-creator style): `scripts/teaser.py`
 
 Reference `teaser_le_big_vass.mp4` (30 s vertical; chapters MUSIQUE / CULTURE / SPORT, cold open on his

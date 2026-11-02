@@ -159,11 +159,17 @@ NW = [(n, cover_card(f"{WORK}/{f}", 370, (255, 170, 60)), lbl) for n, f, lbl in 
     ("dope1", "dope1.jpg", "DOPELYM"), ("wantche", "wantche.jpg", "WANTCHÉ"),
     ("trk", "trk.jpg", "TRK"), ("ogmahilet", "ogmahilet.jpg", "OG MAHILET")]]
 _vc = {}
+# TikTok reposts (576x1024): the watermark sits mid-left (first seconds) or low-right (later); both zones are
+# blurred in the source frame before the crop, and the account is credited on screen instead (see credit()).
+WMBLUR = ("split=3[wa][wb][wc];[wb]crop=200:190:0:420,boxblur=22:3[wl];[wc]crop=240:150:336:780,boxblur=22:3[wr];"
+          "[wa][wl]overlay=0:420[wx];[wx][wr]overlay=336:780,")
+def credit(img, handle):
+    im, _ = neon(f"SOURCE TIKTOK : {handle}", 44, (255, 255, 255)); paste(img, im, W / 2, H - 70, 1.0, 0.85)
 def vclip(key, path, vf, src_t):
     """Frames of a footage clip cropped to 9:16 (TikTok watermark cropped out), read in order."""
     st = _vc.get(key)
     if st is None:
-        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(src_t), "-i", path, "-an", "-vf", f"{vf},scale={W}:{H},eq=contrast=1.05:saturation=1.08",
+        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(src_t), "-i", path, "-an", "-filter_complex", f"{WMBLUR}{vf},scale={W}:{H},eq=contrast=1.05:saturation=1.08",
                               "-r", str(FPS), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
         st = _vc[key] = {"p": p, "last": None}
     buf = st["p"].stdout.read(W * H * 3)
@@ -269,11 +275,13 @@ def draw_scene(name, t, k):
     if name == "clip1":
         img = vclip("v1", *CLIP1, 3.0) * 0.8
         stack(img, t, [(R(5.27), "UN TRUC DE OUF", YEL)], 150, 380, 0)
+        credit(img, "@DOPELYM")
         return img
     if name == "live":
         img = vclip("v2", *LIVE, 1.0) * 0.75
         stack(img, t, [(R(16.34), "SES CONCERTS", WHT), (R(18.28), "EN AFRIQUE", YEL), (R(19.24), "INCROYABLE", RED)], 150, 330, 180)
         typewriter(img, t, R(20.28), "IL SAIT CE QU'IL FAIT", 105, WHT, 1560, 22)
+        credit(img, "@DOPELYM")
         return img
     img = bg("black" if name in ("date", "newwave") else "red", t)
     if name == "affiche":

@@ -192,11 +192,17 @@ YAN3 = cover_card(f"{WORK}/yan3.jpg", 820, (255, 170, 60))
 CROP = "crop=iw*0.78:ih*0.78:iw*0.06:ih*0.06"               # TikTok marks cropped
 GOAL = (f"{WORK}/v2.mov", CROP); FANCAM = (f"{WORK}/v1.mp4", CROP)
 _vc = {}
+# TikTok reposts (576x1024): the watermark sits mid-left (first seconds) or low-right (later); both zones are
+# blurred in the source frame before the crop, and the account is credited on screen instead (see credit()).
+WMBLUR = ("split=3[wa][wb][wc];[wb]crop=200:190:0:420,boxblur=22:3[wl];[wc]crop=240:150:336:780,boxblur=22:3[wr];"
+          "[wa][wl]overlay=0:420[wx];[wx][wr]overlay=336:780,")
+def credit(img, handle):
+    im, _ = neon(f"SOURCE TIKTOK : {handle}", 44, (255, 255, 255)); paste(img, im, W / 2, H - 70, 1.0, 0.85)
 def vclip(key, path, vf, src_t):
     """Frames of a footage clip cropped to 9:16 (TikTok watermark cropped out), read in order."""
     st = _vc.get(key)
     if st is None:
-        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(src_t), "-i", path, "-an", "-vf", f"{vf},scale={W}:{H},eq=contrast=1.05:saturation=1.08",
+        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(src_t), "-i", path, "-an", "-filter_complex", f"{WMBLUR}{vf},scale={W}:{H},eq=contrast=1.05:saturation=1.08",
                               "-r", str(FPS), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
         st = _vc[key] = {"p": p, "last": None}
     buf = st["p"].stdout.read(W * H * 3)
@@ -300,10 +306,12 @@ def draw_scene(name, t, k):
         img = vclip("goal", *GOAL, 0.6) * 0.85
         typewriter(img, t, R(23.84), "LE BUT D'HIER", 140, WHT, 300, 14)
         stack(img, t, [(R(26.40), "INCROYABLE", RED)], 190, 1560, 0)
+        credit(img, "@YAN_DIOMANDE49")
         return img
     if name == "fancam":
         img = vclip("fancam", *FANCAM, 14.2) * 0.8
         stack(img, t, [(R(44.70), "VOUS ALLEZ VOIR", WHT), (R(45.34), "PAR VOUS-MÊME", YEL)], 140, 380, 170)
+        credit(img, "@TOPDUMOMENTOFFICIEL1")
         return img
     img = bg("black" if name == "money" else "red", t)
     if name == "money":
