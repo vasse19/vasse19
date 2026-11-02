@@ -122,5 +122,10 @@ no heavy sharpening). 3D gold intro: `remotion/` composition `GoldIntro` (Remoti
   drifted lip sync by 0.8 s over 86 segments. Always compare the cut file's video and audio durations.
 - Audio mux: end the chain with `aformat=sample_fmts=s16:channel_layouts=stereo` before the AAC encoder; with float input a
   stereo source came out at +1.6 dBFS true peak despite the 0.75 limiter. Always check `ebur128=peak=true` (≤ -0.5 dBFS).
+  Also encode AAC with `-cutoff 18000`: his camera audio has hiss above 18 kHz that made the 192k AAC overshoot by
+  +3 dB (−3.3 dBFS wav → −0.3 dBFS mp4).
+- « Enlève les blancs + envoie les sous-titres pour qu'on corrige »: `scripts/cut_silences.py SRC words.json OUT.mp4 OUT.srt
+  --transpose --fixes fixes.json` → rotated, silences cut (frame-exact), −14 LUFS, plus `.srt` and a numbered `.txt`;
+  mark doubtful words as `[mot ?]` in the fixes.
 - Long-form captions: he prefers **keywords only** (pertinent words, names: « BALOO », « INCROYABLE »),
   not full subtitles; keep his own intro as is.

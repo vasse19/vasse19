@@ -228,5 +228,5 @@ mix /= np.abs(mix).max() + 1e-6
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", f"{WORK}/mix.wav"], input=(mix * 0.8).astype(np.float32).tobytes(), check=True)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/mix.wav", "-filter_complex",
     "[1:a]loudnorm=I=-14:TP=-1.5:LRA=9,aresample=48000,asetpts=N/SR/TB,alimiter=limit=0.8:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
-    "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", "-shortest", OUT], check=True)
+    "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-cutoff", "18000", "-ar", "48000", "-movflags", "+faststart", "-shortest", OUT], check=True)
 print("done", OUT, flush=True)
