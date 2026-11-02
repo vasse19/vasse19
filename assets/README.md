@@ -6,6 +6,9 @@
 |---|---|---|
 | `transitions/burn-transition-12.mp4` | « Burn Transition » (lumière qui brûle), 0,67 s, 2560×1440, avec son | fusion « screen » ; pic lumineux à l'image 11 (0,37 s), ensuite noir |
 | `sfx/riser-metallic-transition.mp3` | « SFX – Riser Metallic Transition », montée de suspense, 5,3 s | pic à 2,95 s : le caler sur la grosse révélation |
+| `sfx/cash-ding.mp3` | clochette de caisse « ding » (son « matricula »), 2,5 s | pic à 0,4 s : à caler sur un chiffre, un prix, « 140 MILLIONS » ; gain 0,5–0,6 |
+| `sfx/money-counter.mp3` | compteur de billets qui défilent, 4,9 s | partie régulière dès 0,6 s ; sous un compteur d'argent, coupé à la longueur voulue avec fondu ; gain 0,9 |
+| `sfx/goal-crowd.mp3` | foule qui explose sur un but, 2,7 s | pic à 0,5 s ; sur un but, une célébration, une grosse annonce sport ; gain 0,3–0,45 sous la voix |
 | `sfx/synth-whoosh.wav` | whoosh de coupe (bruit rose filtré) | gain 0,1–0,25 |
 | `sfx/synth-hit.wav` | impact grave 52 Hz pour les titres 3D | gain 0,45 |
 | `sfx/synth-click.wav` | clic de machine à écrire | gain 0,25, un par lettre |

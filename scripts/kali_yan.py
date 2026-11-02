@@ -418,6 +418,13 @@ for t0, txt, cps in [(R(23.84), "LE BUT D'HIER", 14), (R(32.40), "1 AN DE PRO", 
     for j, ch in enumerate(txt):
         if ch != " ": place(click, t0 + j / cps, 0.25)
 place(riser, R(24.32) - RISER_PEAK, 0.5)
+# his sound effects (assets/sfx): bills counting under the counter, cash ding on « 140 MILLIONS », crowd on the goal
+money = load(os.path.join(LIB, "sfx/money-counter.mp3"))[int(0.6 * SR):]
+money = money[:int((R(6.18) - R(4.74)) * SR)].copy(); money *= np.minimum(1, (len(money) - np.arange(len(money))) / (0.12 * SR)).astype(np.float32)
+place(money, R(4.74), 0.9)
+place(load(os.path.join(LIB, "sfx/cash-ding.mp3")), R(6.18) - 0.25, 0.55)
+crowd = load(os.path.join(LIB, "sfx/goal-crowd.mp3"))
+place(crowd, R(23.50) + 1.4, 0.45); place(crowd, R(43.40) + 0.2, 0.3)
 place(riser, R(38.76) - RISER_PEAK, 0.5)
 BURN_PEAK = 11 / FPS
 BURN_AT = [R(3.58), R(23.50), R(27.30), R(38.70), R(43.40), R(48.90)]
