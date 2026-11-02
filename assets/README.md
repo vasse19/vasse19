@@ -12,6 +12,7 @@
 | `sfx/synth-whoosh.wav` | whoosh de coupe (bruit rose filtré) | gain 0,1–0,25 |
 | `sfx/synth-hit.wav` | impact grave 52 Hz pour les titres 3D | gain 0,45 |
 | `sfx/synth-click.wav` | clic de machine à écrire | gain 0,25, un par lettre |
+| `backgrounds/grid-paper-red.png`, `grid-paper-blue.png` | grille papier rouge / bleue plein écran 1080×1920, tirée de ses bandeaux papier | fonds d'écrans texte, en alternance avec le dégradé rouge et le noir quadrillé (`kali_fx.bg('paper_red'|'paper_blue')`, `bg_for(n)`) |
 | `backgrounds/red-gradient.mp4` | « Copy of Red », dégradé rouge animé, 1080×1920, 12,6 s | fond des écrans texte façon Kali Muscle (en boucle), avec grille et étincelles |
 | `overlays/torn-paper-banner-red.mp4` | bandeau papier déchiré, grille rouge, sur fond vert, 1080×1920, 25,5 s, muet | incrustation `colorkey=0x1DDA0B:0.25:0.08` ; le papier arrive en se dépliant (0–0,3 s), couvre le haut jusqu'à y ≈ 640 ; vers 9,8 s la grille passe au noir. Zone pour un titre néon |
 | `overlays/torn-paper-banner-blue.mp4` | même bandeau, grille bleue | idem |

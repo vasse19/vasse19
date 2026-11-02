@@ -97,6 +97,12 @@ Reference `kadja_ou_est_il.mp4`. No face-cam: every moment has a scene (photos, 
 along at y 1660, his Monsieur Vass logo top-left pulsing with his voice, a waveform under the captions, burns at
 chapter changes, 3D hook/cards/end card. Same transcript workflow (send him the numbered lines to correct first).
 
+## Backgrounds: vary them
+
+He asked (2026-11-02) to vary the grids from time to time: alternate scene backgrounds between his red gradient,
+the black grid, and his grid papers red / blue (`assets/backgrounds/grid-paper-*.png`, `kali_fx.bg_for(scene_index)`),
+and use the torn-paper banners now and then as a header. Never the same background for three scenes in a row.
+
 ## Watermarks on other people's clips
 
 He asked to blur them: blur the TikTok zones in the source frame before cropping and **credit the account on screen**
