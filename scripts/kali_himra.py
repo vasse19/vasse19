@@ -59,6 +59,11 @@ while i < len(keep):
         else: keep[i:i + 3] = True; keep[max(j - 3, i):j] = True
         i = j
     else: i += 1
+# blanks and « euh » between words (fillers are not transcribed): cut the gap, 0.06 s kept after / 0.05 s before
+for a_, b_ in zip(words, words[1:]):
+    if any(ch.isdigit() for ch in a_["w"]): continue          # spoken numbers last longer than their digits
+    e_ = a_["s"] + 0.10 + 0.06 * len(a_["w"].strip(",.?!…"))
+    if b_["s"] - e_ >= 0.25 and a_["s"] < 94.2: keep[int((e_ + 0.06) / 0.02):int((b_["s"] - 0.05) / 0.02)] = False
 keep[int(94.2 / 0.02):] = True                       # « prenez vos places » + sign-off whole
 for a0, b0 in DROP: keep[int(a0 / 0.02):int(b0 / 0.02)] = False
 runs = []
@@ -164,7 +169,8 @@ AFFS = cover_card(f"{WORK}/affiche.jpg", 640, (255, 40, 50))
 ZEN = cover_card(f"{WORK}/zenith.jpg", 680, (255, 210, 150))
 CROWN = cover_card(f"{WORK}/couronne.jpg", 760, (255, 190, 60))
 STEXT = cover_card(f"{WORK}/stade_ext.jpg", 960, (255, 140, 40))
-SINT = cover_card(f"{WORK}/stade_int.jpg", 960, (40, 230, 110))
+ABUJA = cover_card(f"{WORK}/abuja.jpg", 900, (40, 230, 110))
+ACCOR = cover_card(f"{WORK}/accor.jpg", 900, (90, 140, 255))
 ADI = cover_card(f"{WORK}/adidas.jpg", 920, (255, 255, 255))
 CUT_IMG = glow_rgba(rgba_file(f"{WORK}/himra_cut.png", 640), (255, 255, 255), 18, 1.0)
 def flag(kind):
@@ -303,11 +309,12 @@ def draw_scene(name, t, k):
             paste(img, im, W / 2, 1450, popk(t, t2) if t >= t2 else 1.0)
             stack(img, t, [(t1, "PLACES", WHT)], 110, 1640, 0)
     elif name == "nigeria":
-        paste(img, SINT, W / 2, 960, settle(k))
-        if t >= R(24.50): paste(img, FLAG_NG, W / 2, 330, 1.2 * popk(t, R(24.50)))
-        stack(img, t, [(R(24.50), "AU NIGERIA", GRN)], 110, 560, 0)
-        tw(img, t, "abuja", 150, WHT, 1420)
-        stack(img, t, [(R(26.90), "MÊME CAPACITÉ", YEL)], 120, 1600, 0)
+        if t >= R(24.50): paste(img, FLAG_NG, W / 2, 270, popk(t, R(24.50)))
+        stack(img, t, [(R(24.50), "AU NIGERIA", GRN)], 110, 470, 0)
+        if t < R(25.62): stack(img, t, [(R(25.06), "UN AUTRE STADE", WHT)], 130, 960, 0)
+        else: paste(img, ABUJA, W / 2, 1000, settle(t - R(25.62)))
+        tw(img, t, "abuja", 150, WHT, 1490)
+        stack(img, t, [(R(26.90), "MÊME CAPACITÉ", YEL)], 120, 1650, 0)
     elif name == "jeune":
         paste(img, CROWN, W / 2, 1050, settle(k))
         stack(img, t, [(R(30.64), "UN ARTISTE", WHT), (R(32.63), "DE 28 ANS", YEL)], 130, 230, 160)
@@ -318,9 +325,10 @@ def draw_scene(name, t, k):
         stack(img, t, [(R(49.97), "UN CONCERT À", WHT)], 95, 390, 0)
         tw(img, t, "adidas", 150, YEL, 1480)
     elif name == "accor":
-        stack(img, t, [(R(54.21), "QUELQUES ANNÉES", WHT), (R(55.09), "PLUS TARD", WHT)], 120, 380, 150)
-        tw(img, t, "accor", 180, RED, 860)
-        stack(img, t, [(R(57.25), "QUAND IL AURA", WHT), (R(57.58), "SON PUBLIC", YEL)], 130, 1250, 165)
+        stack(img, t, [(R(54.21), "QUELQUES ANNÉES", WHT), (R(55.09), "PLUS TARD", WHT)], 110, 260, 140)
+        if t >= R(56.29): paste(img, ACCOR, W / 2, 870, settle(t - R(56.29)))
+        tw(img, t, "accor", 170, RED, 1340)
+        stack(img, t, [(R(57.25), "QUAND IL AURA", WHT), (R(57.58), "SON PUBLIC", YEL)], 110, 1510, 145)
     elif name == "europe":
         stack(img, t, [(R(60.21), "ET MÊME", WHT), (R(61.17), "DES CONCERTS", YEL)], 130, 380, 165)
         if t >= R(61.89): paste(img, FLAG_CH, 300, 900, popk(t, R(61.89)))
