@@ -322,7 +322,7 @@ def draw_scene(name, t, k):
         tw(img, t, "accor", 180, RED, 860)
         stack(img, t, [(R(57.25), "QUAND IL AURA", WHT), (R(57.58), "SON PUBLIC", YEL)], 130, 1250, 165)
     elif name == "europe":
-        stack(img, t, [(R(61.17), "DES CONCERTS", WHT)], 130, 420, 0)
+        stack(img, t, [(R(60.21), "ET MÊME", WHT), (R(61.17), "DES CONCERTS", YEL)], 130, 380, 165)
         if t >= R(61.89): paste(img, FLAG_CH, 300, 900, popk(t, R(61.89)))
         if t >= R(62.21): paste(img, FLAG_BE, 780, 900, popk(t, R(62.21)))
         stack(img, t, [(R(61.89), "SUISSE", WHT)], 90, 1110, 0)
