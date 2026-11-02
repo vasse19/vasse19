@@ -39,11 +39,12 @@ NOCAP_SRC = [(52.37, 54.0)]   # second arena name unclear: audio kept, no captio
 
 # ---------- jump cuts ----------
 DROP = [(27.80, 29.20),   # « Et comment dire par rapport à ça, »
-        (39.58, 40.47),   # « Pour moi, j'ai bien dit, »
+        (39.58, 40.42),   # « Pour moi, j'ai bien dit, »
         (58.10, 58.82),   # « bien, bien, »
         (64.72, 65.53),   # second « je pense que ça va le faire, »
         (76.98, 78.50),   # « et surtout surtout »
-        (80.00, 80.33)]   # second « peut-être »
+        (80.00, 80.27),   # second « peut-être »
+        (63.05, 63.68)]   # « euh » (heard as « Et ») before « je pense que ça va le faire »
 def dropped(t): return any(a <= t < b for a, b in DROP)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-ac", "1", "-ar", "16000", f"{WORK}/edl.wav"], check=True)
 au, sr = sf.read(f"{WORK}/edl.wav"); au = au[:int(END * sr)]; hop = int(0.02 * sr)
