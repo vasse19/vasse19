@@ -97,6 +97,13 @@ Reference `kadja_ou_est_il.mp4`. No face-cam: every moment has a scene (photos, 
 along at y 1660, his Monsieur Vass logo top-left pulsing with his voice, a waveform under the captions, burns at
 chapter changes, 3D hook/cards/end card. Same transcript workflow (send him the numbered lines to correct first).
 
+## Split-screen interview → Short: `scripts/kali_split.py`
+
+Reference `famille_et_business_short.mp4`: his interviews arrive as a 1080×1920 top/bottom split (positions may swap at
+a cut). Keep both halves, cut to the best lines (~45 s, no repeats), name tags in the corners (« LE BIG VASS » in
+yellow, guest in white), neon overlays and captions on the seam (y 960), 3D hook + conclusion, then an end screen
+« LA SUITE SUR YOUTUBE / LIEN EN BIO » when the full version is on YouTube.
+
 ## Backgrounds: vary them
 
 He asked (2026-11-02) to vary the grids from time to time: alternate scene backgrounds between his red gradient,
