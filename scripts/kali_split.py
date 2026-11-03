@@ -99,7 +99,7 @@ OVER = [  # (start, end, draw) over the dimmed split screen, centred on the seam
     (R(44.90), R(48.95), lambda img, t: stack(img, t, [(R(44.96), "L'AMOUR", WHT), (R(45.36), "AUTHENTIQUE", RED)], 170, 880, 200)),
 ]
 def over_at(t): return [o for o in OVER if o[0] <= t < o[1]]
-TAGS = lambda t, src_t: (("LE BIG VASS", 0), ("L'ARTISTE", 1)) if src_t < SWAP else (("L'ARTISTE", 0), ("LE BIG VASS", 1))
+TAGS = lambda t, src_t: (("LE BIG VASS", 0), ("SWEET SAVAGE", 1)) if src_t < SWAP else (("SWEET SAVAGE", 0), ("LE BIG VASS", 1))
 
 # ---------- captions ----------
 def ts(t): return f"{int(t//3600)}:{int(t%3600//60):02d}:{t%60:05.2f}"
