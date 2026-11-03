@@ -27,11 +27,12 @@ ren(0.32, "team,"); ren(0.96, "Vass"); ren(5.06, "release"); ren(5.62, "party");
 ren(10.20, "« Black"); ren(10.60, "Ops »."); ren(14.38, "release"); ren(14.78, "party."); ren(17.10, "d'ailleurs,")
 ren(28.24, "l'album"); ren(28.56, "« Black Ops »,"); ren(33.10, "le"); ren(33.18, "son"); ren(33.66, "Kadja,")
 ren(34.14, "« Hamed"); ren(34.30, "Chala ».")
+ren(32.06, "THB,"); ren(32.62, "« Deux"); ren(32.78, "Mondes »,"); ren(37.10, "Yjick.")
 words = [w for w in words if w["s"] < END]
 for i, w in enumerate(words):
     nxt = words[i + 1]["s"] if i + 1 < len(words) else END
     w["e"] = min(nxt, w["s"] + 0.12 + 0.065 * len(w["w"]))
-NOCAP_SRC = [(31.9, 33.05), (36.40, 37.40), (41.70, END)]   # unclear names; sign-off under the end card
+NOCAP_SRC = [(36.40, 36.60), (41.70, END)]   # « appelé » (title not confirmed); sign-off under the end card   # unclear names; sign-off under the end card
 
 # ---------- jump cuts ----------
 DROP = []
@@ -183,7 +184,21 @@ def row(img, t, t0, ch, text, y, col=(255, 255, 255), x=130, size=112):
     paste(img, emoji(ch, int(140 * s)), x, y)
     im, pad = neon(text, size, col); paste(img, im, x + 100 + im.shape[1] / 2 - pad, y, 1.0, min((t - t0) / 0.08, 1))
 from kali_fx import bg as fxbg                     # his grid papers (vary the backgrounds)
-PHIL = cover_card(f"{WORK}/philipayne.jpg", 620, (255, 255, 255))
+PHIL = cover_card(f"{WORK}/phil_flyer_crop.jpg", 700, (255, 255, 255))
+FLYER = cover_card(f"{WORK}/flyer.jpg", 560, (255, 40, 50))
+THB = cover_card(f"{WORK}/thb.jpg", 520, (90, 170, 255))
+YJICK = cover_card(f"{WORK}/yjick.jpg", 960, (255, 255, 255))
+CLIP = (f"{WORK}/clip.mov", "crop=iw:ih:0:0")      # his vertical teaser of « Deux Mondes » (no watermark)
+_vc = {}
+def vclip(key, path, vf, src_t):
+    st = _vc.get(key)
+    if st is None:
+        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(src_t), "-i", path, "-an", "-vf", f"{vf},scale={W}:{H},eq=contrast=1.05:saturation=1.08",
+                              "-r", str(FPS), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
+        st = _vc[key] = {"p": p, "last": None}
+    buf = st["p"].stdout.read(W * H * 3)
+    if len(buf) == W * H * 3: st["last"] = np.frombuffer(buf, np.uint8).reshape(H, W, 3).astype(np.float32) / 255
+    return st["last"].copy()
 BOPS = cover_card(f"{WORK}/blackops.jpg", 820, (120, 200, 120))
 KADJ = cover_card(f"{WORK}/kadja.jpg", 700, (255, 60, 60))
 def flag_fr():
@@ -260,7 +275,9 @@ SCENES = [
     (R(7.86), R(11.20), "bops", False),
     (R(15.30), R(21.28), "ticket", False),
     (R(27.15), R(31.95), "poulet", False),
-    (R(31.95), R(35.00), "kadja", False),
+    (R(31.95), R(33.05), "thb", False),
+    (R(33.05), R(35.00), "kadja", False),
+    (R(35.00), R(37.85), "yjick", False),
 ]
 def scene_at(t):
     for s in SCENES:
@@ -284,7 +301,14 @@ def over_at(t): return [o for o in OVER if o[0] <= t < o[1]]
 def popk(t, t0): return 1 + 0.3 * max(0, 1 - max(t - t0, 0) / 0.12) ** 2
 def settle(k): return (1.1 - 0.1 * min(k / 0.3, 1) ** 0.4) * (1 + 0.03 * k)
 def draw_scene(name, t, k):
-    kind = {"france": "paper_blue", "bops": "black", "ticket": "paper_red", "poulet": "black", "kadja": "red"}[name]
+    if name == "poulet":
+        img = vclip("clip", *CLIP, 8.0) * 0.8
+        stack(img, t, [(R(28.24), "L'ALBUM BLACK OPS", WHT), (R(30.02), "DU BON POULET", YEL)], 120, 260, 150)
+        for t0, x in ((R(30.42), 230), (R(30.60), 850)):
+            if t >= t0: paste(img, emoji("🍗", 190), x, 1540, popk(t, t0))
+        if t >= R(30.80): paste(img, emoji("🔥", 190), W / 2, 1560, popk(t, R(30.80)))
+        return img
+    kind = {"france": "paper_blue", "bops": "black", "ticket": "paper_red", "thb": "paper_red", "kadja": "red", "yjick": "paper_blue"}[name]
     img = fxbg(kind, t) if kind.startswith("paper") else bg(kind, t)
     if name == "france":
         paste(img, PHIL, W / 2, 1150, settle(k))
@@ -295,16 +319,18 @@ def draw_scene(name, t, k):
         stack(img, t, [(R(8.44), "IL Y A QUELQUES JOURS", WHT)], 100, 260, 0)
         typewriter(img, t, R(10.20), "BLACK OPS", 170, GRN, 1500, 12)
     elif name == "ticket":
-        stack(img, t, [(R(15.34), "LA BILLETTERIE", WHT), (R(16.54), "EST DISPONIBLE", WHT)], 130, 380, 160)
-        if t >= R(15.50): paste(img, emoji("🎟️", 300), W / 2, 820, popk(t, R(15.50)))
-        stack(img, t, [(R(17.94), "GRATUIT", GRN)], 260, 1180, 0)
-        stack(img, t, [(R(18.90), "PROFITEZ AU MAX", YEL)], 110, 1450, 0)
-    elif name == "poulet":
-        paste(img, BOPS, W / 2, 920, 0.85 * settle(k))
-        stack(img, t, [(R(28.24), "L'ALBUM BLACK OPS", WHT), (R(30.02), "DU BON POULET", YEL)], 120, 260, 150)
-        for t0, x in ((R(30.42), 230), (R(30.60), 850)):
-            if t >= t0: paste(img, emoji("🍗", 190), x, 1540, popk(t, t0))
-        if t >= R(30.80): paste(img, emoji("🔥", 190), W / 2, 1560, popk(t, R(30.80)))
+        paste(img, FLYER, W / 2, 1020, settle(k))
+        stack(img, t, [(R(15.34), "LA BILLETTERIE", WHT), (R(16.54), "EST DISPONIBLE", WHT)], 110, 210, 135)
+        if t >= R(17.94): paste(img, emoji("🎟️", 200), 170, 1600, popk(t, R(17.94)))
+        stack(img, t, [(R(17.94), "GRATUIT", GRN)], 230, 1620, 0)
+        stack(img, t, [(R(18.90), "PROFITEZ AU MAX", YEL)], 100, 1800, 0)
+    elif name == "thb":
+        paste(img, THB, W / 2, 1040, settle(k))
+        stack(img, t, [(R(32.06), "LE SON AVEC THB", WHT)], 110, 260, 0)
+        typewriter(img, t, R(32.62), "« DEUX MONDES »", 140, YEL, 1650, 16)
+    elif name == "yjick":
+        paste(img, YJICK, W / 2, 960, settle(k))
+        stack(img, t, [(R(35.02), "ENSUITE", WHT), (R(36.86), "LE SON AVEC YJICK", YEL)], 120, 420, 150)
     elif name == "kadja":
         paste(img, KADJ, W / 2, 1060, settle(k))
         stack(img, t, [(R(33.10), "LE SON AVEC KADJA", WHT)], 110, 260, 0)
@@ -329,7 +355,7 @@ def punch(t0, amt, hold=0.3, rel=0.45):
     r = np.clip((ft - t0 - hold) / rel, 0, 1); r = r * r * (3 - 2 * r)
     return amt * a * (1 - r)
 EMPH_RED = {"gratuit", "ticket", "hâte", "places"}
-EMPH_WHITE = {"philipayne", "black", "ops", "kadja", "hamed", "chala", "vendredi", "6", "novembre", "france", "release", "party"}
+EMPH_WHITE = {"philipayne", "black", "ops", "kadja", "hamed", "chala", "vendredi", "6", "novembre", "france", "release", "party", "thb", "deux", "mondes", "yjick"}
 for w in words:
     if key(w) in EMPH_RED: z += punch(w["s"], 0.1)
 z += punch(R(23.08), 0.14, 0.6, 0.4)
@@ -397,7 +423,7 @@ for c in CARDS: place(hit, c[0], 0.45); place(whoosh, c[0] - 0.25, 0.2)
 place(hit, R(23.08), 0.45)
 for t0 in (7.06, 15.50, 23.88, 30.42, 30.80, 39.72): place(whoosh, R(t0) - 0.12, 0.15); place(hit, R(t0), 0.15)
 place(load(os.path.join(LIB, "sfx/cash-ding.mp3")), R(17.94) - 0.25, 0.5)        # « GRATUIT »
-for t0, txt, cps in [(R(2.96), "VENDREDI 6 NOVEMBRE", 18), (R(10.20), "BLACK OPS", 12), (R(34.14), "HAMED CHALA", 14)]:
+for t0, txt, cps in [(R(2.96), "VENDREDI 6 NOVEMBRE", 18), (R(10.20), "BLACK OPS", 12), (R(34.14), "HAMED CHALA", 14), (R(32.62), "« DEUX MONDES »", 16)]:
     for j, ch in enumerate(txt):
         if ch != " ": place(click, t0 + j / cps, 0.25)
 place(riser, R(17.94) - RISER_PEAK, 0.45)

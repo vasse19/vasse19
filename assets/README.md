@@ -33,6 +33,7 @@
 | `extraits/musique/dopelym-live-afrique.mp4` | MUSIQUE | Dopelym en live en Afrique (foule, fumigènes), 0–20 s ; filigrane TikTok : recadrer 15 % de chaque côté |
 | `extraits/musique/dopelym-clip-voiture.mp4` | MUSIQUE | Extrait de clip de Dopelym (voitures, lui dans la voiture), 0–22 s |
 | `extraits/musique/kadja-freestyle-kordial-3.mp4` | MUSIQUE | Teaser carré 576×576 du clip « Freestyle Kordial 3 » de Kadja, titre à 11–13,5 s ; filigrane @kadjaofficiel en haut à gauche puis en bas à droite (flouter + créditer) |
+| `extraits/musique/philipayne-thb-deux-mondes.mov` | MUSIQUE | Teaser vertical 720×1280 de « Deux Mondes » (Philipayne × THB), titre à 5–7 s, « disponible mercredi 18h » à 15 s ; pas de filigrane |
 | `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
 | `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
 | `extraits/sport/yan-diomande-but-montage.mov` | SPORT | Montage du but de Yan Diomandé (Real Madrid, n°25) : frappe 0,6–4 s, célébration 6 s, gros plans 19–22 s ; filigrane TikTok : recadrer à 78 % |
