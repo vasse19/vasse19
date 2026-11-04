@@ -82,8 +82,7 @@ def draw(t):
     else:                                                    # end card: presented by Monsieur Vass
         img = bg("red", t) * 0.7
         paste(img, LOGO_L, W / 2, 380, 0.85 + 0.15 * min(k / 0.25, 1))
-        stack(img, t, [(20.8, "PRÉSENTÉ PAR", WHT), (21.1, "LE BIG VASS", YEL)], 100, 700, 125)
-        paste(img, F_PHIL, W / 2, 1290, 0.62 * settle(k))
+        paste(img, F_PHIL, W / 2, 1150, 0.7 * settle(k))
         stack(img, t, [(21.7, "RÉSERVE TA PLACE", WHT), (22.2, "LIEN EN BIO", GRN)], 90, 1730, 115)
     if k < 0.06 and s > 0: img = np.clip(img + (0.06 - k) / 0.06 * 0.7, 0, 1)
     if kind != "end": paste(img, LOGO_S, 125, 125, 1.0)      # his logo on every shot
