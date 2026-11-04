@@ -10,6 +10,16 @@ showreels and chapter cards are organised around them; classify every video or c
 podcast with a guest; topics are rap, music culture, celebrities, sport (he supports Chelsea).
 Sign-off: « C'était le Big Vass pour vous servir ».
 
+## What works on his TikTok (@monsieurvass19, stats 6 oct – 2 nov 2026)
+
+118.7 K followers; 28 days: 2.3 M views, 993 K viewers of whom 507 K new, 86 % from For You. Viewers: Côte d'Ivoire
+26.5 %, France 25 %, USA 6.8 %, Togo 6.4 % — but followers are only 5.4 % French: French viewers watch without following.
+Top 7 (68–141 K views each) are all **reaction videos**: his face with headphones on top, the clip below, one
+first-person hook line on the cover (« Écoute le beat seulement », « J'avais appris que… », « Mbappé sera Ballon d'or »,
+« L'un des meilleurs teaser du rap français », « Les gens pensent que les artistes me payent en secret… »). Topics mix
+Ivorian music, French rap, US rap and football. So: hook = his own short first-person sentence (curiosity / emotion),
+reaction layout when a clip is the subject, sport reactions are worth more of the schedule, ask to follow in the video.
+
 ## Workflow
 
 1. **Analyse first** when asked « analyse la vidéo »: specs, loudness (`hyperframes audio <file> --json`),
