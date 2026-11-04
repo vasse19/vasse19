@@ -107,6 +107,13 @@ Reference `kadja_ou_est_il.mp4`. No face-cam: every moment has a scene (photos, 
 along at y 1660, his Monsieur Vass logo top-left pulsing with his voice, a waveform under the captions, burns at
 chapter changes, 3D hook/cards/end card. Same transcript workflow (send him the numbered lines to correct first).
 
+## « Monsieur Vass réagit » (his best format): `scripts/kali_react.py`
+
+Reference `reaction_qualite_quantite.mp4`. His source is already composed (face-cam y 0–690, clip below, often 60 fps
+→ extract at fps=30). Keep the layout; add his own first-person hook line in a white header box (≤ 1040 px wide, all
+video long), neon captions on the seam, neon overlays + emoji on the clip, « ABONNE-TOI POUR LA SUITE » mid-video,
+short end screen « ABONNE-TOI / LE BIG VASS ». No 3D cards: the hook is his sentence.
+
 ## Split-screen interview → Short: `scripts/kali_split.py`
 
 Reference `famille_et_business_short.mp4`: his interviews arrive as a 1080×1920 top/bottom split (positions may swap at
