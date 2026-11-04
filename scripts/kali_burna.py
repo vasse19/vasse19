@@ -35,14 +35,14 @@ NOCAP = [(35.80, 37.90), (62.90, END)]          # « il est trop [loin ?] »; si
 hop = int(0.02 * sr16)
 db = 20 * np.log10(np.array([np.sqrt(np.mean(au[i:i + hop] ** 2)) for i in range(0, len(au) - hop, hop)]) + 1e-9)
 db = np.convolve(db, np.ones(3) / 3, mode="same")
-keep = db >= np.median(db) - 10
+keep = db >= np.median(db) - 7
 i = 0
 while i < len(keep):
     if not keep[i]:
         j = i
         while j < len(keep) and not keep[j]: j += 1
-        if (j - i) * 0.02 < 0.16: keep[i:j] = True
-        else: keep[i:i + 3] = True; keep[max(j - 3, i):j] = True
+        if (j - i) * 0.02 < 0.10: keep[i:j] = True
+        else: keep[i:i + 2] = True; keep[max(j - 2, i):j] = True
         i = j
     else: i += 1
 keep[int(62.9 / 0.02):] = True
