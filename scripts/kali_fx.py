@@ -74,9 +74,28 @@ gridm[::G, :] = 1; gridm[:, ::G] = 1
 gridm = cv2.GaussianBlur(gridm, (0, 0), 0.8) * 1.6
 _rng = np.random.default_rng(7)
 EMB = np.c_[_rng.uniform(0, W, 160), _rng.uniform(0, H, 160), _rng.uniform(40, 160, 160), _rng.uniform(1.5, 4.5, 160), _rng.uniform(0, 6.3, 160)]
+_paper = {}
+BG_KINDS = ["red", "paper_blue", "black", "paper_red"]      # vary scene backgrounds: cycle through his textures
+def bg_for(n, t):
+    """Background for the n-th scene of a video, so consecutive scenes alternate between his textures."""
+    return bg(BG_KINDS[n % len(BG_KINDS)], t)
 def bg(kind, t):
-    """His red gradient clip (or near-black) + a grid drifting down + rising embers."""
+    """His red gradient clip (or near-black) + a grid drifting down + rising embers;
+    'paper_red' / 'paper_blue': his torn-paper banner grid as a full-screen texture (slow drift, darkened for text)."""
     global _redbg
+    if kind.startswith("paper_"):
+        if kind not in _paper:
+            _paper[kind] = cv2.imread(os.path.join(LIB, f"backgrounds/grid-paper-{kind[6:]}.png")).astype(np.float32) / 255
+        tex = _paper[kind]; off = int(t * 14) % 35
+        img = np.roll(tex, off, axis=0) * 0.62
+        yy, xx = np.ogrid[:H, :W]
+        vig = np.clip(1.15 - np.sqrt(((xx - W / 2) / W) ** 2 + ((yy - H / 2) / H) ** 2) * 1.1, 0.35, 1).astype(np.float32)
+        lay = np.zeros((H, W), np.float32)
+        for x, y, v, r, ph in EMB:
+            yy2 = (y - v * t) % H; xx2 = x + 18 * np.sin(t * 1.3 + ph)
+            cv2.circle(lay, (int(xx2), int(yy2)), int(r), 0.5 + 0.5 * np.sin(t * 7 + ph), -1, cv2.LINE_AA)
+        lay = cv2.GaussianBlur(lay, (0, 0), 1.6)[..., None]
+        return np.clip(img * vig[..., None] + lay * np.array([0.2, 0.6, 1.0], np.float32) * 0.6, 0, 1)
     if kind == "red":
         if _redbg is None:
             rd = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(LIB, "backgrounds/red-gradient.mp4"), "-vf", "fps=30,scale=270:480",

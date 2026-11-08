@@ -10,6 +10,16 @@ showreels and chapter cards are organised around them; classify every video or c
 podcast with a guest; topics are rap, music culture, celebrities, sport (he supports Chelsea).
 Sign-off: « C'était le Big Vass pour vous servir ».
 
+## What works on his TikTok (@monsieurvass19, stats 6 oct – 2 nov 2026)
+
+118.7 K followers; 28 days: 2.3 M views, 993 K viewers of whom 507 K new, 86 % from For You. Viewers: Côte d'Ivoire
+26.5 %, France 25 %, USA 6.8 %, Togo 6.4 % — but followers are only 5.4 % French: French viewers watch without following.
+Top 7 (68–141 K views each) are all **reaction videos**: his face with headphones on top, the clip below, one
+first-person hook line on the cover (« Écoute le beat seulement », « J'avais appris que… », « Mbappé sera Ballon d'or »,
+« L'un des meilleurs teaser du rap français », « Les gens pensent que les artistes me payent en secret… »). Topics mix
+Ivorian music, French rap, US rap and football. So: hook = his own short first-person sentence (curiosity / emotion),
+reaction layout when a clip is the subject, sport reactions are worth more of the schedule, ask to follow in the video.
+
 ## Workflow
 
 1. **Analyse first** when asked « analyse la vidéo »: specs, loudness (`hyperframes audio <file> --json`),
@@ -37,6 +47,7 @@ Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/R
 
 - `assets/transitions/burn-transition-12.mp4`: his « Burn Transition » (peak frame 11, then black)
 - `assets/sfx/riser-metallic-transition.mp3`: suspense riser (peak 2.95 s), plus `synth-whoosh/hit/click.wav`
+- `assets/sfx/cash-ding.mp3` (peak 0.4 s, on money figures), `money-counter.mp3` (under number counters), `goal-crowd.mp3` (peak 0.5 s, goals and sport hype): placed as in `scripts/kali_yan.py`
 - `assets/backgrounds/red-gradient.mp4`: animated red gradient for neon text screens
 - `assets/overlays/torn-paper-banner-{red,blue}.mp4`: green-screen torn-paper header (key `colorkey=0x1DDA0B:0.25:0.08`, covers y < 640, turns black at 9.8 s): use for a neon title over the face-cam
 - `assets/overlays/eye-tear-paper.mp4`, `eye-shatter.mp4`, `hand-tear-paper.mp4` (key `0x40F800`), `tape-strip-flat/wide.mp4` (key `0x00AF3F`): collage-style reveals and tape to stick photos/covers
@@ -90,6 +101,37 @@ How a new Short is built (copy the closest script, change only its data blocks):
 - Finished files at the repo root with a short slug (`didib_triche_ou_strategie.mp4`, `dopelym_concert_paris.mp4`…);
   commit, push, send, then a French recap with what to check.
 
+## Video from a voice note: `scripts/kali_vocal.py`
+
+Reference `kadja_ou_est_il.mp4`. No face-cam: every moment has a scene (photos, covers, his clips), neon captions all
+along at y 1660, his Monsieur Vass logo top-left pulsing with his voice, a waveform under the captions, burns at
+chapter changes, 3D hook/cards/end card. Same transcript workflow (send him the numbered lines to correct first).
+
+## « Monsieur Vass réagit » (his best format): `scripts/kali_react.py`
+
+Reference `reaction_qualite_quantite.mp4`. His source is already composed (face-cam y 0–690, clip below, often 60 fps
+→ extract at fps=30). Keep the layout; add his own first-person hook line in a white header box (≤ 1040 px wide, all
+video long), neon captions on the seam, neon overlays + emoji on the clip, « ABONNE-TOI POUR LA SUITE » mid-video,
+short end screen « ABONNE-TOI / LE BIG VASS ». No 3D cards: the hook is his sentence.
+
+## Split-screen interview → Short: `scripts/kali_split.py`
+
+Reference `famille_et_business_short.mp4`: his interviews arrive as a 1080×1920 top/bottom split (positions may swap at
+a cut). Keep both halves, cut to the best lines (~45 s, no repeats), name tags in the corners (« LE BIG VASS » in
+yellow, guest in white), neon overlays and captions on the seam (y 960), 3D hook + conclusion, then an end screen
+« LA SUITE SUR YOUTUBE / LIEN EN BIO » when the full version is on YouTube.
+
+## Backgrounds: vary them
+
+He asked (2026-11-02) to vary the grids from time to time: alternate scene backgrounds between his red gradient,
+the black grid, and his grid papers red / blue (`assets/backgrounds/grid-paper-*.png`, `kali_fx.bg_for(scene_index)`),
+and use the torn-paper banners now and then as a header. Never the same background for three scenes in a row.
+
+## Watermarks on other people's clips
+
+He asked to blur them: blur the TikTok zones in the source frame before cropping and **credit the account on screen**
+(« SOURCE TIKTOK : @compte », small, bottom) — never remove the attribution entirely.
+
 ## Teaser (US-creator style): `scripts/teaser.py`
 
 Reference `teaser_le_big_vass.mp4` (30 s vertical; chapters MUSIQUE / CULTURE / SPORT, cold open on his
@@ -122,5 +164,10 @@ no heavy sharpening). 3D gold intro: `remotion/` composition `GoldIntro` (Remoti
   drifted lip sync by 0.8 s over 86 segments. Always compare the cut file's video and audio durations.
 - Audio mux: end the chain with `aformat=sample_fmts=s16:channel_layouts=stereo` before the AAC encoder; with float input a
   stereo source came out at +1.6 dBFS true peak despite the 0.75 limiter. Always check `ebur128=peak=true` (≤ -0.5 dBFS).
+  Also encode AAC with `-cutoff 18000`: his camera audio has hiss above 18 kHz that made the 192k AAC overshoot by
+  +3 dB (−3.3 dBFS wav → −0.3 dBFS mp4).
+- « Enlève les blancs + envoie les sous-titres pour qu'on corrige »: `scripts/cut_silences.py SRC words.json OUT.mp4 OUT.srt
+  --transpose --fixes fixes.json` → rotated, silences cut (frame-exact), −14 LUFS, plus `.srt` and a numbered `.txt`;
+  mark doubtful words as `[mot ?]` in the fixes.
 - Long-form captions: he prefers **keywords only** (pertinent words, names: « BALOO », « INCROYABLE »),
   not full subtitles; keep his own intro as is.
