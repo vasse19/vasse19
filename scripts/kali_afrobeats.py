@@ -65,7 +65,32 @@ for a_, b_ in zip(words, words[1:]):
     if any(ch.isdigit() for ch in a_["w"]): continue          # spoken numbers last longer than their digits
     e_ = a_["s"] + 0.10 + 0.06 * len(a_["w"].strip(",.?!…"))
     if b_["s"] - e_ >= 0.25 and a_["s"] < 70.0: keep[int((e_ + 0.06) / 0.02):int((b_["s"] - 0.05) / 0.02)] = False
-keep[int(70.0 / 0.02):] = True                       # « prenez vos places » + sign-off whole
+# breaths between sentences: quieter than the voice and without low frequencies (inhale noise). Between two words,
+# find where the voice of the first word really ends and where the next word really starts, and cut what lies between
+# when it holds a breath (or follows the end of a sentence).
+fr_ = au[:len(db) * hop].reshape(len(db), hop) * np.hanning(hop)
+sp_ = np.abs(np.fft.rfft(fr_, axis=1)) ** 2; fq_ = np.fft.rfftfreq(hop, 1 / sr)
+lfr = sp_[:, (fq_ > 80) & (fq_ < 1000)].sum(1) / (sp_.sum(1) + 1e-12)
+MED = np.median(db)
+voiced = (db > MED - 8) & (lfr > 0.6)
+loud = db > MED - 6
+BREATHS = []
+for a_, b_ in zip(words, words[1:]):
+    if a_["s"] >= 70.0: break
+    i0, i1 = int(a_["s"] / 0.02), int(b_["s"] / 0.02)
+    if i1 - i0 < 6: continue
+    v = np.nonzero(voiced[i0:i1])[0]
+    ve = i0 + (v[-1] + 1 if len(v) else 3)                     # end of the first word's voice
+    on = i1
+    while on > ve and loud[on - 1]: on -= 1                    # the next word's onset (consonants included)
+    c0, c1 = ve + 4, on - 3                                    # keep 0.08 s of tail, 0.06 s before the onset
+    if c1 - c0 < 5: continue                                   # under 0.1 s: leave it
+    seg = slice(c0, c1)
+    breath = np.sum((db[seg] > MED - 22) & (lfr[seg] < 0.65)) >= 4
+    if breath or a_["w"][-1] in ",.?!…":
+        keep[c0:c1] = False; BREATHS.append((round(c0 * 0.02, 2), round(c1 * 0.02, 2)))
+print(f"{len(BREATHS)} breaths / pauses cut, {sum(b - a for a, b in BREATHS):.1f}s", flush=True)
+keep[int(70.0 / 0.02):] = True                       # comment call + sign-off whole
 for a0, b0 in DROP: keep[int(a0 / 0.02):int(b0 / 0.02)] = False
 runs = []
 for k, v in enumerate(keep):
