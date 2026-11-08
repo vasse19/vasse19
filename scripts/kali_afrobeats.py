@@ -41,9 +41,9 @@ NOCAP_SRC = [(70.4, END)]   # comment call + sign-off: shown as a neon screen, A
 # ---------- jump cuts ----------
 DROP = [(8.05, 10.75),    # « Je ne sais pas ce qui s'est passé, mais… »
         (20.05, 24.15),   # « Tu avais des hits, tout ça, etc. Et comment vous dire ? »
-        (36.75, 37.65),   # second « je me pose des questions »
+        (36.75, 37.55),   # second « je me pose des questions »
         (55.95, 58.55),   # « pour ma part, pour ma part, je pense, parce que »
-        (64.95, 66.15),   # « Mais on vient. »
+        (64.95, 66.05),   # « Mais on vient. »
         (68.35, 69.95)]   # « mais sinon… Ah ! »
 def dropped(t): return any(a <= t < b for a, b in DROP)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-ac", "1", "-ar", "16000", f"{WORK}/edl.wav"], check=True)
@@ -167,7 +167,7 @@ def cover_card(path, width, rim):
     return glow_rgba(rgba, rim, 26, 1.1)
 from kali_fx import bg_for
 def card_set(names, width, rim): return [cover_card(f"{WORK}/{n}.jpg", width, rim) for n in names]
-WIRE = card_set(["wire", "wire_hl1"], 960, (140, 90, 255))
+WIRE = card_set(["wire", "wire_hl1"], 920, (140, 90, 255))
 OMAH = card_set(["omah", "omah_hl1", "omah_hl2"], 900, (255, 255, 255))
 ARTS = {"ayra": cover_card(f"{WORK}/ayra.jpg", 340, (255, 60, 80)), "asake": cover_card(f"{WORK}/asake.jpg", 340, (40, 230, 110)),
         "burna": cover_card(f"{WORK}/burna.jpg", 420, (255, 190, 60))}
@@ -276,8 +276,8 @@ def settle(k): return (1.1 - 0.1 * min(k / 0.3, 1) ** 0.4) * (1 + 0.03 * k)
 def hl_card(img, t, k, cards, times, y):
     """Article card; each time in `times` crossfades to the next highlighted version."""
     n = sum(t >= t0 for t0 in times)
-    paste(img, cards[n], W / 2, y, settle(k))
-    if n and t - times[n - 1] < 0.15: paste(img, cards[n - 1], W / 2, y, settle(k), 1 - (t - times[n - 1]) / 0.15)
+    paste(img, cards[n], W / 2, y, settle(min(k, 1.5)))
+    if n and t - times[n - 1] < 0.15: paste(img, cards[n - 1], W / 2, y, settle(min(k, 1.5)), 1 - (t - times[n - 1]) / 0.15)
 def name_tag(img, t, t0, txt, col, x, y):
     if t >= t0: im, _ = neon(txt, 64, col); paste(img, im, x, y, popk(t, t0))
 def draw_scene(name, t, k):
@@ -286,10 +286,10 @@ def draw_scene(name, t, k):
         for n_, (key_, x_, y_) in enumerate([("ayra", 250, 1420), ("burna", 540, 1360), ("asake", 830, 1420)]):
             paste(img, ARTS[key_], x_, y_, 0.85 * settle(k))
     elif name == "years":
-        tw(img, t, "years", 180, YEL, 520)
+        tw(img, t, "years", 140, YEL, 520)
         stack(img, t, [(R(16.3), "CHAQUE ANNÉE", WHT), (R(17.6), "DE NOUVELLES TÊTES", WHT), (R(19.4), "DES HITS", GRN)], 120, 900, 170)
     elif name == "grid":
-        stack(img, t, [(R(26.6), "IL Y A…", WHT)], 120, 260, 0)
+        stack(img, t, [(R(26.0), "IL Y A…", WHT)], 120, 260, 0)
         for key_, t0, x_, y_, lbl, col in [("ayra", 26.9, 290, 720, "AYRA STARR", WHT), ("asake", 27.6, 790, 720, "ASAKE", WHT),
                                           ("burna", 29.0, 540, 1330, "BURNA BOY", YEL)]:
             if t >= R(t0):
