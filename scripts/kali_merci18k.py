@@ -38,9 +38,9 @@ NOCAP_SRC = [(4.1, 4.95), (50.25, 50.95), (65.7, END)]   # unclear words: audio 
 
 # ---------- jump cuts ----------
 DROP = [(18.15, 18.58),   # second « pas régulier »
-        (22.15, 22.75),   # second « tous les jours »
+        (21.76, 22.17),   # first « tous les jours » (the second one is kept whole)
         (34.55, 37.25),   # « Non, c'est qu'en fait euh… vous êtes vraiment… vous êtes… »
-        (44.25, 44.90),   # second « je vous dois ça »
+        (43.78, 44.27),   # first « je vous dois ça » (the second one is kept whole)
         (58.42, 58.70),   # « de… »
         (61.95, 63.45)]   # « et ça tout change pas quoi » (unclear)
 def dropped(t): return any(a <= t < b for a, b in DROP)
