@@ -296,7 +296,7 @@ OVER = [
     (R(63.45), R(64.30), 0.15, True,
      lambda img, t: stack(img, t, [(R(63.5), "ON RESTE", WHT), (R(63.9), "ENSEMBLE", YEL)], 190, 600, 230)),
     (R(64.30), R(66.0), 0.45, False,
-     lambda img, t: stack(img, t, [(R(64.4), "DU CONTENU", WHT), (R(65.4), "ARRIVE", YEL), (R(65.5), "ABONNE-TOI", RED)], 160, 520, 200)),
+     lambda img, t: stack(img, t, [(R(64.4), "DU CONTENU", WHT), (R(64.9), "ARRIVE", YEL), (R(65.2), "ABONNE-TOI", RED)], 160, 520, 200)),
 ]
 def over_at(t): return [o for o in OVER if o[0] <= t < o[1]]
 
@@ -318,7 +318,7 @@ def draw_scene(name, t, k):
     if name == "hook":
         paste(img, PROFIL, W / 2, 1420, settle(k))
     elif name == "counter":
-        counter(img, t, R(13.7), R(14.5), 0, 18000, sp, 230, YEL, 560)
+        counter(img, t, R(13.0), R(14.5), 0, 18000, sp, 230, YEL, 560)
         stack(img, t, [(R(14.5), "ABONNÉS", WHT)], 130, 760, 0)
         stack(img, t, [(R(15.3), "MAIS MON CONTENU", WHT), (R(16.6), "PAS RÉGULIER", RED)], 130, 1150, 170)
     elif name == "autre":
@@ -424,7 +424,7 @@ place(hit, R(14.5), 0.45); place(hit, R(49.85), 0.45); place(hit, R(33.9), 0.35)
 for s0, txt, cps in TYPES.values():
     for j, ch in enumerate(txt):
         if ch != " ": place(click, R(s0) + j / cps, 0.25)
-place(riser, R(13.7) - RISER_PEAK, 0.55)
+place(riser, R(14.5) - RISER_PEAK, 0.55)
 place(riser, R(49.2) - RISER_PEAK, 0.55)
 BURN_PEAK = 11 / FPS
 BURN_AT = [R(12.95), R(28.30), R(48.65)]
