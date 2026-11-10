@@ -375,7 +375,7 @@ def draw_scene(name, t, k):
         paste(img, DUO, W / 2, 900, 0.85 * settle(k))
         stack(img, t, [(R(97.1), "LUI ET CHRIS BROWN", WHT), (R(98.4), "C'EST COMME ÇA", YEL)], 120, 1400, 160)
     elif name == "afsud":
-        stack(img, t, [(R(101.6), "CHRIS BROWN", WHT), (R(102.6), "EN AFRIQUE DU SUD", GRN)], 120, 300, 155)
+        stack(img, t, [(R(100.4), "CHRIS BROWN", WHT), (R(102.6), "EN AFRIQUE DU SUD", GRN)], 120, 300, 155)
         pop_at(img, t, 102.6, FLAG_ZA, W / 2, 720, 1.5)
         stack(img, t, [(R(104.5), "IL APPELLE DAVIDO", YEL)], 110, 1050, 0)
         tw(img, t, "stade", 150, WHT, 1300)
