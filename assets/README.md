@@ -5,6 +5,10 @@
 | Fichier | Quoi | Réglage |
 |---|---|---|
 | `transitions/burn-transition-12.mp4` | « Burn Transition » (lumière qui brûle), 0,67 s, 2560×1440, avec son | fusion « screen » ; pic lumineux à l'image 11 (0,37 s), ensuite noir |
+| `transitions/burn-transition-17.mp4` | « Burn Transition 17 best », brûlure orange plus longue, 1,3 s, 1920×1080 (16:9), avec son | fusion « screen » ; petit éclat à l'image 10 (0,33 s), **pic à l'image 19 (0,63 s)**, retombe jusqu'à 0,95 s. Format horizontal : tel quel en YouTube 16:9 ; en vertical, recadrer le centre (`scale=-2:1920,crop=1080:1920`) |
+| `transitions/red-flash-39.mp4` | flash de lumière **rouge-orangé** (« 39 »), 1,1 s, 1080×1920, avec son | fusion « screen » ; noir puis flash de l'image 15 à 20, **pic à l'image 17 (0,57 s)**, noir dès 0,8 s. Pour un changement de scène dans le style rouge de la chaîne |
+| `transitions/bw-flash-33.mp4` | flash **noir et blanc** (« BW Vert Transition 33 »), 10 images (0,42 s), 1080×1920 à 23,976 i/s, muet (converti du ProRes 4K) | fusion « screen » ; gris qui monte, **blanc plein des images 3 à 6 (0,13–0,25 s)** avec une forme noire, puis gris. Coupe franche et nerveuse ; à caler sur une coupe, avec un whoosh |
+| `transitions/light-flash-23.mp4` | flash de lumière **rose / blanc** (« Vert Transition 23 »), 10 images (0,42 s), 1080×1920 à 23,976 i/s, muet (converti du ProRes 4K) | fusion « screen » ; **pic à l'image 5 (0,21 s)**, éclairé des images 4 à 8. Plus doux que le Burn : pour une révélation de photo ou une scène émotion |
 | `sfx/riser-metallic-transition.mp3` | « SFX – Riser Metallic Transition », montée de suspense, 5,3 s | pic à 2,95 s : le caler sur la grosse révélation |
 | `sfx/cash-ding.mp3` | clochette de caisse « ding » (son « matricula »), 2,5 s | pic à 0,4 s : à caler sur un chiffre, un prix, « 140 MILLIONS » ; gain 0,5–0,6 |
 | `sfx/money-counter.mp3` | compteur de billets qui défilent, 4,9 s | partie régulière dès 0,6 s ; sous un compteur d'argent, coupé à la longueur voulue avec fondu ; gain 0,9 |
@@ -21,6 +25,8 @@
 | `overlays/hand-tear-paper.mp4` | **main qui traverse le papier** et se tend, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; 0–1,2 s ; pour « je vous tends la main », appel au soutien, un artiste qui débarque |
 | `overlays/tape-strip-flat.mp4` | **morceau de scotch** qui se colle, fond vert, 1080×1920, 5 s, muet | `colorkey=0x00AF3F:0.25:0.08` ; arrive en 0,3 s, zone x 369–710, y 863–1055 ; à poser sur le bord d'une photo ou d'une pochette (effet collage). Lire sans `-ss` avant l'entrée (seek = image vide) |
 | `overlays/tape-strip-wide.mp4` | scotch plus large et froissé | `colorkey=0x00AF3F:0.25:0.08` ; zone x 306–753, y 853–1070 ; idem |
+| `overlays/brush-circle.mov` | **cercle tracé au pinceau blanc** qui tourne (« 01068 »), fond noir, 1080×1920, 1,17 s (35 images) en boucle, avec son de pinceau | fusion « screen » ; le cercle occupe x 0–1080 au centre : réduire et poser sur un visage, un nom ou un chiffre à **entourer** (« regardez ça ») ; se lit en boucle |
+| `overlays/embers-motion14.mp4` | **braises orange** qui volent sur fond bleu nuit (« Motion14 »), 1080×1920, 3,7 s, muet | fusion « screen » (le fond sombre disparaît) : braises par-dessus une scène ou un titre, plus fortes vers 0,4–1 s ; ou en fond d'écran texte (en boucle) à la place du dégradé rouge |
 | `3d/lightning-white.png`, `lightning-orange.png`, `lightning-gradient.png`, `lightning-gold.png` | éclairs 3D (blanc, orange, dégradé violet, or), PNG transparents 2000×2000 | « pop » sur les mots forts (ex. « BOOM », « C'EST MORT »), en coin ou derrière un titre |
 | `3d/paper-peel-dark.png` | carte sombre au coin replié, PNG transparent | fond de carte pour un texte ou une pochette |
 
