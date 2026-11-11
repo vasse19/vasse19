@@ -25,7 +25,7 @@ def rm(t):
     global words; x = near(t); words = [w for w in words if w is not x]
 def add(t, txt): words.append({"w": txt, "s": t}); words.sort(key=lambda w: w["s"])
 rm(14.22); rm(42.04)
-ren(4.70, "GTA 6"); ren(12.54, "6,"); ren(14.72, "l'ADN,"); ren(15.44, "l'ADN,"); ren(16.96, "rap")
+ren(4.70, "GTA 6"); ren(12.54, "6,"); ren(14.72, "la DA,"); ren(15.44, "la DA,"); ren(16.96, "rap")
 ren(20.72, "GTA 6,"); rm(21.12); ren(23.90, "Games,"); rm(36.50); ren(36.96, "TikTok.")
 words = [w for w in words if w["s"] < END]
 for i, w in enumerate(words):
@@ -261,7 +261,7 @@ def draw_scene(name, t, k):
         typewriter(img, t, R(4.70), "GTA 6", 220, PURPLE, 330, 8)
         stack(img, t, [(R(5.74), "LA SEMAINE PROCHAINE", YEL)], 110, 1440, 0)
     elif name == "us":
-        stack(img, t, [(R(14.48), "C'EST DANS", WHT), (R(14.72), "L'ADN", YEL)], 170, 360, 200)
+        stack(img, t, [(R(14.48), "C'EST DANS", WHT), (R(14.72), "LA DA", YEL)], 170, 360, 200)
         if t >= R(16.96): paste(img, emoji("🇺🇸", 240), W / 2, 840, popk(t, R(16.96)))
         stack(img, t, [(R(16.96), "RAP US", WHT), (R(18.46), "MUSIQUE US", WHT), (R(19.42), "CULTURE US", RED)], 140, 1110, 170)
     elif name == "rockstar":
@@ -296,7 +296,7 @@ def punch(t0, amt, hold=0.3, rel=0.45):
     a = np.clip((ft - t0) / 0.07, 0, 1); a = a * a * (3 - 2 * a)
     r = np.clip((ft - t0 - hold) / rel, 0, 1); r = r * r * (3 - 2 * r)
     return amt * a * (1 - r)
-EMPH_RED = {"préparez-vous", "préparez-vous.", "fort", "gaming", "l'adn"}
+EMPH_RED = {"préparez-vous", "préparez-vous.", "fort", "gaming", "da"}
 EMPH_WHITE = {"gta", "6", "twitch", "tiktok", "rockstar", "games", "us", "18", "000", "abonnés", "live"}
 for w in words:
     if key(w) in EMPH_RED: z += punch(w["s"], 0.1)
