@@ -55,7 +55,8 @@ while i < len(keep):
     else: i += 1
 # blanks and « euh » between words (fillers are not transcribed): cut the gap, 0.06 s kept after / 0.05 s before
 for a_, b_ in zip(words, words[1:]):
-    if any(ch.isdigit() for ch in a_["w"]): continue          # spoken numbers last longer than their digits
+    w_ = a_["w"].strip(",.?!…")
+    if any(ch.isdigit() for ch in w_) or (len(w_) > 1 and w_.isupper()): continue   # numbers and acronyms (GTA = « G-T-A ») last longer than their letters
     e_ = a_["s"] + 0.10 + 0.06 * len(a_["w"].strip(",.?!…"))
     if b_["s"] - e_ >= 0.25 and a_["s"] < 44.5: keep[int((e_ + 0.06) / 0.02):int((b_["s"] - 0.05) / 0.02)] = False
 # breaths between sentences: quieter than the voice and without low frequencies (inhale noise). Between two words,
