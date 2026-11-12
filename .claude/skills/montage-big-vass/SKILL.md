@@ -47,7 +47,7 @@ Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/R
 
 - `assets/transitions/burn-transition-12.mp4`: his « Burn Transition » (peak frame 11, then black)
 - More transitions he supplied (screen blend, align the peak on the cut): `burn-transition-17.mp4` (16:9, longer orange burn, peak frame 19 = 0.63 s; crop the centre for vertical), `red-flash-39.mp4` (red flash, peak frame 17 = 0.57 s, with sound), `bw-flash-33.mp4` (black & white flash, full white frames 3–6 at 23.976 fps), `light-flash-23.mp4` (soft pink/white flash, peak frame 5 = 0.21 s). Vary them: not the same transition twice in a row
-- `assets/overlays/brush-circle.mov` (white brush circle on black, 1.17 s loop, screen blend: scale it down to circle a face, a name or a number) and `embers-motion14.mp4` (orange embers on dark blue, screen blend over a scene, or as a text background)
+- `assets/overlays/brush-circle.mov` (thick white paint ring, stop-motion, small hole: it covers what is under it, so use it big behind a title or as a flash, never to circle an object; to circle something draw an animated neon ellipse as in `kali_himra_crane.py`) and `embers-motion14.mp4` (orange embers on dark blue, screen blend over a scene, or as a text background)
 - `assets/sfx/riser-metallic-transition.mp3`: suspense riser (peak 2.95 s), plus `synth-whoosh/hit/click.wav`
 - `assets/sfx/cash-ding.mp3` (peak 0.4 s, on money figures), `money-counter.mp3` (under number counters), `goal-crowd.mp3` (peak 0.5 s, goals and sport hype): placed as in `scripts/kali_yan.py`
 - `assets/backgrounds/red-gradient.mp4`: animated red gradient for neon text screens
