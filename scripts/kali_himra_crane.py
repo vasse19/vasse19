@@ -335,7 +335,8 @@ def draw_scene(name, t, k):
             lay = np.zeros((H, W), np.float32)
             cv2.ellipse(lay, (500, 1255), (230, 190), -20, -90, -90 + 360 * k2, 1.0, 14, cv2.LINE_AA)
             g = np.clip(cv2.GaussianBlur(lay, (0, 0), 14) * 1.8, 0, 1)[..., None]
-            img[:] = img * (1 - np.maximum(g, lay[..., None])) + (np.array([0.2, 0.15, 1.0]) * g + lay[..., None]) * np.maximum(g, lay[..., None]) / np.maximum(np.maximum(g, lay[..., None]), 1e-4)
+            a_ = np.maximum(g, lay[..., None])                               # red glow (BGR) with a white core
+            img[:] = img * (1 - a_) + np.clip(np.array([0.25, 0.2, 1.0]) * g + lay[..., None], 0, 1) * a_
             stack(img, t, [(R(14.1), "SES LOCKS DANS UN SAC", YEL)], 90, 400, 0)
         stack(img, t, [(R(16.3), "ON N'A PAS VU SON CRÂNE", RED)], 85, 1780, 0)
     elif name == "options":
