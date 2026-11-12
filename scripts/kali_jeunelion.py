@@ -119,7 +119,32 @@ def scene(t, i):
     for a, b, n in SC:
         if a <= t < b: return a, n
     return SC[-1][0], SC[-1][2]
+# his two Jeune Lion clips (TikTok reposts 576x1024): watermark mid-left then low-right, both blurred, account credited
+WMB = ("split=3[wa][wb][wc];[wb]crop=200:190:0:420,boxblur=22:3[wl];[wc]crop=240:150:336:780,boxblur=22:3[wr];"
+       "[wa][wl]overlay=0:420[wx];[wx][wr]overlay=336:780,")
+_vj = {}
+def jclip(key, path, src_t):
+    st = _vj.get(key)
+    if st is None:
+        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(src_t), "-i", path, "-an", "-filter_complex",
+                              f"{WMB}scale={W}:{H},eq=contrast=1.05:saturation=1.08", "-r", str(FPS), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                             stdout=subprocess.PIPE)
+        st = _vj[key] = {"p": p, "last": None}
+    buf = st["p"].stdout.read(W * H * 3)
+    if len(buf) == W * H * 3: st["last"] = np.frombuffer(buf, np.uint8).reshape(H, W, 3).astype(np.float32) / 255
+    return st["last"].copy()
+def jcredit(img):
+    im, _ = neon("SOURCE TIKTOK : @JEUNELION13", 40, WHT); paste(img, im, W / 2, 1890, 1.0, 0.85)
 def draw(name, t, k):
+    if name == "album" and t >= R(17.70):
+        img = jclip("v1", f"{WORK}/v1.mov", 2.0) * 0.85
+        stack(img, t, [(R(17.70), "SON ALBUM", WHT)], 120, 230, 0)
+        typewriter(img, t, R(18.94), "BABYLONE BRÛLE", 140, GOLD, 1560, 24)
+        jcredit(img); return img
+    if name == "concert" and t >= R(24.32):
+        img = jclip("v2", f"{WORK}/v2.mp4", 17.6) * 0.85
+        stack(img, t, [(R(24.96), "C'ÉTAIT LE FEU", RED)], 150, 330, 0)
+        jcredit(img); return img
     kind = {"ep": "paper_blue", "details": "black", "album": "red", "concert": "paper_red", "card": "red", "end": "red"}[name]
     img = bg(kind, t) * (0.6 if name == "card" else 1.0)
     if name == "card":

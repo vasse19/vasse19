@@ -36,6 +36,7 @@
 | `extraits/musique/philipayne-thb-deux-mondes.mov` | MUSIQUE | Teaser vertical 720×1280 de « Deux Mondes » (Philipayne × THB), titre à 5–7 s, « disponible mercredi 18h » à 15 s ; pas de filigrane |
 | `extraits/musique/burna-boy-nfl-paris-halftime.mp4` | MUSIQUE | Burna Boy, mi-temps du match NFL à Paris, vertical 720×1280, 61 s, sans filigrane ; sur le terrain 22–30 s |
 | `extraits/musique/burna-boy-gbona-live.mp4` | MUSIQUE | « Gbona », live YouTube Music Nights, vertical 1080×1920, 60 s ; scène 12–16 s, flammes 40–48 s |
+| `extraits/musique/jeune-lion-wtfgo-1.mov`, `jeune-lion-wtfgo-2.mp4` | MUSIQUE | Teasers « WTFGO » de Jeune Lion (dragons, feu, Paris en ruines), 576×1024 ; filigrane @jeunelion13 à flouter (milieu gauche puis bas droite) + crédit |
 | `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
 | `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
 | `extraits/sport/yan-diomande-but-montage.mov` | SPORT | Montage du but de Yan Diomandé (Real Madrid, n°25) : frappe 0,6–4 s, célébration 6 s, gros plans 19–22 s ; filigrane TikTok : recadrer à 78 % |
