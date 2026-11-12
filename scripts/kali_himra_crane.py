@@ -333,7 +333,7 @@ def draw_scene(name, t, k):
         if t >= R(14.1):
             k2 = min((t - R(14.1)) / 0.35, 1.0)                          # neon circle drawn around the bag
             lay = np.zeros((H, W), np.float32)
-            cv2.ellipse(lay, (500, 1255), (230, 190), -20, -90, -90 + 360 * k2, 1.0, 14, cv2.LINE_AA)
+            cv2.ellipse(lay, (615, 1228), (215, 175), -20, -90, -90 + 360 * k2, 1.0, 14, cv2.LINE_AA)
             g = np.clip(cv2.GaussianBlur(lay, (0, 0), 14) * 1.8, 0, 1)[..., None]
             a_ = np.maximum(g, lay[..., None])                               # red glow (BGR) with a white core
             img[:] = img * (1 - a_) + np.clip(np.array([0.25, 0.2, 1.0]) * g + lay[..., None], 0, 1) * a_
