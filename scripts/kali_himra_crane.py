@@ -201,9 +201,9 @@ def play(frames, k, dim=0.85):
     fr = frames[min(int(k * FPS), len(frames) - 1)]
     return cv2.resize(fr, (W, H), interpolation=cv2.INTER_LINEAR).astype(np.float32) / 255 * dim
 # his brush-circle overlay (white stroke on black, 35-frame loop), screen-blended at half size
-_bc = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(LIB, "overlays", "brush-circle.mov"), "-vf", "fps=30,scale=540:960",
+_bc = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(LIB, "overlays", "brush-circle.mov"), "-vf", "fps=30,scale=880:1564",
                       "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
-BRUSH = np.frombuffer(_bc, np.uint8).reshape(-1, 960, 540, 3)
+BRUSH = np.frombuffer(_bc, np.uint8).reshape(-1, 1564, 880, 3)
 def screen_at(img, fr, cx, cy):
     h, w = fr.shape[:2]; x0, y0 = int(cx - w / 2), int(cy - h / 2)
     xa, ya, xb, yb = max(x0, 0), max(y0, 0), min(x0 + w, W), min(y0 + h, H)
@@ -297,7 +297,7 @@ def tw(img, t, name, size, col, y):
     s0, txt, cps = TYPES[name]; typewriter(img, t, R(s0), txt, size, col, y, cps)
 OVER = [
     (R(27.00), R(29.15), 0.15, True,
-     lambda img, t: stack(img, t, [(R(27.5), "ÇA ME FAIT", WHT), (R(28.0), "RIRE", YEL)], 200, 600, 240)),
+     lambda img, t: stack(img, t, [(R(27.2), "ÇA ME FAIT", WHT), (R(27.6), "RIRE", YEL)], 200, 600, 240)),
     (R(41.90), R(43.60), 0.45, False,
      lambda img, t: stack(img, t, [(R(42.7), "UN PEU DE", WHT), (R(43.1), "CHEVEUX ?", YEL)], 180, 600, 220)),
 ]
@@ -331,7 +331,7 @@ def draw_scene(name, t, k):
         paste(img, SAC, W / 2, 1060, settle(min(k, 1.5)))
         stack(img, t, [(R(12.5), "CETTE PHOTO", WHT)], 120, 260, 0)
         if t >= R(14.1):
-            screen_at(img, BRUSH[int((t - R(14.1)) * FPS) % len(BRUSH)], 625, 1260)
+            screen_at(img, BRUSH[int((t - R(14.1)) * FPS) % len(BRUSH)], 640, 1300)
             stack(img, t, [(R(14.1), "SES LOCKS DANS UN SAC", YEL)], 90, 400, 0)
         stack(img, t, [(R(16.3), "ON N'A PAS VU SON CRÂNE", RED)], 85, 1780, 0)
     elif name == "options":
