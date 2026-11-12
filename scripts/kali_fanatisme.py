@@ -321,7 +321,7 @@ def draw_scene(name, t, k):
         cur = latest(t, [(4.8, "ARTISTE", YEL), (5.9, "FOOTBALLEUR", GRN), (7.5, "SPORTIF", (120, 190, 255)), (8.1, "ACTEUR", RED)])
         if cur:
             im, _ = neon(cur[1], 170, cur[2]); paste(img, im, W / 2, 470, popk(t, cur[0]))
-        for key_, t0, x_, y_ in [("st1", 5.3, 300, 950), ("f10", 6.3, 780, 950), ("f7", 7.5, 300, 1500), ("st2", 8.1, 780, 1500)]:
+        for key_, t0, x_, y_ in [("st1", 5.3, 300, 950), ("st2", 5.3, 780, 950), ("f10", 6.3, 300, 1500), ("f7", 7.5, 780, 1500)]:
             pop_at(img, t, t0, SMALL[key_], x_, y_)
     elif name == "shirk":
         stack(img, t, [(R(28.0), "SURTOUT", WHT), (R(28.3), "LES MUSULMANS", YEL)], 130, 330, 165)
@@ -334,12 +334,12 @@ def draw_scene(name, t, k):
         stack(img, t, [(R(46.8), "C'ÉTAIT DIEU", RED)], 170, 600, 0)
         stack(img, t, [(R(49.1), "OU UN PROPHÈTE", WHT), (R(52.2), "ADORATION PURE", RED)], 120, 1600, 150)
     elif name == "foot":
-        stack(img, t, [(R(60.6), "LE SPORT", WHT)], 150, 280, 0)
+        stack(img, t, [(R(59.3), "LE SPORT", WHT)], 150, 280, 0)
         pop_at(img, t, 61.2, F10, 300, 860)
         pop_at(img, t, 61.9, F7, 780, 860)
         if t >= R(61.2): im, _ = neon("PRO-MESSI", 80, (120, 190, 255)); paste(img, im, 300, 1330, popk(t, R(61.2)))
         if t >= R(61.9): im, _ = neon("PRO-RONALDO", 80, RED); paste(img, im, 780, 1330, popk(t, R(61.9)))
-        stack(img, t, [(R(66.0), "« L'ENVOYÉ", YEL), (R(68.1), "DE DIEU ?! »", RED)], 150, 1560, 175)
+        stack(img, t, [(R(66.0), "« L'ENVOYÉ", YEL), (R(66.6), "DE DIEU ?! »", RED)], 150, 1560, 175)
     elif name == "comment":
         tw(img, t, "comment", 110, WHT, 760)
         stack(img, t, [(R(87.9), "EN COMMENTAIRE", YEL)], 150, 960, 0)
