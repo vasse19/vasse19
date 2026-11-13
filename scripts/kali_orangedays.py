@@ -94,7 +94,7 @@ def mali_flag():
 FLAG_ML = mali_flag()
 logo = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 210)
 END_LOGO = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 640)
-CARDS = [(0.0, R(3.10), "DIDI B", "À BAMAKO", "hook", 1250), (R(23.90), R(25.75), "ENTRÉE", "GRATUITE", "card", 960),
+CARDS = [(0.0, R(4.45), "DIDI B", "À BAMAKO", "hook", 1420), (R(23.90), R(25.75), "ENTRÉE", "GRATUITE", "card", 960),
          (R(25.75), DUR, "LE BIG", "VASS", "end", 1370)]
 card_img = [block(c[2], c[3], 1040, {"hook": 820, "end": 700}.get(c[4], 1000)) for c in CARDS]
 
@@ -117,7 +117,7 @@ def credit(img, handle):
     im, _ = neon(f"SOURCE TIKTOK : {handle}", 40, WHT); paste(img, im, W / 2, 1890, 1.0, 0.85)
 
 SCENES = [  # (start, end, name) in source seconds; every moment has one
-    (0.0, 3.10, "hook"), (3.10, 7.40, "mali"), (7.40, 9.00, "orange"), (9.00, 12.60, "fest"), (12.60, 15.50, "didib"),
+    (0.0, 4.45, "hook"), (4.45, 7.40, "mali"), (7.40, 9.00, "orange"), (9.00, 12.60, "fest"), (12.60, 15.50, "didib"),
     (15.50, 19.30, "lieu"), (19.30, 23.90, "horaires"), (23.90, 25.75, "card"), (25.75, END + 1, "end")]
 SC = [(R(a), R(b), n) for a, b, n in SCENES]
 def scene(t, i):
@@ -149,7 +149,7 @@ def draw(name, t, k):
         stack(img, t, [(R(19.36), "ANIMATIONS", WHT)], 150, 420, 0)
         typewriter(img, t, R(20.56), "DÈS 9H", 220, YEL, 640, 10)
         stack(img, t, [(R(22.00), "CONCERTS", WHT)], 150, 1000, 0)
-        typewriter(img, t, R(23.30), "22H", 240, ORA, 1230, 8)
+        typewriter(img, t, R(22.58), "22H", 240, ORA, 1230, 8)
     elif name == "card":
         img = bg("red", t) * 0.6
     return img
@@ -187,7 +187,7 @@ open(f"{WORK}/caps.ass", "w").write("\n".join(ass) + "\n")
 burn = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(LIB, "transitions/burn-transition-12.mp4"), "-vf", f"scale=-2:{H},crop={W}:{H}",
                        "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
 BURN = np.frombuffer(burn, np.uint8).reshape(-1, H, W, 3); BURN_PEAK = 11 / FPS
-BURN_AT = [R(3.10), R(9.00), R(15.50), R(23.90)]
+BURN_AT = [R(4.45), R(9.00), R(15.50), R(23.90)]
 VIDEO_ONLY = f"{WORK}/video_only.mp4"
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
     "-vf", f"noise=alls=3:allf=t+u,ass={WORK}/caps.ass:fontsdir={os.path.dirname(ANTON)},format=yuv420p",
@@ -201,7 +201,7 @@ for i in range(N):
         if not (c[0] <= t < c[1]): continue
         kk = t - c[0]
         if c[4] == "end": img = bg("red", t) * 0.55; paste(img, END_LOGO, W / 2, 700, min(kk / 0.25, 1) * 0.15 + 0.85)
-        elif c[4] == "hook": img = bg("red", t) * 0.8; paste(img, POST, W / 2, 760, 0.85)
+        elif c[4] == "hook": img = bg("red", t) * 0.8; paste(img, POST, W / 2, 720, 0.78)
         sc = 0.55 + 0.55 * min(kk / 0.12, 1) - 0.1 * min(max(kk - 0.12, 0) / 0.1, 1)
         paste(img, card_img[ci], W / 2, c[5], sc)
     if name != "end":
@@ -232,7 +232,7 @@ burn_a = load(os.path.join(LIB, "transitions/burn-transition-12.mp4"))
 for a, b, n in SC[1:]: place(whoosh, a - 0.2, 0.2)
 for c in CARDS: place(hit, c[0], 0.45)
 for t0, txt, cps in [(R(6.26), "BAMAKO", 12), (R(13.08), "DIDI B", 10), (R(17.34), "PLACE DU CINQUANTENAIRE", 24),
-                     (R(20.56), "DÈS 9H", 10), (R(23.30), "22H", 8)]:
+                     (R(20.56), "DÈS 9H", 10), (R(22.58), "22H", 8)]:
     for j, ch in enumerate(txt):
         if ch != " ": place(click, t0 + j / cps, 0.22)
 for t0 in (R(4.98), R(14.38)): place(hit, t0, 0.25)
