@@ -237,7 +237,7 @@ PlayResY: {H}
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: K,Anton,150,&H0000E5FF,&H0000E5FF,&H00000000,&H99000000,0,0,0,0,100,100,2,0,1,9,6,5,40,40,0,1
+Style: K,Anton,230,&H0000E5FF,&H0000E5FF,&H00000000,&H99000000,0,0,0,0,100,100,2,0,1,12,8,5,40,40,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"""]
@@ -247,7 +247,7 @@ for i, (s0, txt, col) in enumerate(keywords):
     if i + 1 < len(keywords): e = min(e, keywords[i + 1][0] - 0.05)
     for c in CARDS:
         if s0 < c[0] < e: e = c[0]
-    ass.append(f"Dialogue: 0,{ts(s0)},{ts(e)},K,,0,0,0,,{{\\an5\\pos(960,880){COL[col]}\\fscx70\\fscy70\\t(0,100,\\fscx108\\fscy108)\\t(100,170,\\fscx100\\fscy100)}}{txt}")
+    ass.append(f"Dialogue: 0,{ts(s0)},{ts(e)},K,,0,0,0,,{{\\an5\\pos(960,840){COL[col]}\\fscx70\\fscy70\\t(0,100,\\fscx108\\fscy108)\\t(100,170,\\fscx100\\fscy100)}}{txt}")
 open(f"{WORK}/caps.ass", "w").write("\n".join(ass) + "\n")
 
 # ---------- chapters list for the YouTube description ----------
@@ -272,7 +272,10 @@ BURN_AT = [c[0] for c in CARDS if c[4] == "card" and c[2] in [ch[1] for ch in CH
 burn_snd = np.frombuffer(subprocess.check_output(["ffmpeg", "-v", "error", "-i", f"{WORK}/burn.mp4", "-f", "f32le", "-ac", "1", "-ar", "48000", "-"]), np.float32)
 for b_ in BURN_AT: place(burn_snd, b_ - 0.39, 0.6)
 # end screen: his intro music, faded
-place(hit, CONTENT, 0.45)                                   # no music intro in this source: just a hit on the end screen
+place(hit, CONTENT, 0.45)                                   # no music intro in this source: a soft A-minor pad under the end screen
+pad = synth(f"aevalsrc='0.25*sin(2*PI*110*t)+0.35*sin(2*PI*220*t)+0.22*sin(2*PI*261.6*t)+0.2*sin(2*PI*329.6*t)':d={ENDSCREEN},"
+            f"tremolo=f=0.5:d=0.4,lowpass=f=1200,afade=t=in:d=1.5,afade=t=out:st={ENDSCREEN - 3}:d=3", f"{WORK}/pad.wav")
+place(pad, CONTENT, 0.25)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", "48000", "-ac", "1", "-i", "-", f"{WORK}/sfx.wav"], input=sfx[:int(DUR * 48000)].tobytes(), check=True)
 
 # ---------- render ----------
@@ -282,7 +285,7 @@ dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", CUT, "-f", "rawvideo", "-
 VF = f"unsharp=5:5:0.5,eq=contrast=1.06:saturation=1.08,vignette=angle=PI/6,noise=alls=3:allf=t+u,ass={WORK}/caps.ass:fontsdir={os.path.expanduser('~/.fonts')},format=yuv420p"
 VIDEO_ONLY = f"{WORK}/video_only.mp4"
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-    "-vf", VF, "-c:v", "libx264", "-preset", "medium", "-crf", "22", VIDEO_ONLY], stdin=subprocess.PIPE)
+    "-vf", VF, "-c:v", "libx264", "-preset", "medium", "-b:v", "1600k", "-maxrate", "2600k", "-bufsize", "5200k", VIDEO_ONLY], stdin=subprocess.PIPE)   # ~95 MB: under GitHub's 100 MB
 FR = SW * SH * 3
 last_frame = None
 endbg = None
