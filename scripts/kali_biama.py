@@ -198,7 +198,7 @@ CREDIT = {"poy": "@LEPLUSFRAISDESMANAGERS", "speed": "@K.LED_STUDIO", "clip": "@
 def play(frames, k, dim=0.85):
     fr = frames[min(int(k * FPS), len(frames) - 1)]
     return cv2.resize(fr, (W, H), interpolation=cv2.INTER_LINEAR).astype(np.float32) / 255 * dim
-BOLT = {c: rgba_file(os.path.join(LIB, "3d", f"lightning-{c}.png"), 420) for c in ("gold", "orange", "white")}
+BOLT = {c: rgba_file(os.path.join(LIB, "3d", f"lightning-{c}.png"), 760) for c in ("gold", "orange", "white")}
 def bolt(img, t, t0, col, x, y, sc=1.0):
     k = t - t0
     if 0 <= k < 1.2: paste(img, BOLT[col], x, y, sc * popk(t, t0) * (1 + 0.04 * k), min(k / 0.08, 1) * min((1.2 - k) / 0.2, 1))
@@ -492,7 +492,7 @@ dec.stdout.close(); dec.kill(); dec.wait()
 # voice as recorded (he asked to keep his sound): no compressor or loudness change, safety limiter only
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
     "[1:a]aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
-    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.89:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
+    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.8:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-cutoff", "18000", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
 print("done", OUT, len(SHOTS), "shots", flush=True)
