@@ -13,6 +13,15 @@
 | `sfx/cash-ding.mp3` | clochette de caisse « ding » (son « matricula »), 2,5 s | pic à 0,4 s : à caler sur un chiffre, un prix, « 140 MILLIONS » ; gain 0,5–0,6 |
 | `sfx/money-counter.mp3` | compteur de billets qui défilent, 4,9 s | partie régulière dès 0,6 s ; sous un compteur d'argent, coupé à la longueur voulue avec fondu ; gain 0,9 |
 | `sfx/goal-crowd.mp3` | foule qui explose sur un but, 2,7 s | pic à 0,5 s ; sur un but, une célébration, une grosse annonce sport ; gain 0,3–0,45 sous la voix |
+| `sfx/beep-censure.mp3` | bip de censure continu (1 kHz type télé), son de 0,09 à 4,5 s | couper à la longueur du mot à masquer (gros mot, nom à cacher, chiffre secret) ; ou bip très court sur un « ding » d'info ; gain 0,3–0,4 |
+| `sfx/camera-shutter-long.mp3` | déclencheur d'appareil photo (clic + armement), son 0,29–1,25 s, pic à 0,74 s | sur l'apparition d'une photo, d'une pochette, d'un flash blanc ; **source à +1,6 dBFS → gain 0,4–0,5 max** |
+| `sfx/camera-shutter-short.mp3` | clic d'appareil photo sec, 0,34 s, pic à 0,21 s | sur chaque photo d'une rafale, galerie d'artistes, capture d'écran ; gain 0,5–0,7 |
+| `sfx/sparkle.mp3` | scintillement magique, deux occurrences : 0,75–1,84 s et 4,29–5,38 s (pic 4,36 s) | sur un objet doré, un disque d'or/certification, un cœur, une révélation « brillante » ; prendre l'une des deux parties ; gain 0,3–0,4 |
+| `sfx/whoosh-1.mp3` | whoosh ample, son 0,31–0,80 s, pic 0,42 s | grosses transitions, entrée d'une carte ou d'un titre 3D ; caler le pic sur la coupe (placer à t − 0,42) ; gain 0,25–0,35 |
+| `sfx/whoosh-2.mp3` | whoosh court, 0,07–0,37 s, pic 0,13 s | coupes rapides, mots qui apparaissent ; gain 0,2–0,3 |
+| `sfx/whoosh-3.mp3` | whoosh très sec, 0,21–0,38 s, pic 0,26 s | zooms / punch-in, pop d'image ; gain 0,2–0,3 |
+| `sfx/whoosh-4.mp3` | whoosh court, 0,04–0,42 s, pic 0,08 s | glissement de texte, changement de fond ; gain 0,2–0,3 |
+| `sfx/uhh.mp3` | « uhh » voix (réaction hésitante / malaise), 0,64–0,93 s, pic 0,74 s | moment gênant, info douteuse, « hmm… vraiment ? » ; **source très forte (+7,7 dBFS décodé) → gain 0,15–0,25** |
 | `sfx/synth-whoosh.wav` | whoosh de coupe (bruit rose filtré) | gain 0,1–0,25 |
 | `sfx/synth-hit.wav` | impact grave 52 Hz pour les titres 3D | gain 0,45 |
 | `sfx/synth-click.wav` | clic de machine à écrire | gain 0,25, un par lettre |
@@ -22,6 +31,7 @@
 | `overlays/torn-paper-banner-blue.mp4` | même bandeau, grille bleue | idem |
 | `overlays/eye-tear-paper.mp4` | œil (maquillage violet) qui apparaît en **déchirant du papier**, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; déchirure 0–1,2 s puis tenu. Pour « regardez bien », un regard, un mystère |
 | `overlays/eye-shatter.mp4` | œil bleu qui se reconstitue **en éclats**, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; éclats 0–1,6 s puis tenu |
+| `overlays/eye-paper-unfold.mp4` | **boule de papier froissé qui se déplie en œil** (iris gris-vert), puis l'œil regarde autour, fond vert, 2000×2000, 20 s, muet | `colorkey=0x18FF07:0.3:0.1` ; dépliage 0–0,6 s puis tenu ; pour « regardez bien », un regard, surveiller, un mystère |
 | `overlays/hand-tear-paper.mp4` | **main qui traverse le papier** et se tend, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; 0–1,2 s ; pour « je vous tends la main », appel au soutien, un artiste qui débarque |
 | `overlays/tape-strip-flat.mp4` | **morceau de scotch** qui se colle, fond vert, 1080×1920, 5 s, muet | `colorkey=0x00AF3F:0.25:0.08` ; arrive en 0,3 s, zone x 369–710, y 863–1055 ; à poser sur le bord d'une photo ou d'une pochette (effet collage). Lire sans `-ss` avant l'entrée (seek = image vide) |
 | `overlays/tape-strip-wide.mp4` | scotch plus large et froissé | `colorkey=0x00AF3F:0.25:0.08` ; zone x 306–753, y 853–1070 ; idem |
@@ -29,6 +39,15 @@
 | `overlays/embers-motion14.mp4` | **braises orange** qui volent sur fond bleu nuit (« Motion14 »), 1080×1920, 3,7 s, muet | fusion « screen » (le fond sombre disparaît) : braises par-dessus une scène ou un titre, plus fortes vers 0,4–1 s ; ou en fond d'écran texte (en boucle) à la place du dégradé rouge |
 | `3d/lightning-white.png`, `lightning-orange.png`, `lightning-gradient.png`, `lightning-gold.png` | éclairs 3D (blanc, orange, dégradé violet, or), PNG transparents 2000×2000 | « pop » sur les mots forts (ex. « BOOM », « C'EST MORT »), en coin ou derrière un titre |
 | `3d/paper-peel-dark.png` | carte sombre au coin replié, PNG transparent | fond de carte pour un texte ou une pochette |
+| `3d/money-stack-teal.png`, `money-stack-pink.png`, `money-stack-gold.png`, `money-stack-white.png` | liasse de billets 3D avec bande « $ » (turquoise/orange, rose-violet dégradé, gris/or, blanc mat), PNG transparents 2000×2000 | argent, cachet, contrat, streams qui rapportent, « 140 MILLIONS » ; or = luxe, blanc = schéma sobre ; avec `sfx/cash-ding.mp3` |
+| `3d/heart-gold.png` | cœur 3D doré, PNG transparent 2000×2000 | amour du public, « merci la famille », hommage, likes |
+| `3d/music-note-gold.png`, `music-note-red.png`, `music-note-gradient.png` | note de musique 3D (or, rouge-orange, dégradé jaune-violet), PNG transparents 2000×2000 | pilier MUSIQUE : nouveau son, single, playlist, « à écouter » ; avec `sfx/sparkle.mp3` pour la dorée |
+| `3d/wifi-red.png`, `wifi-gradient.png` | signal wifi 3D (rouge-orange, dégradé violet), PNG transparents 2000×2000 | live, en ligne, internet, réseaux sociaux, « ça a buzzé », streaming |
+| `icons/groupe-celebration-trinque.png` | pictogramme blanc lumineux : 3 personnes qui trinquent / célèbrent, PNG transparent 1080×1080 | victoire, sortie d'album, certification, fête, release party |
+| `icons/duo-amis-rire.png` | 2 amis qui rigolent épaule contre épaule | collab, featuring, amitié entre artistes, « des frères » |
+| `icons/equipe-solidaire-3.png` | 3 personnes bras dessus bras dessous | équipe, label, collectif, la communauté, « on est ensemble » |
+| `icons/entraide-coup-de-main.png` | une personne sur une marche qui tire l'autre vers le haut | manager / promoteur / éditeur qui fait monter un artiste, ouvrir des portes |
+| `icons/porter-un-frere.png` | une personne qui en porte une autre sur son dos | porter un artiste, soutien, « il l'a porté », grand frère du game |
 
 ## Extraits classés par pilier (`extraits/`)
 

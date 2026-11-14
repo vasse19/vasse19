@@ -49,11 +49,12 @@ Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/R
 - More transitions he supplied (screen blend, align the peak on the cut): `burn-transition-17.mp4` (16:9, longer orange burn, peak frame 19 = 0.63 s; crop the centre for vertical), `red-flash-39.mp4` (red flash, peak frame 17 = 0.57 s, with sound), `bw-flash-33.mp4` (black & white flash, full white frames 3–6 at 23.976 fps), `light-flash-23.mp4` (soft pink/white flash, peak frame 5 = 0.21 s). Vary them: not the same transition twice in a row
 - `assets/overlays/brush-circle.mov` (thick white paint ring, stop-motion, small hole: it covers what is under it, so use it big behind a title or as a flash, never to circle an object; to circle something draw an animated neon ellipse as in `kali_himra_crane.py`) and `embers-motion14.mp4` (orange embers on dark blue, screen blend over a scene, or as a text background)
 - `assets/sfx/riser-metallic-transition.mp3`: suspense riser (peak 2.95 s), plus `synth-whoosh/hit/click.wav`
-- `assets/sfx/cash-ding.mp3` (peak 0.4 s, on money figures), `money-counter.mp3` (under number counters), `goal-crowd.mp3` (peak 0.5 s, goals and sport hype): placed as in `scripts/kali_yan.py`
+- `assets/sfx/cash-ding.mp3` (peak 0.4 s, on money figures), `money-counter.mp3` (under number counters), `goal-crowd.mp3` (peak 0.5 s, goals and sport hype): placed as in `scripts/kali_yan.py`; also `beep-censure.mp3` (censor beep, trim to the word), `camera-shutter-long/short.mp3` (photo reveals; long one is hot, gain ≤ 0.5), `sparkle.mp3` (gold/shine reveals), real whooshes `whoosh-1..4.mp3` (prefer them over `synth-whoosh.wav`, vary between them), `uhh.mp3` (awkward moment; very hot, gain ≤ 0.25)
 - `assets/backgrounds/red-gradient.mp4`: animated red gradient for neon text screens
 - `assets/overlays/torn-paper-banner-{red,blue}.mp4`: green-screen torn-paper header (key `colorkey=0x1DDA0B:0.25:0.08`, covers y < 640, turns black at 9.8 s): use for a neon title over the face-cam
-- `assets/overlays/eye-tear-paper.mp4`, `eye-shatter.mp4`, `hand-tear-paper.mp4` (key `0x40F800`), `tape-strip-flat/wide.mp4` (key `0x00AF3F`): collage-style reveals and tape to stick photos/covers
-- `assets/3d/lightning-{white,orange,gradient,gold}.png`, `paper-peel-dark.png`: transparent 3D elements to pop on strong words or behind titles
+- `assets/overlays/eye-tear-paper.mp4`, `eye-shatter.mp4`, `hand-tear-paper.mp4` (key `0x40F800`), `eye-paper-unfold.mp4` (key `0x18FF07`), `tape-strip-flat/wide.mp4` (key `0x00AF3F`): collage-style reveals and tape to stick photos/covers
+- `assets/3d/lightning-{white,orange,gradient,gold}.png`, `paper-peel-dark.png`, `money-stack-{teal,pink,gold,white}.png` (money), `heart-gold.png`, `music-note-{gold,red,gradient}.png`, `wifi-{red,gradient}.png`: transparent 3D elements to pop on strong words or behind titles
+- `assets/icons/*.png`: white glowing people pictograms (celebration, duo, team, helping hand, carrying a friend), transparent 1080×1080: pop them on paper/red backgrounds for relationship stories (manager, collab, solidarity) and for schemas in explainer videos
 
 ## Style parameters
 
