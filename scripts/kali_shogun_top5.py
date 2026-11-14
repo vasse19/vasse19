@@ -148,7 +148,7 @@ def draw(name, t, k):
                 paste(img, COVS, 820, 330, 1.0)
             typewriter(img, t, R(tt), title, 190 if len(title) < 10 else 120, WHT, 760 if not (n == 4 and t >= R(20.96)) else 1110, 16)
             for m, (a, b, ti) in enumerate(cur[:-1]):                       # leaderboard of the songs already ranked
-                lb, _ = neon(f"{m + 1}. {ti}", 82, GOLD if m == 0 else WHT); paste(img, lb, W / 2, 1210 + m * 100)
+                lb, _ = neon(f"{m + 1}. {ti}", 82, GOLD if m == 0 else WHT); paste(img, lb, W / 2, 1270 + m * 95)
     elif name == "change":
         paste(img, DROUGE_B, W / 2, 1050, settle(min(k, 1.5)))
         stack(img, t, [(R(25.70), "MON CLASSEMENT", WHT), (R(27.40), "ACTUEL", YEL)], 110, 230, 135)
