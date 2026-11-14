@@ -19,7 +19,7 @@ def near(t): return min(words, key=lambda w: abs(w["s"] - t))
 def ren(t, txt): near(t)["w"] = txt
 def rm(t):
     global words; x = near(t); words = [w for w in words if w is not x]
-ren(1.36, "d'Ameka Zrai"); ren(2.32, "featuring"); ren(4.58, "Ameka"); ren(4.66, "Zrai"); ren(12.52, "prêts")
+ren(1.20, "son « Pop »"); ren(1.36, "d'Ameka Zrai"); ren(2.32, "featuring"); ren(2.88, "Jokair."); ren(4.58, "Ameka"); ren(4.66, "Zrai"); ren(12.52, "prêts")
 ren(18.08, "comme"); ren(19.12, "Trippie"); ren(19.68, "Redd,"); ren(29.80, "Trippie Redd."); ren(30.36, "Trippie Redd,"); ren(30.92, "en")
 ren(32.70, "« Neon"); ren(33.10, "Shark"); ren(33.50, "vs"); ren(33.74, "Pegasus »"); ren(39.68, "Post"); ren(40.00, "Malone,")
 ren(49.82, "lui ouvrir"); ren(52.14, "un"); ren(53.58, "feat"); ren(54.24, "Yseult."); rm(54.40); ren(55.44, "Yseult,"); rm(55.68)
@@ -28,7 +28,7 @@ words = [w for w in words if w["s"] < END]
 for i, w in enumerate(words):
     nxt = words[i + 1]["s"] if i + 1 < len(words) else END
     w["e"] = min(nxt, w["s"] + 0.12 + 0.065 * len(w["w"]))
-NOCAP = [(2.85, 3.30), (59.40, END)]            # featured artist's name unclear; sign-off under the end card
+NOCAP = [(59.40, END)]                          # sign-off under the end card
 
 # ---------- silences out (audio only) ----------
 hop = int(0.02 * sr16)
@@ -91,6 +91,17 @@ ORA = (255, 121, 0)
 POSTM = card(f"{WORK}/postmalone.jpg", 400, (255, 255, 255)); TRIP = card(f"{WORK}/trippie.jpg", 400, (255, 60, 60))
 MGK = card(f"{WORK}/mgk.jpg", 400, (255, 190, 60)); NEON = card(f"{WORK}/neonshark.jpg", 620, (150, 90, 255))
 TRIPS = card(f"{WORK}/trippie.jpg", 320, (255, 60, 60)); POSTB = card(f"{WORK}/postmalone.jpg", 680, (255, 255, 255))
+def clip_frames(path, t0, dur):
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", str(t0), "-t", str(dur), "-i", path, "-an", "-vf",
+                          "fps=30,scale=540:960,eq=contrast=1.05:saturation=1.1", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                         capture_output=True, check=True).stdout
+    return np.frombuffer(raw, np.uint8).reshape(-1, 960, 540, 3)
+CLIP = clip_frames(f"{WORK}/pop_clip.mov", 3.0, 7.0)        # his official « POP » clip: Ameka Zrai on screen 3-10 s
+def clipbg(k, dim):
+    fr = CLIP[min(int(k * FPS), len(CLIP) - 1)]
+    return cv2.resize(fr, (W, H), interpolation=cv2.INTER_LINEAR).astype(np.float32) / 255 * dim
+def clip_credit(img):
+    im, _ = neon("CLIP OFFICIEL : AMEKA ZRAI – POP", 40, WHT); paste(img, im, W / 2, 1890, 1.0, 0.85)
 YSE = card(f"{WORK}/yseult.jpg", 620, (255, 190, 60))
 def fr_flag():
     f = np.zeros((200, 300, 3), np.float32); f[:, :100] = (0, 85, 164); f[:, 100:200] = (255, 255, 255); f[:, 200:] = (239, 65, 53)
@@ -131,6 +142,7 @@ def scene(t, i):
 def draw(name, t, k):
     img = bg("black" if name in ("us", "portes") else "red", t)
     if name == "da":
+        img = clipbg(t, 0.55); clip_credit(img)
         typewriter(img, t, R(4.58), "AMEKA ZRAI", 170, WHT, 330, 12)
         stack(img, t, [(R(5.38), "PEUT ALLER DANS", WHT), (R(6.02), "CETTE DA", YEL)], 120, 560, 150)
         stack(img, t, [(R(10.04), "ROCK", RED), (R(10.44), "× POP PUNK", (255, 120, 200))], 190, 950, 220)
@@ -182,7 +194,7 @@ Style: W,Anton,150,&H0000E5FF,&H0000E5FF,&H00000000,&H99000000,0,0,0,0,100,100,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"""]
 key = lambda w: w["w"].lower().strip(",.?!…«» :")
-WHITE = {"ameka", "zrai", "post", "malone", "trippie", "redd", "mgk", "neon", "shark", "pegasus", "yseult", "2021", "france"}
+WHITE = {"jokair", "ameka", "zrai", "post", "malone", "trippie", "redd", "mgk", "neon", "shark", "pegasus", "yseult", "2021", "france"}
 REDW = {"rock", "punk", "pop"}
 in_card = lambda t: any(c[0] <= t < c[1] for c in CARDS)
 for w in words:
@@ -214,7 +226,7 @@ for i in range(N):
         if not (c[0] <= t < c[1]): continue
         kk = t - c[0]
         if c[4] == "end": img = bg("red", t) * 0.55; paste(img, END_LOGO, W / 2, 700, min(kk / 0.25, 1) * 0.15 + 0.85)
-        elif c[4] == "hook": img = bg("red", t) * 0.8; [paste(img, im_, x_, 1250, 0.8) for im_, x_ in ((POSTM, 220), (TRIP, 540), (MGK, 860))]
+        elif c[4] == "hook": img = clipbg(t, 0.7); clip_credit(img); stack(img, t, [(0.0, "« POP » FEAT JOKAIR", YEL)], 90, 1180, 0)
         sc = 0.55 + 0.55 * min(kk / 0.12, 1) - 0.1 * min(max(kk - 0.12, 0) / 0.1, 1)
         paste(img, card_img[ci], W / 2, c[5], sc)
     if name != "end":
