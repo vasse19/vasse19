@@ -23,6 +23,11 @@
 | `overlays/tape-strip-wide.mp4` | scotch plus large et froissé | `colorkey=0x00AF3F:0.25:0.08` ; zone x 306–753, y 853–1070 ; idem |
 | `3d/lightning-white.png`, `lightning-orange.png`, `lightning-gradient.png`, `lightning-gold.png` | éclairs 3D (blanc, orange, dégradé violet, or), PNG transparents 2000×2000 | « pop » sur les mots forts (ex. « BOOM », « C'EST MORT »), en coin ou derrière un titre |
 | `3d/paper-peel-dark.png` | carte sombre au coin replié, PNG transparent | fond de carte pour un texte ou une pochette |
+| `icons/groupe-celebration-trinque.png` | pictogramme blanc lumineux : 3 personnes qui trinquent / célèbrent, PNG transparent 1080×1080 | victoire, sortie d'album, certification, fête, release party |
+| `icons/duo-amis-rire.png` | 2 amis qui rigolent épaule contre épaule | collab, featuring, amitié entre artistes, « des frères » |
+| `icons/equipe-solidaire-3.png` | 3 personnes bras dessus bras dessous | équipe, label, collectif, la communauté, « on est ensemble » |
+| `icons/entraide-coup-de-main.png` | une personne sur une marche qui tire l'autre vers le haut | manager / promoteur / éditeur qui fait monter un artiste, ouvrir des portes |
+| `icons/porter-un-frere.png` | une personne qui en porte une autre sur son dos | porter un artiste, soutien, « il l'a porté », grand frère du game |
 
 ## Extraits classés par pilier (`extraits/`)
 
