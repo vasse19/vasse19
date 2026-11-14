@@ -72,7 +72,7 @@ Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/R
 | Transitions | his « Burn Transition » clip, screen-blended, peak (0.39 s in) on 4–5 key moments, its own whoosh |
 | SFX | synthesized whoosh on cuts and B-roll, low hit on cards |
 | Grade | unsharp 0.5, contrast 1.06, saturation 1.08, light vignette, fine grain |
-| Audio | gain to taste (+11 to +18 dB for quiet phone audio), compressor 4:1 at −22 dB, `loudnorm I=-14`, then **`aresample=48000,asetpts=N/SR/TB` before `amix`** (else the voice drops out at the end), limiter 0.75 → about −14 LUFS, peak ≤ −2 dB |
+| Audio | **Since 2026-11-14 he wants his voice as recorded** (« est-ce que le son tu peux le laisser comme c'était »): no denoise, no compressor, no `loudnorm`, no gain; only `aresample=48000,asetpts=N/SR/TB` before `amix` (else the voice drops out at the end) and a safety `alimiter` (0.7–0.89, lower it until the AAC true peak is ≤ −0.5 dBFS: his takes often clip at +1.5 dBFS). Examples: `kali_biama_complet.py`, `kali_amekazrai.py`, `longform_bilan.py`. Only for a very quiet source (< −20 LUFS) ask before raising it |
 
 ## Kali Muscle style (`scripts/vlog_kali.py`): the default for Shorts
 
@@ -109,6 +109,10 @@ How a new Short is built (copy the closest script, change only its data blocks):
 Reference `kadja_ou_est_il.mp4`. No face-cam: every moment has a scene (photos, covers, his clips), neon captions all
 along at y 1660, his Monsieur Vass logo top-left pulsing with his voice, a waveform under the captions, burns at
 chapter changes, 3D hook/cards/end card. Same transcript workflow (send him the numbered lines to correct first).
+More examples: `kali_orangedays.py` (event: posters, a highlighted Facebook post, « ENTRÉE GRATUITE » 3D card),
+`kali_amekazrai.py` (artist grid, his official clip behind the hook, featured artist read off the clip's cover),
+`kali_shogun_top5.py` (a ranking: big neon N°1–N°5, the title typed, a leaderboard that fills up). Never let a scene
+start empty: put his current sentence on screen from the scene's first frame.
 
 ## « Monsieur Vass réagit » (his best format): `scripts/kali_react.py`
 
@@ -133,7 +137,17 @@ and use the torn-paper banners now and then as a header. Never the same backgrou
 ## Watermarks on other people's clips
 
 He asked to blur them: blur the TikTok zones in the source frame before cropping and **credit the account on screen**
-(« SOURCE TIKTOK : @compte », small, bottom) — never remove the attribution entirely.
+(« SOURCE TIKTOK : @compte », small, bottom) — never remove the attribution entirely. Keep the blur boxes **small**
+(he asked « la taille du floutage fait en minime »): only the logo + handle, e.g. in a 576×1024 repost ~170×100 at
+(0, 462) and ~156×104 at (420, 792), wider only for a long handle (`wm()` in `kali_biama_complet.py`). Read the handle
+on the clip's TikTok end card (zoom on the search bar) to credit it.
+
+## 3D and circling
+
+When he asks for « des animations 3D »: 3D blocks (`block()` from `fx3d.text3d`) for the hook, one title scene and one
+or two cards, plus his 3D PNGs (`assets/3d/`, lightning, money, notes…) popping at ~760 px on strong words
+(`bolt()` in `kali_biama_complet.py`). To circle something in a photo, draw an animated neon ellipse
+(`kali_himra_crane.py`), not `brush-circle.mov`.
 
 ## Teaser (US-creator style): `scripts/teaser.py`
 
@@ -173,4 +187,13 @@ no heavy sharpening). 3D gold intro: `remotion/` composition `GoldIntro` (Remoti
   --transpose --fixes fixes.json` → rotated, silences cut (frame-exact), −14 LUFS, plus `.srt` and a numbered `.txt`;
   mark doubtful words as `[mot ?]` in the fixes.
 - Long-form captions: he prefers **keywords only** (pertinent words, names: « BALOO », « INCROYABLE »),
-  not full subtitles; keep his own intro as is.
+  not full subtitles; keep his own intro as is. He asked for them **big and plain** (« rajoute du gros texte
+  simplement »): Anton 230 at y 840 on 1920×1080 (`longform_bilan.py`). Cap the video bitrate (`-b:v 1600k`) so a
+  ~7 min 1080p file stays under GitHub's 100 MB; give him the chapter list for the YouTube description.
+- Cutting: besides silences, cut **breaths between sentences** (quiet, little energy under 1 kHz, between two words;
+  keep 0.08 s of tail and 0.06 s before the next onset) and filler repeats. Drop the **first** of two repeated phrases
+  so the kept one stays whole, and find exact bounds from the audio energy when the ASR stamps are rough. In the
+  word-gap rule, treat numbers **and acronyms** (GTA = « G-T-A ») as longer than their letters, or « VI » gets cut.
+  After rendering, re-transcribe the cut in short windows and compare with the source: a missing word at a window
+  edge is usually the ASR, a missing word at a cut is a real clip to fix. If he says a cut is too chopped, rebuild on
+  the full take he sends with fewer drops (`kali_biama_complet.py`).
