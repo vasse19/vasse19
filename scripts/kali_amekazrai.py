@@ -93,7 +93,7 @@ MGK = card(f"{WORK}/mgk.jpg", 400, (255, 190, 60)); NEON = card(f"{WORK}/neonsha
 TRIPS = card(f"{WORK}/trippie.jpg", 320, (255, 60, 60)); POSTB = card(f"{WORK}/postmalone.jpg", 680, (255, 255, 255))
 def clip_frames(path, t0, dur):
     raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", str(t0), "-t", str(dur), "-i", path, "-an", "-vf",
-                          "fps=30,scale=540:960,eq=contrast=1.05:saturation=1.1", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                          "crop=576:690:0:0,fps=30,scale=-2:960,crop=540:960,eq=contrast=1.05:saturation=1.1", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                          capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, 960, 540, 3)
 CLIP = clip_frames(f"{WORK}/pop_clip.mov", 3.0, 7.0)        # his official « POP » clip: Ameka Zrai on screen 3-10 s
@@ -148,8 +148,8 @@ def draw(name, t, k):
         stack(img, t, [(R(10.04), "ROCK", RED), (R(10.44), "× POP PUNK", (255, 120, 200))], 190, 950, 220)
         stack(img, t, [(R(11.96), "VOUS N'ÊTES PAS PRÊTS", WHT)], 95, 1430, 0)
     elif name == "us":
-        stack(img, t, [(R(15.26), "ÇA M'A FAIT PENSER À…", WHT)], 100, 230, 0)
-        for im_, t0, x_, y_, lbl in [(POSTM, 18.24, 300, 660, "POST MALONE"), (TRIP, 19.12, 780, 660, "TRIPPIE REDD"), (MGK, 20.48, 540, 1220, "MGK")]:
+        stack(img, t, [(R(13.50), "QUAND J'AI ÉCOUTÉ", WHT), (R(14.94), "LE SON", YEL), (R(15.82), "ÇA M'A FAIT PENSER À…", WHT)], 95, 200, 115)
+        for im_, t0, x_, y_, lbl in [(POSTM, 18.24, 300, 780, "POST MALONE"), (TRIP, 19.12, 780, 780, "TRIPPIE REDD"), (MGK, 20.48, 540, 1290, "MGK")]:
             if t >= R(t0):
                 paste(img, im_, x_, y_, popk(t, R(t0)))
                 lab, _ = neon(lbl, 64, YEL); paste(img, lab, x_, y_ + im_.shape[0] / 2 - 10)
@@ -166,7 +166,8 @@ def draw(name, t, k):
         stack(img, t, [(R(39.68), "POST MALONE", WHT)], 150, 260, 0)
         stack(img, t, [(R(40.66), "VOUS CONNAISSEZ", WHT), (R(41.14), "LA SUITE", YEL)], 110, 1340, 140)
     elif name == "portes":
-        stack(img, t, [(R(46.92), "UN PUBLIC", WHT), (R(47.48), "PLUS LARGE", YEL)], 150, 330, 185)
+        stack(img, t, [(R(45.40), "ET SURTOUT…", WHT)], 110, 180, 0)
+        stack(img, t, [(R(46.44), "TOUCHER UN PUBLIC", WHT), (R(47.48), "PLUS LARGE", YEL)], 120, 360, 150)
         if t >= R(48.52): paste(img, FLAG_FR, W / 2, 800, 1.5 * popk(t, R(48.52)))
         stack(img, t, [(R(48.52), "EN FRANCE", WHT)], 130, 1020, 0)
         stack(img, t, [(R(49.82), "ÇA VA LUI OUVRIR", WHT), (R(50.86), "DES PORTES", GRN)], 120, 1250, 150)
