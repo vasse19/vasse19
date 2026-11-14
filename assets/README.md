@@ -13,6 +13,11 @@
 | `sfx/camera-shutter-long.mp3` | déclencheur d'appareil photo (clic + armement), son 0,29–1,25 s, pic à 0,74 s | sur l'apparition d'une photo, d'une pochette, d'un flash blanc ; **source à +1,6 dBFS → gain 0,4–0,5 max** |
 | `sfx/camera-shutter-short.mp3` | clic d'appareil photo sec, 0,34 s, pic à 0,21 s | sur chaque photo d'une rafale, galerie d'artistes, capture d'écran ; gain 0,5–0,7 |
 | `sfx/sparkle.mp3` | scintillement magique, deux occurrences : 0,75–1,84 s et 4,29–5,38 s (pic 4,36 s) | sur un objet doré, un disque d'or/certification, un cœur, une révélation « brillante » ; prendre l'une des deux parties ; gain 0,3–0,4 |
+| `sfx/whoosh-1.mp3` | whoosh ample, son 0,31–0,80 s, pic 0,42 s | grosses transitions, entrée d'une carte ou d'un titre 3D ; caler le pic sur la coupe (placer à t − 0,42) ; gain 0,25–0,35 |
+| `sfx/whoosh-2.mp3` | whoosh court, 0,07–0,37 s, pic 0,13 s | coupes rapides, mots qui apparaissent ; gain 0,2–0,3 |
+| `sfx/whoosh-3.mp3` | whoosh très sec, 0,21–0,38 s, pic 0,26 s | zooms / punch-in, pop d'image ; gain 0,2–0,3 |
+| `sfx/whoosh-4.mp3` | whoosh court, 0,04–0,42 s, pic 0,08 s | glissement de texte, changement de fond ; gain 0,2–0,3 |
+| `sfx/uhh.mp3` | « uhh » voix (réaction hésitante / malaise), 0,64–0,93 s, pic 0,74 s | moment gênant, info douteuse, « hmm… vraiment ? » ; **source très forte (+7,7 dBFS décodé) → gain 0,15–0,25** |
 | `sfx/synth-whoosh.wav` | whoosh de coupe (bruit rose filtré) | gain 0,1–0,25 |
 | `sfx/synth-hit.wav` | impact grave 52 Hz pour les titres 3D | gain 0,45 |
 | `sfx/synth-click.wav` | clic de machine à écrire | gain 0,25, un par lettre |
