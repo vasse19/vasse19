@@ -25,14 +25,14 @@ def ren(t, txt): near(t)["w"] = txt
 def rm(t):
     global words; x = near(t); words = [w for w in words if w is not x]
 ren(1.20, "Biama"); ren(4.08, "en"); ren(4.74, "tout,"); ren(5.38, "tout."); ren(11.64, "le"); ren(13.24, "le"); ren(13.66, "Biama"); rm(13.90)
-ren(17.74, "francophonie."); ren(21.44, "coupé-décalé."); rm(21.68); rm(21.84)
+ren(17.74, "francophonie."); ren(20.56, "gars,"); ren(20.88, "on a vu"); ren(21.20, "avec"); ren(21.44, "coupé-décalé."); rm(21.68); rm(21.84)
 ren(25.78, "coupé-décalé"); rm(26.02); rm(26.18); ren(26.82, "menteurs.")
 ren(28.92, "coupé-décalé"); rm(29.24); rm(29.32); ren(30.94, "Rap ivoire,"); rm(31.42); ren(35.78, "Biama,")
 words = [w for w in words if w["s"] < END]
 for i, w in enumerate(words):
     nxt = words[i + 1]["s"] if i + 1 < len(words) else END
     w["e"] = min(nxt, w["s"] + 0.12 + 0.065 * len(w["w"]))
-NOCAP_SRC = [(20.85, 21.40), (38.30, END)]   # unclear words / comment call shown as a screen
+NOCAP_SRC = [(38.30, END)]   # unclear words / comment call shown as a screen
 
 # ---------- jump cuts ----------
 DROP = [(27.20, 28.15),   # second « c'est des menteurs »
@@ -321,9 +321,9 @@ def draw_scene(name, t, k):
     if name == "clip":
         img = play(C_CLIP, k, 0.8); credit(img, "clip")
         stack(img, t, [(R(21.44), "LE COUPÉ-DÉCALÉ", GOLD)], 140, 300, 0)
-        stack(img, t, [(R(22.58), "REGARDEZ COMMENT ÇA A PRIS", WHT), (R(23.78), "AU FIL DES ANNÉES", YEL)], 90, 450, 115)
-        stack(img, t, [(R(25.46), "« IL EST MORT » ?", WHT), (R(26.82), "DES MENTEURS", RED)], 120, 1330, 150)
-        bolt(img, t, R(21.44), "gold", 880, 620, 0.9); bolt(img, t, R(26.82), "orange", 220, 1150, 0.8)
+        stack(img, t, [(R(22.58), "REGARDEZ COMMENT ÇA A PRIS", WHT), (R(23.78), "AU FIL DES ANNÉES", YEL)], 85, 500, 110)
+        stack(img, t, [(R(25.46), "« IL EST MORT » ?", WHT), (R(26.42), "DES MENTEURS", RED)], 120, 1330, 150)
+        bolt(img, t, R(21.44), "gold", 880, 620, 0.9); bolt(img, t, R(26.42), "orange", 220, 1150, 0.8)
         return img
     if name == "danse":
         img = play(C_DANSE, k, 0.8); credit(img, "danse")
