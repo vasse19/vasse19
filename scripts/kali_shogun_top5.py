@@ -142,8 +142,8 @@ def draw(name, t, k):
             n = len(cur); t0, tt, title = cur[-1]
             im, _ = neon(f"N°{n}", 260, RED if n == 1 else YEL); paste(img, im, 300, 330, popk(t, R(t0)))
             if n == 4 and t >= R(20.96):
-                paste(img, DROUGE, 620, 760, 1.0); paste(img, MAVO, 900, 760, popk(t, R(20.96)))
-                lab, _ = neon("FEAT MAVO", 70, (255, 120, 200)); paste(img, lab, 900, 1010)
+                paste(img, DROUGE, 360, 760, 1.0); paste(img, MAVO, 740, 760, popk(t, R(20.96)))
+                lab, _ = neon("FEAT MAVO", 70, (255, 120, 200)); paste(img, lab, 740, 1010)
             else:
                 paste(img, COVS, 820, 330, 1.0)
             typewriter(img, t, R(tt), title, 190 if len(title) < 10 else 120, WHT, 760 if not (n == 4 and t >= R(20.96)) else 1110, 16)
