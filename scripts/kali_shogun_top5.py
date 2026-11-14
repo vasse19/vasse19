@@ -87,7 +87,7 @@ def emoji(ch, size):
     return _em[(ch, size)]
 ORA = (255, 121, 0)
 COVER = card(f"{WORK}/cover.jpg", 760, (255, 150, 40)); COVS = card(f"{WORK}/cover.jpg", 300, (255, 150, 40))
-DPULL = card(f"{WORK}/didib_pull.jpg", 620, (255, 190, 60)); DROUGE = card(f"{WORK}/didib_rouge.jpg", 400, (255, 60, 60))
+DPULL = card(f"{WORK}/didib_pull.jpg", 540, (255, 190, 60)); DROUGE = card(f"{WORK}/didib_rouge.jpg", 400, (255, 60, 60))
 MAVO = card(f"{WORK}/mavo.jpg", 380, (255, 120, 200)); DROUGE_B = card(f"{WORK}/didib_rouge.jpg", 700, (255, 60, 60))
 RANKS = [(12.20, 13.08, "PARTI"), (13.66, 14.70, "ADIOS"), (15.58, 16.54, "FREE"), (17.18, 19.76, "FIRE IN YOUR EYES"), (22.74, 24.10, "MA BABY")]
 def fr_flag():
@@ -129,7 +129,7 @@ def scene(t, i):
 def draw(name, t, k):
     img = bg("black" if name in ("rank",) else "red", t)
     if name == "intro":
-        paste(img, DPULL, W / 2, 1060, settle(min(k, 1.5)))
+        paste(img, DPULL, W / 2, 980, settle(min(k, 1.5)))
         stack(img, t, [(R(3.52), "IL Y A UNE SEMAINE", WHT)], 100, 200, 0)
         typewriter(img, t, R(4.50), "DIDI B", 160, YEL, 350, 10)
         stack(img, t, [(R(5.94), "SHOGUN IN LAGOS", GOLD)], 95, 1530, 0)
@@ -146,9 +146,9 @@ def draw(name, t, k):
                 lab, _ = neon("FEAT MAVO", 70, (255, 120, 200)); paste(img, lab, 900, 1010)
             else:
                 paste(img, COVS, 820, 330, 1.0)
-            typewriter(img, t, R(tt), title, 130 if len(title) < 10 else 95, WHT, 760 if not (n == 4 and t >= R(20.96)) else 1110, 16)
+            typewriter(img, t, R(tt), title, 190 if len(title) < 10 else 120, WHT, 760 if not (n == 4 and t >= R(20.96)) else 1110, 16)
             for m, (a, b, ti) in enumerate(cur[:-1]):                       # leaderboard of the songs already ranked
-                lb, _ = neon(f"{m + 1}. {ti}", 62, GOLD if m == 0 else WHT); paste(img, lb, W / 2, 1230 + m * 85)
+                lb, _ = neon(f"{m + 1}. {ti}", 82, GOLD if m == 0 else WHT); paste(img, lb, W / 2, 1210 + m * 100)
     elif name == "change":
         paste(img, DROUGE_B, W / 2, 1050, settle(min(k, 1.5)))
         stack(img, t, [(R(25.70), "MON CLASSEMENT", WHT), (R(27.40), "ACTUEL", YEL)], 110, 230, 135)
