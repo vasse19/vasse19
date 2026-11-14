@@ -21,8 +21,8 @@ def rm(t):
     global words; x = near(t); words = [w for w in words if w is not x]
 ren(1.84, "Vass"); words.append({"w": "vous", "s": 2.20}); words.sort(key=lambda w: w["s"])
 ren(4.50, "Didi B"); ren(5.46, "mixtape"); ren(5.94, "« Shogun"); ren(6.34, "in"); ren(6.58, "Lagos ».")
-ren(13.08, "« Parti »."); ren(14.70, "« Adios »."); ren(16.54, "« Free »."); ren(19.76, "« Fire"); ren(20.56, "Eyes »"); ren(20.80, "en")
-ren(21.60, "Mavo."); rm(21.84); ren(24.10, "« Ma"); ren(24.26, "Baby »."); ren(26.58, "classement")
+ren(13.08, "« Party »."); ren(14.70, "« Adios »."); ren(16.54, "« Free »."); ren(19.76, "« Fire"); ren(20.56, "Eyes »"); ren(20.80, "en")
+ren(21.60, "Mavo."); rm(21.84); ren(24.10, "« My"); ren(24.26, "Baby »."); ren(26.58, "classement")
 words = [w for w in words if w["s"] < END]
 for i, w in enumerate(words):
     nxt = words[i + 1]["s"] if i + 1 < len(words) else END
@@ -89,7 +89,7 @@ ORA = (255, 121, 0)
 COVER = card(f"{WORK}/cover.jpg", 760, (255, 150, 40)); COVS = card(f"{WORK}/cover.jpg", 300, (255, 150, 40))
 DPULL = card(f"{WORK}/didib_pull.jpg", 540, (255, 190, 60)); DROUGE = card(f"{WORK}/didib_rouge.jpg", 400, (255, 60, 60))
 MAVO = card(f"{WORK}/mavo.jpg", 380, (255, 120, 200)); DROUGE_B = card(f"{WORK}/didib_rouge.jpg", 700, (255, 60, 60))
-RANKS = [(12.20, 13.08, "PARTI"), (13.66, 14.70, "ADIOS"), (15.58, 16.54, "FREE"), (17.18, 19.76, "FIRE IN YOUR EYES"), (22.74, 24.10, "MA BABY")]
+RANKS = [(12.20, 13.08, "PARTY"), (13.66, 14.70, "ADIOS"), (15.58, 16.54, "FREE"), (17.18, 19.76, "FIRE IN YOUR EYES"), (22.74, 24.10, "MY BABY")]
 def fr_flag():
     f = np.zeros((200, 300, 3), np.float32); f[:, :100] = (0, 85, 164); f[:, 100:200] = (255, 255, 255); f[:, 200:] = (239, 65, 53)
     return glow_rgba(np.dstack([f / 255, np.ones((200, 300), np.float32)]), (255, 255, 255), 12, 1.2)
@@ -172,7 +172,7 @@ Style: W,Anton,150,&H0000E5FF,&H0000E5FF,&H00000000,&H99000000,0,0,0,0,100,100,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"""]
 key = lambda w: w["w"].lower().strip(",.?!…«» :")
-WHITE = {"didi", "b", "shogun", "in", "lagos", "mavo", "parti", "adios", "free", "fire", "your", "eyes", "ma", "baby"}
+WHITE = {"didi", "b", "shogun", "in", "lagos", "mavo", "party", "adios", "free", "fire", "your", "eyes", "my", "baby"}
 REDW = {"top", "5", "premier"}
 in_card = lambda t: any(c[0] <= t < c[1] for c in CARDS)
 for w in words:
