@@ -9,6 +9,10 @@
 | `sfx/cash-ding.mp3` | clochette de caisse « ding » (son « matricula »), 2,5 s | pic à 0,4 s : à caler sur un chiffre, un prix, « 140 MILLIONS » ; gain 0,5–0,6 |
 | `sfx/money-counter.mp3` | compteur de billets qui défilent, 4,9 s | partie régulière dès 0,6 s ; sous un compteur d'argent, coupé à la longueur voulue avec fondu ; gain 0,9 |
 | `sfx/goal-crowd.mp3` | foule qui explose sur un but, 2,7 s | pic à 0,5 s ; sur un but, une célébration, une grosse annonce sport ; gain 0,3–0,45 sous la voix |
+| `sfx/beep-censure.mp3` | bip de censure continu (1 kHz type télé), son de 0,09 à 4,5 s | couper à la longueur du mot à masquer (gros mot, nom à cacher, chiffre secret) ; ou bip très court sur un « ding » d'info ; gain 0,3–0,4 |
+| `sfx/camera-shutter-long.mp3` | déclencheur d'appareil photo (clic + armement), son 0,29–1,25 s, pic à 0,74 s | sur l'apparition d'une photo, d'une pochette, d'un flash blanc ; **source à +1,6 dBFS → gain 0,4–0,5 max** |
+| `sfx/camera-shutter-short.mp3` | clic d'appareil photo sec, 0,34 s, pic à 0,21 s | sur chaque photo d'une rafale, galerie d'artistes, capture d'écran ; gain 0,5–0,7 |
+| `sfx/sparkle.mp3` | scintillement magique, deux occurrences : 0,75–1,84 s et 4,29–5,38 s (pic 4,36 s) | sur un objet doré, un disque d'or/certification, un cœur, une révélation « brillante » ; prendre l'une des deux parties ; gain 0,3–0,4 |
 | `sfx/synth-whoosh.wav` | whoosh de coupe (bruit rose filtré) | gain 0,1–0,25 |
 | `sfx/synth-hit.wav` | impact grave 52 Hz pour les titres 3D | gain 0,45 |
 | `sfx/synth-click.wav` | clic de machine à écrire | gain 0,25, un par lettre |
@@ -26,6 +30,8 @@
 | `3d/paper-peel-dark.png` | carte sombre au coin replié, PNG transparent | fond de carte pour un texte ou une pochette |
 | `3d/money-stack-teal.png`, `money-stack-pink.png`, `money-stack-gold.png`, `money-stack-white.png` | liasse de billets 3D avec bande « $ » (turquoise/orange, rose-violet dégradé, gris/or, blanc mat), PNG transparents 2000×2000 | argent, cachet, contrat, streams qui rapportent, « 140 MILLIONS » ; or = luxe, blanc = schéma sobre ; avec `sfx/cash-ding.mp3` |
 | `3d/heart-gold.png` | cœur 3D doré, PNG transparent 2000×2000 | amour du public, « merci la famille », hommage, likes |
+| `3d/music-note-gold.png`, `music-note-red.png`, `music-note-gradient.png` | note de musique 3D (or, rouge-orange, dégradé jaune-violet), PNG transparents 2000×2000 | pilier MUSIQUE : nouveau son, single, playlist, « à écouter » ; avec `sfx/sparkle.mp3` pour la dorée |
+| `3d/wifi-red.png`, `wifi-gradient.png` | signal wifi 3D (rouge-orange, dégradé violet), PNG transparents 2000×2000 | live, en ligne, internet, réseaux sociaux, « ça a buzzé », streaming |
 | `icons/groupe-celebration-trinque.png` | pictogramme blanc lumineux : 3 personnes qui trinquent / célèbrent, PNG transparent 1080×1080 | victoire, sortie d'album, certification, fête, release party |
 | `icons/duo-amis-rire.png` | 2 amis qui rigolent épaule contre épaule | collab, featuring, amitié entre artistes, « des frères » |
 | `icons/equipe-solidaire-3.png` | 3 personnes bras dessus bras dessous | équipe, label, collectif, la communauté, « on est ensemble » |

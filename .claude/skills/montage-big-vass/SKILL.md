@@ -47,11 +47,11 @@ Transitions, sounds and backgrounds he supplied, kept in the repo (see `assets/R
 
 - `assets/transitions/burn-transition-12.mp4`: his « Burn Transition » (peak frame 11, then black)
 - `assets/sfx/riser-metallic-transition.mp3`: suspense riser (peak 2.95 s), plus `synth-whoosh/hit/click.wav`
-- `assets/sfx/cash-ding.mp3` (peak 0.4 s, on money figures), `money-counter.mp3` (under number counters), `goal-crowd.mp3` (peak 0.5 s, goals and sport hype): placed as in `scripts/kali_yan.py`
+- `assets/sfx/cash-ding.mp3` (peak 0.4 s, on money figures), `money-counter.mp3` (under number counters), `goal-crowd.mp3` (peak 0.5 s, goals and sport hype): placed as in `scripts/kali_yan.py`; also `beep-censure.mp3` (censor beep, trim to the word), `camera-shutter-long/short.mp3` (photo reveals; long one is hot, gain ≤ 0.5), `sparkle.mp3` (gold/shine reveals)
 - `assets/backgrounds/red-gradient.mp4`: animated red gradient for neon text screens
 - `assets/overlays/torn-paper-banner-{red,blue}.mp4`: green-screen torn-paper header (key `colorkey=0x1DDA0B:0.25:0.08`, covers y < 640, turns black at 9.8 s): use for a neon title over the face-cam
 - `assets/overlays/eye-tear-paper.mp4`, `eye-shatter.mp4`, `hand-tear-paper.mp4` (key `0x40F800`), `eye-paper-unfold.mp4` (key `0x18FF07`), `tape-strip-flat/wide.mp4` (key `0x00AF3F`): collage-style reveals and tape to stick photos/covers
-- `assets/3d/lightning-{white,orange,gradient,gold}.png`, `paper-peel-dark.png`, `money-stack-{teal,pink,gold,white}.png` (money), `heart-gold.png`: transparent 3D elements to pop on strong words or behind titles
+- `assets/3d/lightning-{white,orange,gradient,gold}.png`, `paper-peel-dark.png`, `money-stack-{teal,pink,gold,white}.png` (money), `heart-gold.png`, `music-note-{gold,red,gradient}.png`, `wifi-{red,gradient}.png`: transparent 3D elements to pop on strong words or behind titles
 - `assets/icons/*.png`: white glowing people pictograms (celebration, duo, team, helping hand, carrying a friend), transparent 1080×1080: pop them on paper/red backgrounds for relationship stories (manager, collab, solidarity) and for schemas in explainer videos
 
 ## Style parameters
