@@ -492,7 +492,7 @@ dec.stdout.close(); dec.kill(); dec.wait()
 # voice as recorded (he asked to keep his sound): no compressor or loudness change, safety limiter only
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
     "[1:a]aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
-    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.8:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
+    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.7:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-cutoff", "18000", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
 print("done", OUT, len(SHOTS), "shots", flush=True)
