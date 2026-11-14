@@ -335,11 +335,10 @@ for i in range(N):
     enc.stdin.write((np.clip(img, 0, 1) * 255).astype(np.uint8).tobytes())
 enc.stdin.close(); enc.wait()
 dec.stdout.close(); dec.kill(); dec.wait()
-# voice/intro: compress + loudness; loudnorm resamples to 192 kHz, so resample and re-stamp before amix
+# voice as recorded (he asked to keep his sound as it was): no denoise, compressor or loudness change, only a safety limiter
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", CUT, "-i", f"{WORK}/sfx.wav", "-filter_complex",
-    "[1:a]highpass=f=90,afftdn=nr=12:nf=-30,volume=-3dB,acompressor=threshold=-22dB:ratio=4:attack=5:release=90:makeup=3dB,loudnorm=I=-14:TP=-1.5:LRA=7,"
-    "aresample=48000,asetpts=N/SR/TB,apad[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
-    "[fx][vo]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.75:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
+    "[1:a]aresample=48000,asetpts=N/SR/TB,apad[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
+    "[fx][vo]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.89:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-cutoff", "18000", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
 print("done", OUT, len(SHOTS), "shots", flush=True)
