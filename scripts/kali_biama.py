@@ -189,11 +189,11 @@ def clip_frames(path, t0, dur, vf=""):
                           (vf + "," if vf else "") + "fps=30,scale=360:640,eq=contrast=1.05:saturation=1.08",
                           "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, 640, 360, 3)
-C_POY_A = clip_frames(f"{WORK}/clip4.mov", 0.3, 2.6, wm(0, 210, 420, 156))
+C_POY_A = clip_frames(f"{WORK}/clip4.mov", 0.3, 2.6, wm(0, 210, 360, 216))
 C_SPEED = clip_frames(f"{WORK}/clip2.mp4", 2.0, 3.6, wm(0, 160, 420, 156))
 C_CLIP = clip_frames(f"{WORK}/clip1.mp4", 10.0, 6.4, wm(0, 160, 420, 156))
 C_DANSE = clip_frames(f"{WORK}/clip3.mp4", 4.0, 6.6, wm(0, 170, 420, 156))
-C_POY_B = clip_frames(f"{WORK}/clip4.mov", 8.0, 3.2, wm(0, 210, 420, 156))
+C_POY_B = clip_frames(f"{WORK}/clip4.mov", 8.0, 3.2, wm(0, 210, 360, 216))   # long handle: wider right box
 CREDIT = {"poy": "@LEPLUSFRAISDESMANAGERS", "speed": "@K.LED_STUDIO", "clip": "@MAEVA33540", "danse": "@RENARDBARAKISSA"}
 def play(frames, k, dim=0.85):
     fr = frames[min(int(k * FPS), len(frames) - 1)]
