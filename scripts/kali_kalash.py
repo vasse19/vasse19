@@ -22,7 +22,7 @@ def rm(t):
     global words; x = near(t); words = [w for w in words if w is not x]
 rm(1.20); ren(1.12, "hein ?"); ren(1.44, "Kalash"); ren(2.08, "Himra"); ren(8.04, "Himra,"); ren(8.68, "lui ouvrir")
 ren(12.34, "Antilles"); ren(19.50, "Bamby,"); ren(20.82, "« Gangsta »,"); ren(25.86, "avec"); ren(26.02, "Kalash.")
-rm(33.26); rm(35.18); rm(36.70); rm(37.18); ren(34.30, "chat-bouillon ?"); rm(34.62); rm(34.78); ren(36.22, "mélo ?"); ren(36.86, "Bref !")
+rm(33.26); rm(35.18); rm(36.70); rm(37.18); ren(34.30, "shatta bouyon ?"); rm(34.62); rm(34.78); ren(36.22, "mélo ?"); ren(36.86, "Bref !")
 ren(42.78, "Vass"); ren(43.10, "vous"); ren(43.26, "servir.")
 words = [w for w in words if w["s"] < END]
 for i, w in enumerate(words):
@@ -188,7 +188,7 @@ def draw(name, t, k):
     elif name == "collab":
         paste(img, HIM, 290, 880, settle(k)); paste(img, KAL, 790, 880, settle(k))
         stack(img, t, [(R(31.26), "J'AI HÂTE", WHT)], 120, 220, 0)
-        stack(img, t, [(R(34.30), "CHAT-BOUILLON ?", YEL), (R(36.22), "MÉLO ?", RED)], 120, 1330, 150)
+        stack(img, t, [(R(34.30), "SHATTA BOUYON ?", YEL), (R(36.22), "MÉLO ?", RED)], 120, 1330, 150)
         if t >= R(32.06): paste(img, emoji("❓", 160), W / 2, 880, popk(t, R(32.06)))
     return img
 
