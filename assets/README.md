@@ -18,11 +18,14 @@
 | `overlays/torn-paper-banner-blue.mp4` | même bandeau, grille bleue | idem |
 | `overlays/eye-tear-paper.mp4` | œil (maquillage violet) qui apparaît en **déchirant du papier**, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; déchirure 0–1,2 s puis tenu. Pour « regardez bien », un regard, un mystère |
 | `overlays/eye-shatter.mp4` | œil bleu qui se reconstitue **en éclats**, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; éclats 0–1,6 s puis tenu |
+| `overlays/eye-paper-unfold.mp4` | **boule de papier froissé qui se déplie en œil** (iris gris-vert), puis l'œil regarde autour, fond vert, 2000×2000, 20 s, muet | `colorkey=0x18FF07:0.3:0.1` ; dépliage 0–0,6 s puis tenu ; pour « regardez bien », un regard, surveiller, un mystère |
 | `overlays/hand-tear-paper.mp4` | **main qui traverse le papier** et se tend, fond vert, 1080×1080, 3 s, muet | `colorkey=0x40F800:0.3:0.1` ; 0–1,2 s ; pour « je vous tends la main », appel au soutien, un artiste qui débarque |
 | `overlays/tape-strip-flat.mp4` | **morceau de scotch** qui se colle, fond vert, 1080×1920, 5 s, muet | `colorkey=0x00AF3F:0.25:0.08` ; arrive en 0,3 s, zone x 369–710, y 863–1055 ; à poser sur le bord d'une photo ou d'une pochette (effet collage). Lire sans `-ss` avant l'entrée (seek = image vide) |
 | `overlays/tape-strip-wide.mp4` | scotch plus large et froissé | `colorkey=0x00AF3F:0.25:0.08` ; zone x 306–753, y 853–1070 ; idem |
 | `3d/lightning-white.png`, `lightning-orange.png`, `lightning-gradient.png`, `lightning-gold.png` | éclairs 3D (blanc, orange, dégradé violet, or), PNG transparents 2000×2000 | « pop » sur les mots forts (ex. « BOOM », « C'EST MORT »), en coin ou derrière un titre |
 | `3d/paper-peel-dark.png` | carte sombre au coin replié, PNG transparent | fond de carte pour un texte ou une pochette |
+| `3d/money-stack-teal.png`, `money-stack-pink.png`, `money-stack-gold.png`, `money-stack-white.png` | liasse de billets 3D avec bande « $ » (turquoise/orange, rose-violet dégradé, gris/or, blanc mat), PNG transparents 2000×2000 | argent, cachet, contrat, streams qui rapportent, « 140 MILLIONS » ; or = luxe, blanc = schéma sobre ; avec `sfx/cash-ding.mp3` |
+| `3d/heart-gold.png` | cœur 3D doré, PNG transparent 2000×2000 | amour du public, « merci la famille », hommage, likes |
 | `icons/groupe-celebration-trinque.png` | pictogramme blanc lumineux : 3 personnes qui trinquent / célèbrent, PNG transparent 1080×1080 | victoire, sortie d'album, certification, fête, release party |
 | `icons/duo-amis-rire.png` | 2 amis qui rigolent épaule contre épaule | collab, featuring, amitié entre artistes, « des frères » |
 | `icons/equipe-solidaire-3.png` | 3 personnes bras dessus bras dessous | équipe, label, collectif, la communauté, « on est ensemble » |
