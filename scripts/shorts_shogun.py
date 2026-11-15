@@ -14,22 +14,37 @@ os.makedirs(WORK, exist_ok=True)
 
 COMMON = {"djb": "Didi B", "jdb": "Didi B", "dj": None, "b": None, "didible": "Didi B", "djibé": "Didi B", "legos": "Lagos", "l'ego": "Lagos ?",
           "mixtep": "mixtape", "chartes": "charts", "latan": "Zlatan", "finos": "Phyno", "finot": "Phyno", "tyque": "Tayc"}
-SHORTS = [  # name, start, end (seconds in the finished video), 3D title (chrome | red), word fixes, emphasis words (white / red)
-    ("shogun_seul_sur_scene_lagos", 266.95, 310.45, "SEUL SUR SCÈNE", "À LAGOS ?", {"_repl": [
+SHORTS = [  # name, [(start, end) ranges in the finished video, joined], ~1 min each, 3D title (chrome | red), word fixes, emphasis words (white / red)
+    ("shogun_seul_sur_scene_lagos", [(266.95, 329.25)], "SEUL SUR SCÈNE", "À LAGOS ?", {"_repl": [
         (0.4, 7.95, "Deux jours après la sortie, le dimanche 8 novembre, Didi_B donne son tout premier concert au Nigeria, à l'Afrika Shrine."),
         (8.3, 13.6, "La salle mythique de Fela Kuti. Le symbole est fort et la soirée est annoncée guichet fermé."),
-        (16.8, 22.3, "tels que Young Jonn, Zinoleesky, Zlatan, Qing Madi."), (29.4, 29.9, "nigérians de"), (39.4, 40.2, "saluent son courage.")]}, {"lagos", "nigeria", "shrine", "fela", "kuti"}, {"surprise", "seul", "polémique", "personne", "courage"}),
-    ("shogun_zenith_planete_rap", 95.25, 120.98, "LE ZÉNITH", "COMPLET", {"_clip": (13.73, 25.73, "c4.json", 8.95), "fali": "Fally"}, {"zénith", "paris", "fally", "stade", "france"}, {"fermé", "sold", "out", "big"}),
-    ("shogun_pourquoi_lagos", 0.0, 26.40, "IL A TOUT GAGNÉ…", "POURQUOI LAGOS ?", {"gilbe": "Didi B", "disible": "Didi B", "type": "Tayc.",
-        "_repl": [(3.7, 4.9, "Shogun in Lagos."), (10.1, 11.5, "En Côte d'Ivoire, la mixtape"), (14.5, 15.9, "cette même mixtape")], "_cut_after": 25.95}, {"shogun", "lagos", "davido", "zlatan", "phyno", "tayc", "apple", "music", "nigeria"}, {"première", "risque", "recommencer"}),
-    ("shogun_son_avec_davido", 220.55, 248.45, "LE SON AVEC", "DAVIDO", {"fuck": "F***"}, {"davido", "youtube", "clip"}, {"attendu", "sale", "banger", "fuck"}),
+        (16.8, 22.3, "tels que Young Jonn, Zinoleesky, Zlatan, Qing Madi."), (29.4, 29.9, "nigérians de"), (39.4, 40.2, "saluent son courage."),
+        (46.9, 48.25, "au Nigeria, Didi_B")], "zinolensky": "Zinoleesky"}, {"lagos", "nigeria", "shrine", "fela", "kuti", "zinoleesky", "good", "vibes"}, {"zéro", "surprise", "seul", "polémique", "personne", "courage"}),
+    ("shogun_zenith_planete_rap", [(81.05, 131.75)], "LE ZÉNITH", "COMPLET", {"_clip": (27.93, 39.93, "c4.json", 8.95), "fali": "Fally", "ibele": "Ibile", "2025,": None, "_repl": [(10.8, 11.6, "février,")]}, {"zénith", "paris", "fally", "stade", "france", "juventus", "nueva", "era", "zlatan", "spotify"}, {"millions", "fermé", "sold", "out", "big"}),
+    ("shogun_pourquoi_lagos", [(0.0, 26.40), (54.75, 81.05)], "IL A TOUT GAGNÉ…", "POURQUOI LAGOS ?", {"gilbe": "Didi B", "disible": "Didi B", "type": "Tayc.",
+        "jb": "Didi B", "didib": "Didi B", "disib": "Didi B", "légos": "Lagos ?", "nigerien": "Nigeria.",
+        "_repl": [(3.7, 4.9, "Shogun in Lagos."), (10.1, 11.5, "En Côte d'Ivoire, la mixtape"), (14.5, 15.9, "cette même mixtape"),
+                  (26.4, 32.9, "Quelque temps après, après avoir quitté le 92i, il sort son autre projet en 2025…"), (35.2, 36.6, "à l'APRODEMCI en Côte d'Ivoire."),
+                  (43.0, 44.3, "Félix-Houphouët-Boigny"), (44.6, 45.5, "30_000"), (46.8, 47.7, "Alpha Blondy")], "_drop": [(25.95, 26.4)]}, {"shogun", "lagos", "davido", "zlatan", "phyno", "tayc", "apple", "music", "nigeria", "92i", "aprodemci", "félix-houphouët-boigny", "alpha", "blondy"}, {"platine", "30 000", "gagné", "première", "risque", "recommencer"}),
+    ("shogun_son_avec_davido", [(190.30, 248.45)], "LE SON AVEC", "DAVIDO", {"fuck": "F***", "finno": "Phyno,", "join": "Jonn,", "gana": "Ghana", "prom": "Promise,", "focalistique": "Focalistic,", "nsg": "NSG.",
+        "_repl": [(3.1, 3.95, "il y a"), (12.0, 12.7, "Qing Madi,"), (17.7, 18.7, "il a mis Tayc"), (27.4, 28.5, "prod amapiano"), (40.1, 40.5, "carrément")]}, {"davido", "youtube", "clip", "phyno", "zlatan", "young", "jonn", "qing", "madi", "mavo", "king", "promise", "focalistic", "tayc", "nsg", "nigeria", "ghana"}, {"exclusivités", "attendu", "sale", "banger", "fuck"}),
 ]
 
+def cut(name, rng):
+    """The short's source: one or several ranges of the finished video, joined."""
+    out = f"{WORK}/{name}_src.mp4"
+    if not os.path.exists(out):
+        fc = "".join(f"[0:v]trim={x}:{y},setpts=PTS-STARTPTS[v{i}];[0:a]atrim={x}:{y},asetpts=PTS-STARTPTS,afade=t=in:d=0.03,afade=t=out:st={y - x - 0.05:.3f}:d=0.05[a{i}];"
+                     for i, (x, y) in enumerate(rng))
+        fc += "".join(f"[v{i}][a{i}]" for i in range(len(rng))) + f"concat=n={len(rng)}:v=1:a=1[v][a]"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-filter_complex", fc, "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-crf", "16",
+                        "-preset", "fast", "-c:a", "aac", "-b:a", "256k", out], check=True)
+    return out, sum(y - x for x, y in rng)
 def asr(name, a, b):
     js = f"{WORK}/{name}.json"
     if os.path.exists(js): return json.load(open(js))
     wav = f"{WORK}/{name}.wav"
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(a), "-t", str(b - a), "-i", SRC, "-ac", "1", "-ar", "16000", wav], check=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(a), "-t", str(b - a), "-i", CUR, "-ac", "1", "-ar", "16000", wav], check=True)
     d = b - a; wins = [f"{i}-{min(i + 15, d):.2f}" for i in range(0, int(d) + 1, 15) if i < d - 0.3]
     subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), "asr_words_win.py"), wav, MODEL, js] + wins, check=True, stdout=subprocess.DEVNULL)
     return json.load(open(js))
@@ -73,8 +88,9 @@ cv2.imwrite(f"{WORK}/glow.png", (np.dstack([g[..., [2, 1, 0]], g[..., 3:]]) * 25
 
 ONLY = os.environ.get("ONLY")
 os.makedirs(OUTDIR, exist_ok=True)
-for name, a, b, top, bot, fixes, white, red in SHORTS:
+for name, rng, top, bot, fixes, white, red in SHORTS:
     if ONLY and ONLY not in name: continue
+    CUR, b = cut(name, rng); a = 0.0
     words = asr(name, a, b)
     fx = {**COMMON, **fixes}
     for t0, t1, text in fixes.get("_repl", []):          # passages the ASR got wrong: his exact words, spread over the same time
@@ -83,7 +99,7 @@ for name, a, b, top, bot, fixes, white, red in SHORTS:
     if "_clip" in fixes:                                  # interview inserted in the video: words from the clip's own transcript
         c0, c1, js, ss = fixes["_clip"]; cw = json.load(open(os.path.join(WORK, "..", "clips", js)))
         words = [w for w in words if not (c0 <= w["s"] < c1)] + [{"w": w["w"], "s": c0 + w["s"] - ss} for w in cw if ss <= w["s"] < ss + (c1 - c0) - 0.1]
-    words = sorted([w for w in words if w["s"] < fixes.get("_cut_after", 1e9)], key=lambda w: w["s"])
+    words = sorted([w for w in words if not any(x <= w["s"] < y for x, y in fixes.get("_drop", []))], key=lambda w: w["s"])
     out_words = []
     for w in words:
         k = w["w"].lower().strip(",.?!…«» :")
@@ -115,7 +131,7 @@ for name, a, b, top, bot, fixes, white, red in SHORTS:
           f"[g3]ass={WORK}/{name}.ass:fontsdir={os.path.dirname(ANTON)},fps={FPS},format=yuv420p,setsar=1[mv];"
           f"[0:a]aresample=48000,aformat=channel_layouts=stereo,afade=t=out:st={b - a - 0.25:.2f}:d=0.25[ma];"
           f"[3:v]fps={FPS},format=yuv420p,setsar=1[ev];[3:a]aformat=channel_layouts=stereo[ea];[mv][ma][ev][ea]concat=n=2:v=1:a=1[v][au]")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(a), "-t", str(b - a), "-i", SRC, "-loop", "1", "-i", f"{WORK}/{name}_title.png",
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(a), "-t", str(b - a), "-i", CUR, "-loop", "1", "-i", f"{WORK}/{name}_title.png",
                     "-loop", "1", "-i", f"{WORK}/glow.png", "-i", endmp4, "-filter_complex", fc,
                     "-map", "[v]", "-map", "[au]", "-c:v", "libx264", "-preset", "slow", "-crf", "20",
                     "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", out], check=True)
