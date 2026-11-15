@@ -19,7 +19,7 @@ def near(t): return min(words, key=lambda w: abs(w["s"] - t))
 def ren(t, txt): near(t)["w"] = txt
 def rm(t):
     global words; x = near(t); words = [w for w in words if w is not x]
-ren(1.28, "Vass"); ren(4.16, "officiel :"); rm(4.98); ren(5.54, "Golden"); ren(6.02, "Boy,"); ren(6.42, "TRK,"); ren(8.10, "Expositions")
+ren(1.28, "Vass"); ren(4.16, "maintenant"); ren(4.98, "officiel :"); ren(5.54, "Golden"); ren(6.02, "Boy,"); ren(6.42, "TRK,"); ren(8.10, "Expositions")
 ren(8.58, "d'Abidjan"); ren(13.66, "fallait."); ren(17.02, "ses"); ren(20.24, "« LVDG"); ren(21.60, "2 »"); ren(22.50, "« 2026"); ren(23.62, "Run ».")
 ren(29.72, "Wave"); ren(31.00, "salles"); ren(35.58, "disponibles.")
 words = [w for w in words if w["s"] < END]
@@ -88,13 +88,13 @@ def emoji(ch, size):
 ORA = (255, 121, 0)
 FLYER = card(f"{WORK}/flyer.jpg", 720, (255, 190, 60)); FLYS = card(f"{WORK}/flyer.jpg", 560, (255, 190, 60))
 TRK = card(f"{WORK}/trk.jpg", 680, (255, 255, 255))
-LVDG = card(f"{WORK}/lvdg.jpg", 420, (60, 200, 90)); GOLD_C = card(f"{WORK}/golden.jpg", 420, (255, 190, 60))
+LVDG = card(f"{WORK}/lvdg.jpg", 460, (60, 200, 90)); GOLD_C = card(f"{WORK}/golden.jpg", 460, (255, 190, 60))
 def frames(path, t0, dur, w, h):
     raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", str(t0), "-t", str(dur), "-i", path, "-an", "-vf", f"fps=30,scale={w}:{h}",
                           "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
 PR = {k: frames(f"{WORK}/promo.mov", a, d, 1080, 810) for k, (a, d) in
-      {"intro": (9.0, 3.0), "stage": (12.0, 4.0), "crowd": (14.5, 5.0), "lights": (20.0, 4.0), "clip": (24.0, 3.0), "back": (44.0, 4.5)}.items()}
+      {"intro": (9.0, 3.0), "stage": (13.0, 4.0), "crowd": (14.5, 5.0), "lights": (21.0, 4.0), "clip": (24.0, 3.0), "back": (44.0, 4.5)}.items()}
 def promo(key, k, dim=1.0):
     f = PR[key][min(int(k * FPS), len(PR[key]) - 1)]
     bgf = cv2.resize(cv2.GaussianBlur(cv2.resize(f, (135, 240)), (0, 0), 6), (W, H)).astype(np.float32) / 255 * 0.4
@@ -151,7 +151,7 @@ def draw(name, t, k):
     if name == "newwave":
         img = promo("lights" if t < R(30.60) else "back", k if t < R(30.60) else t - R(30.60))
         stack(img, t, [(R(28.76), "LES ARTISTES", WHT), (R(29.40), "DE LA NEW WAVE", YEL)], 120, 300, 150)
-        stack(img, t, [(R(30.60), "DANS LES GROSSES SALLES", WHT), (R(31.66), "EN CÔTE D'IVOIRE", GOLD)], 95, 1520, 120)
+        stack(img, t, [(R(30.60), "DANS LES GROSSES SALLES", WHT), (R(31.66), "EN CÔTE D'IVOIRE", GOLD)], 95, 1440, 120)
         return img
     img = bg("black" if name in ("parc", "projets", "places") else "red", t)
     if name == "officiel":
