@@ -69,6 +69,9 @@ INS = [  # (source time where his voice pauses, duration, clip, clip start) — 
 def R(t): return R0(t) + sum(d for at, d, *_ in INS if t >= at)
 INS_OUT = [(R0(at) + sum(d2 for at2, d2, *_ in INS if at2 < at), d, clip, ss) for at, d, clip, ss in INS]
 DUR = sum(b - a for a, b in segs) + sum(x[1] for x in INS); N = int(DUR * FPS)
+if os.environ.get("EXPORT_WORDS"):                     # words with their time in the finished video (for Shorts captions)
+    out = [{"w": w["w"], "s": R(w["s"]), "e": R(w["e"]), "src": w["s"]} for w in words if any(a <= w["s"] < b for a, b in segs)]
+    json.dump({"words": out, "ins": INS_OUT}, open(os.environ["EXPORT_WORDS"], "w"), ensure_ascii=False); sys.exit()
 print(f"{len(segs)} segments, {DUR:.1f}s (from {END:.1f}s)", flush=True)
 voice = sf.read(f"{WORK}/voice_cut.wav")[0]
 for at, d, *_ in sorted(INS, reverse=True):          # silence in his voice while the clip speaks
