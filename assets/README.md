@@ -59,6 +59,9 @@
 | `extraits/musique/didib-stade-fhb-concert-16x9.mp4` | MUSIQUE | Didi B au stade FHB (Félicia), 3 mai 2025 : plaques de platine sur scène, foule ; TikTok vertical recadré 16:9 (fond flouté), filigrane flouté (source TikTok @marcel.media0), 1 min 39 avec son |
 | `extraits/musique/didib-je-mappelle-clip-16x9.mp4` | MUSIQUE | coulisses du clip « Je m'appelle » (Didi B feat. Zlatan), « OUT NOW » ; TikTok vertical recadré 16:9, filigranes et lien YouTube floutés (source @didib.mojaveli), 21 s avec son |
 | `extraits/musique/kiff-no-beat-clip-16x9.mp4` | MUSIQUE | ancien clip de Kiff No Beat (quartier, danse) ; bande vidéo extraite du TikTok et mise en 1920×1080, logos floutés (source TikTok @2x_ramazanny), 56 s avec son |
+| `extraits/musique/didib-interview-planete-rap-16x9.mp4` | MUSIQUE | Didi B à Planète Rap (Skyrock), 33 s : « je suis un big par mon talent », « il y a quelques années on ne pouvait même pas parler de Zénith » (≈4–13 s), Fally Ipupa et le Stade de France (≈14–20 s) ; inserts affiche Zénith 19.04.2026 (13–16 s), vue aérienne d'Abidjan (25–29 s) ; logos Planète Rap / Skyrock floutés, créditer « PLANÈTE RAP / SKYROCK » |
+| `extraits/musique/zrai-studio-16x9.mp4` | MUSIQUE | Zrai en studio (titre « ZRAI, artiste interprète » 0–3 s), session d'enregistrement, 30 s, pas de parole |
+| `extraits/musique/young-jonn-diner-raba-16x9.mp4` | MUSIQUE | Dîner avec Young Jonn (titre à l'écran 9–12 s), on entend « Raba » vers 15–18 s, 18 s |
 | `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
 | `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
 | `extraits/sport/yan-diomande-but-montage.mov` | SPORT | Montage du but de Yan Diomandé (Real Madrid, n°25) : frappe 0,6–4 s, célébration 6 s, gros plans 19–22 s ; filigrane TikTok : recadrer à 78 % |
