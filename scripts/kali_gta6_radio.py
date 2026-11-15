@@ -93,7 +93,7 @@ def frames(path, t0, dur, vf, w, h):
                           "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
 TR = {k: frames(f"{WORK}/v1.mp4", a, d, "transpose=2,crop=iw:ih*0.84", 1080, 512) for k, (a, d) in
-      {"logo": (162.3, 3.0), "rock": (2.2, 2.6), "beach": (6.4, 3.0), "night": (143.0, 4.0), "city": (31.0, 3.5)}.items()}
+      {"logo": (162.3, 3.0), "rock": (71.6, 2.6), "beach": (6.4, 3.0), "night": (143.0, 4.0), "city": (31.0, 3.5)}.items()}
 PL = {k: frames(f"{WORK}/v2.mp4", a, d, "null", 900, 864) for k, (a, d) in {"burna": (1.0, 2.6), "joha": (17.0, 7.5)}.items()}
 def trailer(key, k, dim=1.0):
     f = TR[key][min(int(k * FPS), len(TR[key]) - 1)]
@@ -162,10 +162,10 @@ def draw(name, t, k):
     img = bg("black" if name in ("genres", "palmsy", "comment") else "red", t)
     if name == "afro":
         stack(img, t, [(R(4.00), "LA MUSIQUE", WHT), (R(4.90), "AFRICAINE", GOLD)], 150, 320, 180)
-        pop3d(img, t, R(4.90), "note", 280, 820, 0.9, 4.0)
-        stack(img, t, [(R(6.02), "SA PROPRE RADIO", YEL)], 130, 1000, 0)
-        pop3d(img, t, R(6.26), "wifi", 800, 760, 0.9, 3.0)
-        stack(img, t, [(R(7.14), "DANS GTA VI", (255, 90, 200))], 150, 1250, 0)
+        pop3d(img, t, R(4.90), "note", 250, 700, 0.7, 4.0)
+        stack(img, t, [(R(6.02), "SA PROPRE RADIO", YEL)], 130, 1060, 0)
+        pop3d(img, t, R(6.26), "wifi", 830, 680, 0.7, 3.0)
+        stack(img, t, [(R(7.14), "DANS GTA VI", (255, 90, 200))], 150, 1300, 0)
     elif name == "afrobank":
         paste(img, AFRO, W / 2, 980, settle(min(k, 1.5)))
         typewriter(img, t, R(10.28), "AFROBANK FM", 150, GRN, 300, 14)
@@ -177,13 +177,13 @@ def draw(name, t, k):
         player(img, "burna", k, 980)
         stack(img, t, [(R(16.06), "AUX CÔTÉS DE", WHT), (R(16.46), "PALMSY", YEL)], 130, 230, 155)
     elif name == "genres":
-        stack(img, t, [(R(18.16), "AU PROGRAMME", WHT)], 120, 260, 0)
+        stack(img, t, [(R(18.10), "AU PROGRAMME", WHT)], 120, 260, 0)
         stack(img, t, [(R(18.56), "AFROBEATS", GOLD), (R(19.60), "AMAPIANO", GRN), (R(21.52), "GROS CLASSIQUES", RED)], 160, 560, 230)
         pop3d(img, t, R(18.56), "note", 870, 1350, 0.75, 3.8); pop3d(img, t, R(19.60), "note2", 220, 1300, 0.7, 2.8)
     elif name == "bangers":
         player(img, "joha", k, 820)
         stack(img, t, [(R(23.54), "DES BANGERS", YEL)], 110, 230, 0)
-        stack(img, t, [(R(24.18), "JOHA – ASAKE", WHT), (R(25.38), "SHAY'SANA – DJ LAG", WHT), (R(28.20), "LÉGENDE : PAT THOMAS", GOLD)], 75, 1330, 95)
+        stack(img, t, [(R(24.18), "JOHA – ASAKE", WHT), (R(25.38), "SHAY'SANA – DJ LAG", WHT), (R(28.20), "LÉGENDE : PAT THOMAS", GOLD)], 88, 1320, 108)
     elif name == "comment":
         typewriter(img, t, R(37.04), "DONNEZ VOTRE AVIS", 110, WHT, 760, 22)
         stack(img, t, [(R(37.70), "EN COMMENTAIRE", YEL)], 150, 960, 0)
