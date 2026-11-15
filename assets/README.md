@@ -63,3 +63,6 @@
 | `extraits/sport/cote-divoire-coupe-du-monde.mp4` | SPORT | Sa vidéo Côte d'Ivoire / Coupe du monde : Infantino, Éléphants, poule avec l'Allemagne, « restez concentrés » à 36,9 s |
 
 Logo : `showreel/assets/logos/monsieur-vass.png`.
+| `musique/didib-stade-fhb-concert-16x9.mp4` | musique | Didi B au stade FHB (Félicia), 3 mai 2025 : plaques de platine sur scène, foule ; TikTok vertical recadré 16:9 (fond flouté), filigrane flouté (source TikTok @marcel.media0), 1 min 39 avec son |
+| `musique/didib-je-mappelle-clip-16x9.mp4` | musique | coulisses du clip « Je m'appelle » (Didi B feat. Zlatan), « OUT NOW » ; TikTok vertical recadré 16:9, filigranes et lien YouTube floutés (source @didib.mojaveli), 21 s avec son |
+| `musique/kiff-no-beat-clip-16x9.mp4` | musique | ancien clip de Kiff No Beat (quartier, danse) ; bande vidéo extraite du TikTok et mise en 1920×1080, logos floutés (source TikTok @2x_ramazanny), 56 s avec son |
