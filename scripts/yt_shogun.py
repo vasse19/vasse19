@@ -56,16 +56,24 @@ if not os.path.exists(f"{WORK}/voice_cut.wav") or not PREVIEW:
     open(f"{WORK}/fc.txt", "w").write(";".join(fc))
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f"{WORK}/src.mp3", "-filter_complex_script", f"{WORK}/fc.txt", "-map", "[a]",
                     "-ar", str(SR), "-ac", "1", f"{WORK}/voice_cut.wav"], check=True)
-def R(t):
+def R0(t):
     acc = 0.0
     for a, b in segs:
         if t < a: return acc
         if t < b: return acc + t - a
         acc += b - a
     return acc
-DUR = sum(b - a for a, b in segs); N = int(DUR * FPS)
+CLIPS = os.path.join(REPO, "assets/extraits/musique")
+INS = [  # (source time where his voice pauses, duration, clip, clip start) — Didi B speaks at Planète Rap
+    (127.40, 12.0, "didib-interview-planete-rap-16x9.mp4", 8.95)]
+def R(t): return R0(t) + sum(d for at, d, *_ in INS if t >= at)
+INS_OUT = [(R0(at) + sum(d2 for at2, d2, *_ in INS if at2 < at), d, clip, ss) for at, d, clip, ss in INS]
+DUR = sum(b - a for a, b in segs) + sum(x[1] for x in INS); N = int(DUR * FPS)
 print(f"{len(segs)} segments, {DUR:.1f}s (from {END:.1f}s)", flush=True)
 voice = sf.read(f"{WORK}/voice_cut.wav")[0]
+for at, d, *_ in sorted(INS, reverse=True):          # silence in his voice while the clip speaks
+    i0 = int(R0(at) * SR); voice = np.concatenate([voice[:i0], np.zeros(int(d * SR)), voice[i0:]])
+sf.write(f"{WORK}/voice_ins.wav", voice, SR)
 lvl = np.array([np.sqrt(np.mean(voice[int(i / FPS * SR):int((i + 1) / FPS * SR)] ** 2) + 1e-12) for i in range(N)])
 lvl = np.clip(lvl / (np.percentile(lvl, 95) + 1e-9), 0, 1.2)
 
@@ -177,6 +185,35 @@ class P:                                              # 3D png from his library,
     def __init__(s, t0, rel, cx, cy, w=260, out=None): s.t0, s.rel, s.cx, s.cy, s.w, s.out = t0, rel, cx, cy, w, out
 class S:                                              # red stamp
     def __init__(s, t0, text, cx, cy, size=110): s.t0, s.text, s.cx, s.cy, s.size = t0, text, cx, cy, size
+class V:                                              # video clip: glowing card, or full-screen background ('bg')
+    def __init__(s, clip, t0, cx, cy, w, ss=0.0, out=None, mode="card", credit=None, gain=0.12):
+        s.clip, s.t0, s.cx, s.cy, s.w, s.ss, s.out, s.mode, s.credit, s.gain = clip, t0, cx, cy, w, ss, out, mode, credit, gain
+_vp, _vglow = {}, {}
+def vframe(v, k):
+    st = _vp.get(id(v)); want = int(round(k * FPS)); h = (int(v.w * 9 / 16) // 2) * 2 if v.mode == "card" else H
+    if st is None or st["n"] != want:
+        if st: st["p"].kill(); st["p"].wait()
+        p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{v.ss + want / FPS:.3f}", "-i", os.path.join(CLIPS, v.clip), "-an",
+                              "-vf", f"scale={v.w}:{h}", "-r", str(FPS), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
+        st = _vp[id(v)] = {"p": p, "n": want, "last": st["last"] if st else None, "h": h}
+    buf = st["p"].stdout.read(v.w * h * 3); st["n"] += 1
+    if len(buf) == v.w * h * 3: st["last"] = np.frombuffer(buf, np.uint8).reshape(h, v.w, 3).astype(np.float32) / 255
+    return st["last"]
+def draw_video(img, v, k, fade):
+    fr = vframe(v, k)
+    if fr is None: return
+    if v.mode == "bg":
+        a = min(k / 0.3, 1) * fade; img[:] = img * (1 - a) + fr * 0.42 * a
+    else:
+        h, w = fr.shape[:2]
+        if (w, h) not in _vglow: _vglow[(w, h)] = glow_rgba(np.dstack([np.zeros((h, w, 3), np.float32), np.ones((h, w), np.float32)]), (255, 255, 255), 22, 1.0)
+        sc, a = settle(min(k, 2.0)), min(k / 0.15, 1) * fade
+        paste(img, _vglow[(w, h)], v.cx, v.cy, sc, a)
+        paste(img, np.dstack([fr[..., ::-1], np.ones((h, w), np.float32)]), v.cx, v.cy, sc, a)
+        x0, y0, x1, y1 = int(v.cx - w * sc / 2), int(v.cy - h * sc / 2), int(v.cx + w * sc / 2), int(v.cy + h * sc / 2)
+        if a > 0.5: cv2.rectangle(img, (x0, y0), (x1, y1), (1.0, 1.0, 1.0), 5)
+    if v.credit:
+        cb = kbox(v.credit, 24); paste(img, cb, 40 + cb.shape[1] / 2, H - 40, 1.0, 0.85 * fade * min(k / 0.3, 1))
 class K:                                              # red cross over a rectangle
     def __init__(s, t0, x0, y0, x1, y1): s.t0, s.r = t0, (x0, y0, x1, y1)
 
@@ -216,6 +253,7 @@ def draw_el(img, el, t, ts):
         paste(img, png(el.rel, el.w), el.cx, el.cy + 10 * np.sin(t * 2 + el.cy), popk(k) * (1 + 0.02 * np.sin(t * 1.7)), min(k / 0.1, 1) * fade)
     elif isinstance(el, S):
         sc = 1.0 + 1.6 * max(0.0, 1 - k / 0.14) ** 2; paste(img, stamp(el.text, el.size), el.cx, el.cy, sc, min(k / 0.06, 1))
+    elif isinstance(el, V): draw_video(img, el, k, fade)
     elif isinstance(el, K):
         x0, y0, x1, y1 = el.r; u = min(k / 0.25, 1)
         cv2.line(img, (x0, y0), (int(x0 + (x1 - x0) * u), int(y0 + (y1 - y0) * u)), (0.15, 0.1, 0.95), 18, cv2.LINE_AA)
@@ -243,7 +281,8 @@ SCENES = [
         X(T("partager", 30), "PARTAGE", 1380, 520, 130, RED), P(T("liker", 30), "3d/heart-gold.png", 560, 300, 200),
         E(T("commenter", 30), "💬", 960, 300, 170), E(T("partager", 30), "🔁", 1380, 300, 170)]),
     # --- 1. les débuts ---
-    (36.0, 45.80, "kiff-no-beat.jpg", [C("kiff-no-beat.jpg", CL, 520, 820), X(T("keefnobit"), "KIFF NO BEAT", CR + 80, 330, 110, YEL, "type"),
+    (36.0, 45.80, "kiff-no-beat.jpg", [C("kiff-no-beat.jpg", CL, 520, 820, out=T("premier", 40)),
+        V("kiff-no-beat-clip-16x9.mp4", T("premier", 40), CL, 520, 820, ss=10.0, credit="SOURCE : TIKTOK @2X_RAMAZANNY"), X(T("keefnobit"), "KIFF NO BEAT", CR + 80, 330, 110, YEL, "type"),
         X(T("2009"), "2009 · ABIDJAN", CR + 80, 480, 70, WHT, "box"), X(T("premier", 40), "1ER GROUPE HIP-HOP AFRICAIN", CR + 80, 640, 58, WHT),
         X(T("universal"), "SIGNÉ CHEZ UNIVERSAL", CR + 80, 740, 74, GOLD), X(T("2017"), "2017", CR + 80, 860, 70, WHT, "box")]),
     # --- 2. la carrière solo ---
@@ -256,7 +295,8 @@ SCENES = [
         X(T("2025", 64), "SON PROJET 2025", CR, 430, 80, YEL), X(T("platine", 70), "DISQUE DE PLATINE", CR, 640, 96, GOLD),
         P(T("platine", 70), "3d/lightning-gold.png", CR + 400, 600, 180), X(T("prodemsi"), "APRODEMCI · CÔTE D'IVOIRE", CR, 780, 56, WHT, "box")]),
     # --- 3. Félicia ---
-    (76.30, 94.65, "stade-fhb-felicia.jpg", [C("stade-fhb-felicia.jpg", 960, 480, 960, out=89.4),
+    (76.30, 94.65, "stade-fhb-felicia.jpg", [C("stade-fhb-felicia.jpg", 960, 480, 960, out=T("remplir")),
+        V("didib-stade-fhb-concert-16x9.mp4", T("remplir"), 960, 480, 960, ss=7.0, out=89.4, credit="SOURCE : TIKTOK @MARCEL.MEDIA0"),
         X(T("mai", 76), "3 MAI 2025", 960, 105, 84, YEL, out=89.4), Nn(T("plus", 82), T("personnes", 84), 30000, 960, 880, 130, YEL, " PERSONNES", out=89.4),
         X(T("alpha", 85), "1ÈRE FOIS DEPUIS ALPHA BLONDY EN 1985", 960, 1005, 56, WHT, "box", out=89.4),
         X(T("tout", 89), "IL A TOUT GAGNÉ", 960, 400, 120, WHT), X(T("nouveau", 92), "NOUVEAU TERRAIN", 960, 600, 100, YEL),
@@ -275,7 +315,7 @@ SCENES = [
         P(T("bientôt", 133), "3d/money-stack-teal.png", 1470, 920, 220)]),
     (139.40, 155.80, "grid", [X(T("enchaîne"), "IL ENCHAÎNE LES SINGLES", 960, 170, 96, WHT), P(T("singles", 141), "3d/music-note-gold.png", 960, 540, 260),
         C("mavo.jpg", 480, 560, 380, T("mavo")), X(T("mavo"), "FEAT. MAVO", 480, 860, 60, WHT, "box"),
-        C("young-jonn.jpg", 1440, 560, 420, T("young", 146)), X(T("young", 146), "FEAT. YOUNG JONN", 1440, 860, 60, WHT, "box")]),
+        V("young-jonn-diner-raba-16x9.mp4", T("young", 146), 1400, 560, 640, ss=9.1, gain=0.2), X(T("young", 146), "« RABA » FEAT. YOUNG JONN", 1400, 860, 60, WHT, "box")]),
     # --- 5. la signature ---
     (155.80, 177.10, "paper_red", [X(T("juin"), "JUIN 2026", 960, 170, 96, YEL), X(T("sonic", 158), "SIGNÉ CHEZ SONY MUSIC FRANCE", 960, 330, 96, WHT),
         E(T("sonic", 158), "✍️", 960, 500, 150), X(T("annoncent"), "ANNONCÉ PAR LE LABEL", 960, 660, 60, WHT, "box"),
@@ -285,10 +325,10 @@ SCENES = [
     (177.10, 192.15, "shogun-in-lagos.jpg", [C("shogun-in-lagos.jpg", CL, 540, 700), X(T("octobre"), "OCTOBRE 2026 : L'ANNONCE", CR, 300, 64, WHT, "box"),
         X(T("attendait"), "LA MIXTAPE TANT ATTENDUE", CR, 450, 66, YEL), X(T("vendredi"), "VENDREDI 6 NOVEMBRE", CR, 620, 84, WHT),
         X(T("distribué"), "DISTRIBUÉ PAR SONY MUSIC FRANCE", CR, 780, 52, WHT, "box")]),
-    (192.15, 208.30, "grid", [Nn(T("23", 192), T("titres", 193), 23, 960, 230, 160, YEL, " TITRES"),
-        X(T("afrobit"), "UNE DA AFROBEAT", 960, 470, 130, GOLD), P(T("afrobit"), "3d/music-note-red.png", 360, 520, 260),
+    (192.15, 208.30, "grid", [V("zrai-studio-16x9.mp4", None, 960, 540, 1920, ss=8.0, mode="bg", gain=0.15), Nn(T("23", 192), T("titres", 193), 23, 960, 230, 160, YEL, " TITRES"),
+        X(T("afrobit"), "UNE DA AFROBEATS", 960, 470, 130, GOLD), P(T("afrobit"), "3d/music-note-red.png", 360, 520, 260),
         P(T("afrobit"), "3d/music-note-gradient.png", 1560, 520, 260), X(T("rap", 200), "PAS DU RAP CETTE FOIS", 960, 720, 80, RED),
-        X(T("vraiment", 203), "100 % AFROBEAT", 960, 880, 76, WHT, "box")]),
+        X(T("vraiment", 203), "100 % AFROBEATS", 960, 880, 76, WHT, "box")]),
     (208.30, 224.45, "grid", [X(T("exclusivités"), "7 EXCLUSIVITÉS SUR 23 TITRES", 960, 120, 76, YEL), X(T("nigeria", 215), "NIGERIA À L'HONNEUR", 960, 230, 86, WHT),
         E(T("nigeria", 215), NG, 1460, 230, 110),
         C("davido.jpg", 280, 560, 300, T("davido", 218)), C("phyno.jpg", 600, 560, 300, T("finot", 218)), C("zlatan.jpg", 900, 560, 260, T("zlatan", 219)), X(T("zlatan", 219), "ZLATAN", 900, 820, 50, WHT),
@@ -300,7 +340,7 @@ SCENES = [
         C("tayc.jpg", 1200, 520, 330, T("taïk")), X(T("taïk"), "TAYC", 1200, 920, 48, WHT),
         C("nsg.jpg", 1640, 520, 330, T("nsg")), E(T("londonien"), GB, 1640, 820, 90), X(T("nsg"), "NSG", 1640, 920, 48, WHT),
         X(T("ghana"), "AU-DELÀ DU NIGERIA", 960, 120, 76, YEL)]),
-    (237.0, 244.35, "je-mappelle.jpg", [C("je-mappelle.jpg", CL, 540, 560), X(T("je", 237), "« JE M'APPELLE »", CR, 340, 90, YEL),
+    (237.0, 244.35, "je-mappelle.jpg", [V("didib-je-mappelle-clip-16x9.mp4", None, 560, 540, 780, ss=0.5, gain=0.2, credit="SOURCE : TIKTOK @DIDIB.MOJAVELI"), X(T("je", 237), "« JE M'APPELLE »", CR, 340, 90, YEL),
         X(T("prod", 238), "SUR UNE PROD AMAPIANO", CR, 500, 64, WHT, "box"), X(T("différence"), "IL A FAIT LA DIFFÉRENCE", CR, 680, 72, GOLD)]),
     (244.35, 275.70, "davido.jpg", [C("davido.jpg", 960, 545, 800), X(T("attendu"), "LE SON LE PLUS ATTENDU", 960, 110, 90, YEL, out=T("savent")),
         X(T("davido", 247), "FEAT. DAVIDO", 960, 960, 90, WHT, out=T("savent")),
@@ -378,17 +418,27 @@ BURN_AT = [R(c[0]) for c in CHAPTERS[1:]] + [SC[-1][0]]
 f0, f1 = 0, N
 SNAP = os.environ.get("SNAP")                         # "src_t1,src_t2,..." writes one PNG per source time, then exits
 frames = range(f0, f1)
-if SNAP: frames = [int(R(float(x)) * FPS) for x in SNAP.split(",")]
+if SNAP: frames = [int((float(x[1:]) if x[0] == "o" else R(float(x))) * FPS) for x in SNAP.split(",")]
 if PREVIEW: a_, b_ = map(float, PREVIEW.split("-")); f0, f1 = int(a_ * FPS), min(int(b_ * FPS), N)
 VIDEO_ONLY = f"{WORK}/video_only.mp4" if not PREVIEW else OUT
 enc = None if SNAP else subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
     "-vf", "noise=alls=3:allf=t+u,format=yuv420p", "-c:v", "libx264", "-preset", "fast", "-crf", "19", VIDEO_ONLY], stdin=subprocess.PIPE)
-lab_cache = {}
+lab_cache = {}; _vins = {}
 for i in (frames if SNAP else range(f0, f1)):
     t = i / FPS
     si = max(j for j, s in enumerate(SC) if s[0] <= t) if t >= SC[0][0] else 0
     ts, te, bgs, els = SC[si]; k = t - ts
-    if bgs == "end":
+    ins = next((x for x in INS_OUT if x[0] <= t < x[0] + x[1]), None)
+    if ins:
+        o0, d, clip, ss = ins; kk = t - o0; k = kk
+        img = background("zenith-complet.jpg", t, kk)
+        if ins not in _vins: _vins[ins] = V(clip, None, 960, 495, 1220, ss=ss, credit="SOURCE : PLANÈTE RAP / SKYROCK")
+        draw_video(img, _vins[ins], kk, float(np.clip((d - kk) / 0.2, 0, 1)))
+        lb = kbox("DIDI B À PLANÈTE RAP", 44); paste(img, lb, W / 2, 75, popk(kk), min(kk / 0.1, 1))
+        for q0, q1, q in ((0.9, 6.2, "« ON NE POUVAIT MÊME PAS PARLER DE ZÉNITH »"), (10.3, d, "« IL NOUS MONTRE LA VOIE, ON LE SUIT »")):
+            if q0 <= kk < q1: im, _ = neon(q, 48, YEL); paste(img, im, W / 2, 935, popk(kk - q0), min((kk - q0) / 0.08, 1) * min((q1 - kk) / 0.15, 1))
+        if 6.4 <= kk < 10.2: im, _ = neon("FALLY IPUPA · 2 STADES DE FRANCE", 46, WHT); paste(img, im, W / 2, 935, popk(kk - 6.4), min((kk - 6.4) / 0.08, 1))
+    elif bgs == "end":
         img = background("grid", t, k) * 0.8
         paste(img, END_LOGO, W / 2, 380, 0.85 + 0.15 * min(k / 0.3, 1))
         paste(img, end_img, W / 2, 800, 0.6 + 0.4 * min(k / 0.15, 1))
@@ -411,6 +461,8 @@ for i in (frames if SNAP else range(f0, f1)):
         cv2.circle(img, (95, 95), int(70 + 10 * lv), (0.25, 0.75, 1.0), 4, cv2.LINE_AA)
         paste(img, logo, 95, 95, 1.0 + 0.06 * lv)
     if k < 0.08 and si > 0: img = np.clip(img + (0.08 - k) / 0.08 * 0.55, 0, 1)      # white flash on every cut
+    for o0, d, *_ in INS_OUT:
+        if 0 <= t - (o0 + d) < 0.08: img = np.clip(img + (0.08 - (t - o0 - d)) / 0.08 * 0.55, 0, 1)
     for b_ in BURN_AT:
         kb = int(round((t - (b_ - BURN_PEAK)) * FPS))
         if 0 <= kb < len(BURN): img = 1 - (1 - img) * (1 - BURN[kb].astype(np.float32) / 255)
@@ -449,13 +501,26 @@ for a, b, bgs, els in SC:
         elif isinstance(el, S) or isinstance(el, K): place(hit, t0, 0.4)
         elif isinstance(el, P) and "gold" in el.rel: place(sparkle[int(4.2 * SR):int(5.4 * SR)], t0 - 0.1, 0.3)
         elif isinstance(el, (E, P)): place(hit, t0, 0.12)
+def clip_audio(clip, ss, d):
+    a = np.frombuffer(subprocess.check_output(["ffmpeg", "-v", "error", "-ss", f"{ss:.3f}", "-t", f"{d:.3f}", "-i", os.path.join(CLIPS, clip),
+        "-af", "loudnorm=I=-16:TP=-2", "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"]), np.float32).copy()
+    f = min(int(0.25 * SR), len(a) // 4)
+    if f: a[:f] *= np.linspace(0, 1, f); a[-f:] *= np.linspace(1, 0, f)
+    return a
+for a, b, bgs, els in SC:
+    for el in els:
+        if isinstance(el, V):
+            t0 = a if el.t0 is None else R(el.t0); t1 = b if el.out is None else R(el.out)
+            place(clip_audio(el.clip, el.ss, t1 - t0), t0, el.gain)
+for o0, d, clip, ss in INS_OUT:
+    place(clip_audio(clip, ss, d), o0, 1.0); place(whooshes[0][0], o0 - whooshes[0][1], 0.25)
 for c in CHAPTERS:
     if c[2]: place(hit, R(c[0]), 0.45)
 for b_ in BURN_AT: place(burn_a, b_ - BURN_PEAK, 0.45)
 place(hit, HOOK[0], 0.5); place(riser, HOOK[0] - 2.95, 0.4); place(riser, R(T("surprise")) - 2.95, 0.45)
 place(uhh, R(T("vient", 340)) + 0.15, 0.2); place(crowd, R(T("personnes", 84)), 0.3)
 sf.write(f"{WORK}/sfx.wav", sfx[:int(DUR * SR)], SR)
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/voice_cut.wav", "-i", f"{WORK}/sfx.wav", "-filter_complex",
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/voice_ins.wav", "-i", f"{WORK}/sfx.wav", "-filter_complex",
     "[1:a]highpass=f=70,acompressor=threshold=-22dB:ratio=3:attack=5:release=90:makeup=2dB,loudnorm=I=-14:TP=-1.5:LRA=7,"
     "aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
     "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.75:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
