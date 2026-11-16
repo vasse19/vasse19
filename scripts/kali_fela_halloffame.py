@@ -195,6 +195,28 @@ FELAS = cv2.resize(FELAS, None, fx=470 / max(FELAS.shape[:2]), fy=470 / max(FELA
 HALL = cover_card(f"{WORK}/p3.jpg", 960, (255, 255, 255)); HALLS = cover_card(f"{WORK}/p3.jpg", 760, (255, 255, 255))
 IND = {k: cover_card(f"{WORK}/{f}", 300, c) for k, f, c in (("jay", "p4.jpg", (255, 255, 255)), ("pac", "p5.jpg", (255, 255, 255)),
        ("nwa", "p6.jpg", (255, 255, 255)), ("wu", "p7.jpg", (255, 222, 40)), ("phil", "p8.jpg", (255, 60, 60)), ("queen", "p9.jpg", (255, 190, 60)))}
+def blur_boxes(boxes):
+    """Blur only small watermark boxes (x, y, w, h) in the 576x1024 TikTok frame."""
+    out, src = [], "[0:v]"
+    for n, (x, y, w, h) in enumerate(boxes):
+        out.append(f"{src}split[a{n}][b{n}];[b{n}]crop={w}:{h}:{x}:{y},boxblur=8[c{n}];[a{n}][c{n}]overlay={x}:{y}[o{n}]"); src = f"[o{n}]"
+    return ";".join(out) + f";{src}"
+def clip_frames(path, t0, dur, boxes):
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", str(t0), "-t", str(dur), "-i", path, "-an", "-filter_complex",
+                          blur_boxes(boxes) + "fps=30,scale=360:640,eq=contrast=1.05:saturation=1.08", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                         capture_output=True, check=True).stdout
+    return np.frombuffer(raw, np.uint8).reshape(-1, 640, 360, 3)
+WM_STD = [(0, 462, 165, 100), (412, 752, 164, 150)]          # TikTok logo + handle: left (early) and right (later)
+C_LIVE = clip_frames(f"{WORK}/fc2.mp4", 6.0, 5.6, WM_STD)                                   # @rockhall: Fela on stage, blue trousers
+C_STAGE = clip_frames(f"{WORK}/fc3.mp4", 2.0, 12.6, WM_STD + [(230, 705, 150, 95)])          # @9japr247: leopard shirt (+ « 9ja PR » logo)
+C_SMOKE = clip_frames(f"{WORK}/fc1.mp4", 15.5, 5.0, WM_STD)                                 # @thegr8vibe: close-up with cigarette
+C_BAND = clip_frames(f"{WORK}/fc1.mp4", 0.3, 6.6, WM_STD)                                   # @thegr8vibe: the band in yellow
+CREDIT = {"live": "@ROCKHALL", "stage": "@9JAPR247", "smoke": "@THEGR8VIBE", "band": "@THEGR8VIBE"}
+def play(frames, k, dim=0.82):
+    fr = frames[min(int(k * FPS), len(frames) - 1)]
+    return cv2.resize(fr, (W, H), interpolation=cv2.INTER_LINEAR).astype(np.float32) / 255 * dim
+def credit(img, key_):
+    im, _ = neon(f"SOURCE TIKTOK : {CREDIT[key_]}", 34, WHT); paste(img, im, W / 2, 1860, 1.0, 0.85)
 def fit(v, m=470):
     sc = m / max(v.shape[:2]); return cv2.resize(v, None, fx=sc, fy=sc, interpolation=cv2.INTER_LINEAR)
 IND = {k: fit(v) for k, v in IND.items()}
@@ -314,6 +336,28 @@ def tag(img, t, t0, im, lbl, x, y, col=WHT):
     if t >= R(t0):
         paste(img, im, x, y, popk(t, R(t0))); lb, _ = neon(lbl, 62, col); paste(img, lb, x, y + im.shape[0] / 2 - 6)
 def draw_scene(name, t, k):
+    if name == "fela":
+        img = play(C_LIVE, k); credit(img, "live")
+        stack(img, t, [(R(4.58), "FELA KUTI", GOLD), (R(6.18), "1ER ARTISTE AFRICAIN", WHT)], 120, 230, 145)
+        stack(img, t, [(R(7.70), "INTRONISÉ", RED)], 150, 1680, 0)
+        return img
+    if name == "engage":
+        img = play(C_STAGE, k); credit(img, "stage")
+        stack(img, t, [(R(42.20), "CONNU POUR", WHT), (R(44.42), "SES ENGAGEMENTS", YEL), (R(45.08), "POLITIQUES", RED)], 100, 220, 120)
+        if t >= R(49.58): paste(img, FLAG_NG, 220, 1600, popk(t, R(49.58)) * 0.8)
+        cur = [x for x in ((48.04, "IL DÉNONÇAIT", WHT), (50.30, "LA CORRUPTION", RED), (51.42, "LA COLONISATION", RED)) if t >= R(x[0])]
+        if cur: im, _ = neon(cur[-1][1], 100, cur[-1][2]); paste(img, im, W / 2 + 80, 1620, popk(t, R(cur[-1][0])))
+        return img
+    if name == "legende":
+        img = play(C_SMOKE, k); credit(img, "smoke")
+        stack(img, t, [(R(54.32), "DES ALLERS-RETOURS", WHT), (R(55.04), "EN PRISON", RED)], 110, 230, 135)
+        stack(img, t, [(R(57.12), "SA LÉGENDE", GOLD)], 160, 1640, 0)
+        return img
+    if name == "fils":
+        img = play(C_BAND, k); credit(img, "band")
+        stack(img, t, [(R(74.85), "À LA CÉRÉMONIE", WHT), (R(77.22), "SEUN KUTI", GOLD), (R(78.58), "FEMI KUTI", GOLD)], 120, 220, 145)
+        stack(img, t, [(R(76.90), "SES DEUX FILS, ARTISTES", WHT)], 85, 1680, 0)
+        return img
     img = bg_for([s[2] for s in SCENES].index(name), t)
     if name == "hook":
         paste(img, FELA1, W / 2, 1280, settle(k)); bolt(img, t, 0.0, "gold", 870, 1400, 0.8)
