@@ -209,7 +209,7 @@ def clip_frames(path, t0, dur, boxes):
 WM_STD = [(0, 462, 165, 100), (412, 752, 164, 150)]          # TikTok logo + handle: left (early) and right (later)
 C_LIVE = clip_frames(f"{WORK}/fc2.mp4", 6.0, 5.6, WM_STD)                                   # @rockhall: Fela on stage, blue trousers
 C_STAGE = clip_frames(f"{WORK}/fc3.mp4", 2.0, 12.6, WM_STD + [(230, 705, 150, 95)])          # @9japr247: leopard shirt (+ « 9ja PR » logo)
-C_SMOKE = clip_frames(f"{WORK}/fc1.mp4", 15.5, 5.0, WM_STD)                                 # @thegr8vibe: close-up with cigarette
+C_SMOKE = clip_frames(f"{WORK}/fc1.mp4", 16.6, 5.0, WM_STD)                                 # @thegr8vibe: close-up with cigarette
 C_BAND = clip_frames(f"{WORK}/fc1.mp4", 0.3, 6.6, WM_STD)                                   # @thegr8vibe: the band in yellow
 CREDIT = {"live": "@ROCKHALL", "stage": "@9JAPR247", "smoke": "@THEGR8VIBE", "band": "@THEGR8VIBE"}
 def play(frames, k, dim=0.82):
