@@ -190,10 +190,11 @@ def cover_card(path, width, rim):
 from kali_fx import bg_for
 def card_set(names, width, rim): return [cover_card(f"{WORK}/{n}.jpg", width, rim) for n in names]
 FELA1 = cover_card(f"{WORK}/p1.jpg", 720, (255, 190, 60)); FELA2 = cover_card(f"{WORK}/p2.jpg", 600, (255, 190, 60))
-FELAS = cover_card(f"{WORK}/p1.jpg", 300, (255, 190, 60))
+FELAS = cover_card(f"{WORK}/p1.jpg", 405, (255, 190, 60))
 HALL = cover_card(f"{WORK}/p3.jpg", 960, (255, 255, 255)); HALLS = cover_card(f"{WORK}/p3.jpg", 760, (255, 255, 255))
 IND = {k: cover_card(f"{WORK}/{f}", 300, c) for k, f, c in (("jay", "p4.jpg", (255, 255, 255)), ("pac", "p5.jpg", (255, 255, 255)),
        ("nwa", "p6.jpg", (255, 255, 255)), ("wu", "p7.jpg", (255, 222, 40)), ("phil", "p8.jpg", (255, 60, 60)), ("queen", "p9.jpg", (255, 190, 60)))}
+IND = {k: cv2.resize(v, None, fx=1.35, fy=1.35, interpolation=cv2.INTER_LINEAR) for k, v in IND.items()}
 BOLT = {c: rgba_file(os.path.join(LIB, "3d", f), 640) for c, f in (("gold", "lightning-gold.png"), ("heart", "heart-gold.png"), ("note", "music-note-gold.png"))}
 def bolt(img, t, t0, col, x, y, sc=1.0):
     k = t - t0
@@ -286,7 +287,7 @@ def scene_at(t):
     for s in SCENES:
         if s[0] <= t < s[1]: return s
     return None
-TYPES = {"hall": (9.48, "ROCK AND ROLL HALL OF FAME", 24), "1997": (64.04, "1997", 8)}
+TYPES = {"1997": (64.04, "1997", 8)}
 def tw(img, t, name, size, col, y):
     s0, txt, cps = TYPES[name]; typewriter(img, t, R(s0), txt, size, col, y, cps)
 OVER = [
@@ -319,21 +320,21 @@ def draw_scene(name, t, k):
         stack(img, t, [(R(7.70), "INTRONISÉ", RED)], 150, 1740, 0)
     elif name == "hall":
         paste(img, HALL, W / 2, 1000, settle(min(k, 1.5)))
-        tw(img, t, "hall", 80, YEL, 360)
+        stack(img, t, [(R(9.48), "ROCK AND ROLL", YEL), (R(9.96), "HALL OF FAME", GOLD)], 130, 260, 160)
         stack(img, t, [(R(10.60), "AUX ÉTATS-UNIS", WHT)], 110, 1460, 0)
         if t >= R(10.76): paste(img, FLAG_US, W / 2, 1650, popk(t, R(10.76)))
     elif name == "avant":
         stack(img, t, [(R(23.22), "LES ANNÉES", WHT), (R(23.94), "PRÉCÉDENTES", YEL)], 110, 230, 135)
-        tag(img, t, 24.66, IND["jay"], "JAY-Z", 290, 760); tag(img, t, 25.46, IND["pac"], "2PAC", 790, 760)
-        tag(img, t, 26.42, IND["nwa"], "N.W.A", 540, 1300)
+        tag(img, t, 24.66, IND["jay"], "JAY-Z", 290, 720); tag(img, t, 25.46, IND["pac"], "2PAC", 790, 720)
+        tag(img, t, 26.42, IND["nwa"], "N.W.A", 540, 1340)
     elif name == "2026":
         stack(img, t, [(R(28.04), "CETTE ANNÉE", GOLD)], 130, 220, 0)
-        tag(img, t, 28.76, IND["queen"], "QUEEN LATIFAH", 290, 680); tag(img, t, 29.96, IND["wu"], "WU-TANG CLAN", 790, 680)
-        tag(img, t, 30.92, IND["phil"], "PHIL COLLINS", 290, 1200); tag(img, t, 32.70, FELAS, "FELA KUTI", 790, 1200, GOLD)
+        tag(img, t, 28.76, IND["queen"], "QUEEN LATIFAH", 290, 660); tag(img, t, 29.96, IND["wu"], "WU-TANG CLAN", 790, 660)
+        tag(img, t, 30.92, IND["phil"], "PHIL COLLINS", 290, 1310); tag(img, t, 32.70, FELAS, "FELA KUTI", 790, 1310, GOLD)
         if t >= R(32.70): bolt(img, t, R(32.70), "gold", 960, 1000, 0.5)
     elif name == "engage":
         paste(img, FELA1, W / 2, 1150, 0.8 * settle(min(k, 1.5)))
-        stack(img, t, [(R(43.94), "CONNU POUR", WHT), (R(44.42), "SES ENGAGEMENTS", YEL), (R(45.08), "POLITIQUES", RED)], 100, 220, 120)
+        stack(img, t, [(R(42.20), "CONNU POUR", WHT), (R(44.42), "SES ENGAGEMENTS", YEL), (R(45.08), "POLITIQUES", RED)], 100, 220, 120)
         if t >= R(49.58): paste(img, FLAG_NG, 220, 1650, popk(t, R(49.58)) * 0.8)
         cur = [x for x in ((48.04, "IL DÉNONÇAIT", WHT), (50.30, "LA CORRUPTION", RED), (51.42, "LA COLONISATION", RED)) if t >= R(x[0])]
         if cur: im, _ = neon(cur[-1][1], 100, cur[-1][2]); paste(img, im, W / 2 + 80, 1680, popk(t, R(cur[-1][0])))
@@ -349,10 +350,10 @@ def draw_scene(name, t, k):
         stack(img, t, [(R(69.42), "INTRONISÉ", GOLD), (R(70.70), "DANS CE PANTHÉON", WHT)], 120, 260, 150)
     elif name == "fils":
         paste(img, FELA1, W / 2, 1150, 0.75 * settle(min(k, 1.5)))
-        stack(img, t, [(R(76.90), "SES FILS", WHT), (R(77.22), "SEUN KUTI", GOLD), (R(78.58), "FEMI KUTI", GOLD)], 120, 220, 145)
-        stack(img, t, [(R(79.86), "TOUS LES DEUX ARTISTES", WHT)], 90, 1720, 0)
+        stack(img, t, [(R(74.85), "À LA CÉRÉMONIE", WHT), (R(77.22), "SEUN KUTI", GOLD), (R(78.58), "FEMI KUTI", GOLD)], 120, 220, 145)
+        stack(img, t, [(R(76.90), "SES DEUX FILS, ARTISTES", WHT)], 85, 1720, 0)
     elif name == "heritage":
-        stack(img, t, [(R(90.88), "SANS LUI…", WHT)], 150, 330, 0)
+        stack(img, t, [(R(90.32), "SANS LUI…", WHT)], 150, 330, 0)
         stack(img, t, [(R(92.40), "BURNA BOY", YEL), (R(93.20), "WIZKID", YEL), (R(93.76), "ASAKE", YEL), (R(94.66), "DAVIDO", YEL)], 150, 620, 190)
         stack(img, t, [(R(95.62), "NON NON NON !", RED)], 130, 1460, 0)
         bolt(img, t, R(92.40), "note", 880, 1580, 0.7)
