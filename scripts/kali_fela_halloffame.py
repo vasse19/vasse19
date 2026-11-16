@@ -190,11 +190,14 @@ def cover_card(path, width, rim):
 from kali_fx import bg_for
 def card_set(names, width, rim): return [cover_card(f"{WORK}/{n}.jpg", width, rim) for n in names]
 FELA1 = cover_card(f"{WORK}/p1.jpg", 720, (255, 190, 60)); FELA2 = cover_card(f"{WORK}/p2.jpg", 600, (255, 190, 60))
-FELAS = cover_card(f"{WORK}/p1.jpg", 405, (255, 190, 60))
+FELAS = cover_card(f"{WORK}/p1.jpg", 400, (255, 190, 60))
+FELAS = cv2.resize(FELAS, None, fx=470 / max(FELAS.shape[:2]), fy=470 / max(FELAS.shape[:2]))
 HALL = cover_card(f"{WORK}/p3.jpg", 960, (255, 255, 255)); HALLS = cover_card(f"{WORK}/p3.jpg", 760, (255, 255, 255))
 IND = {k: cover_card(f"{WORK}/{f}", 300, c) for k, f, c in (("jay", "p4.jpg", (255, 255, 255)), ("pac", "p5.jpg", (255, 255, 255)),
        ("nwa", "p6.jpg", (255, 255, 255)), ("wu", "p7.jpg", (255, 222, 40)), ("phil", "p8.jpg", (255, 60, 60)), ("queen", "p9.jpg", (255, 190, 60)))}
-IND = {k: cv2.resize(v, None, fx=1.35, fy=1.35, interpolation=cv2.INTER_LINEAR) for k, v in IND.items()}
+def fit(v, m=470):
+    sc = m / max(v.shape[:2]); return cv2.resize(v, None, fx=sc, fy=sc, interpolation=cv2.INTER_LINEAR)
+IND = {k: fit(v) for k, v in IND.items()}
 BOLT = {c: rgba_file(os.path.join(LIB, "3d", f), 640) for c, f in (("gold", "lightning-gold.png"), ("heart", "heart-gold.png"), ("note", "music-note-gold.png"))}
 def bolt(img, t, t0, col, x, y, sc=1.0):
     k = t - t0
@@ -324,11 +327,11 @@ def draw_scene(name, t, k):
         stack(img, t, [(R(10.60), "AUX ÉTATS-UNIS", WHT)], 110, 1460, 0)
         if t >= R(10.76): paste(img, FLAG_US, W / 2, 1650, popk(t, R(10.76)))
     elif name == "avant":
-        stack(img, t, [(R(23.22), "LES ANNÉES", WHT), (R(23.94), "PRÉCÉDENTES", YEL)], 110, 230, 135)
+        stack(img, t, [(R(23.22), "LES ANNÉES PRÉCÉDENTES", YEL)], 100, 200, 0)
         tag(img, t, 24.66, IND["jay"], "JAY-Z", 290, 720); tag(img, t, 25.46, IND["pac"], "2PAC", 790, 720)
         tag(img, t, 26.42, IND["nwa"], "N.W.A", 540, 1340)
     elif name == "2026":
-        stack(img, t, [(R(28.04), "CETTE ANNÉE", GOLD)], 130, 220, 0)
+        stack(img, t, [(R(28.04), "CETTE ANNÉE", GOLD)], 110, 200, 0)
         tag(img, t, 28.76, IND["queen"], "QUEEN LATIFAH", 290, 660); tag(img, t, 29.96, IND["wu"], "WU-TANG CLAN", 790, 660)
         tag(img, t, 30.92, IND["phil"], "PHIL COLLINS", 290, 1310); tag(img, t, 32.70, FELAS, "FELA KUTI", 790, 1310, GOLD)
         if t >= R(32.70): bolt(img, t, R(32.70), "gold", 960, 1000, 0.5)
