@@ -62,6 +62,8 @@
 | `extraits/musique/didib-interview-planete-rap-16x9.mp4` | MUSIQUE | Didi B à Planète Rap (Skyrock), 33 s : « je suis un big par mon talent », « il y a quelques années on ne pouvait même pas parler de Zénith » (≈4–13 s), Fally Ipupa et le Stade de France (≈14–20 s) ; inserts affiche Zénith 19.04.2026 (13–16 s), vue aérienne d'Abidjan (25–29 s) ; logos Planète Rap / Skyrock floutés, créditer « PLANÈTE RAP / SKYROCK » |
 | `extraits/musique/zrai-studio-16x9.mp4` | MUSIQUE | Zrai en studio (titre « ZRAI, artiste interprète » 0–3 s), session d'enregistrement, 30 s, pas de parole |
 | `extraits/musique/young-jonn-diner-raba-16x9.mp4` | MUSIQUE | Dîner avec Young Jonn (titre à l'écran 9–12 s), on entend « Raba » vers 15–18 s, 18 s |
+| `extraits/musique/himra-zenith-live-16x9.mp4` | MUSIQUE | Himra en live au Zénith de Paris (28 janvier 2026), gilet pare-balles, écran « 1X » ; vertical recadré 16:9 (fond flouté), pas de filigrane, 62 s avec son |
+| `extraits/musique/himra-flammes-16x9.mp4` | MUSIQUE | Himra reçoit sa Flamme (musique africaine ou d'inspiration africaine) : « c'est la première flamme de l'Afrique… première flamme africaine pour la Côte d'Ivoire » (≈2–14 s), Tiakola sur scène (14–16 s) ; filigrane TikTok @lesflammesawards flouté, créditer, 21,5 s avec son |
 | `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
 | `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
 | `extraits/sport/yan-diomande-but-montage.mov` | SPORT | Montage du but de Yan Diomandé (Real Madrid, n°25) : frappe 0,6–4 s, célébration 6 s, gros plans 19–22 s ; filigrane TikTok : recadrer à 78 % |
