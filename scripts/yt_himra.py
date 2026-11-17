@@ -419,10 +419,11 @@ frames = range(f0, f1)
 if SNAP: frames = [int((float(x[1:]) if x[0] == "o" else R(float(x))) * FPS) for x in SNAP.split(",")]
 if PREVIEW: a_, b_ = map(float, PREVIEW.split("-")); f0, f1 = int(a_ * FPS), min(int(b_ * FPS), N)
 VIDEO_ONLY = f"{WORK}/video_only.mp4" if not PREVIEW else OUT
-enc = None if SNAP else subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+SKIP_VIDEO = os.environ.get("SKIP_VIDEO")             # reuse WORK/video_only.mp4, redo only the sound
+enc = None if SNAP or SKIP_VIDEO else subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
     "-vf", "noise=alls=3:allf=t+u,format=yuv420p", "-c:v", "libx264", "-preset", "fast", "-crf", "19", VIDEO_ONLY], stdin=subprocess.PIPE)
 lab_cache = {}; _vins = {}
-for i in (frames if SNAP else range(f0, f1)):
+for i in ([] if SKIP_VIDEO else frames if SNAP else range(f0, f1)):
     t = i / FPS
     si = max(j for j, s in enumerate(SC) if s[0] <= t) if t >= SC[0][0] else 0
     ts, te, bgs, els = SC[si]; k = t - ts
@@ -467,7 +468,7 @@ for i in (frames if SNAP else range(f0, f1)):
     enc.stdin.write((np.clip(img, 0, 1) * 255).astype(np.uint8).tobytes())
     if i % 600 == 0: print(f"frame {i}/{N}", flush=True)
 if SNAP: sys.exit()
-enc.stdin.close(); enc.wait()
+if enc: enc.stdin.close(); enc.wait()
 if PREVIEW: print("preview done", OUT); sys.exit()
 
 # ---------- sound ----------
@@ -514,8 +515,8 @@ for o0, d, clip, ss, _at in INS_OUT:
 for c in CHAPTERS:
     if c[2]: place(hit, R(c[0]), 0.45)
 for b_ in BURN_AT: place(burn_a, b_ - BURN_PEAK, 0.45)
-place(hit, HOOK[0], 0.5); place(riser, HOOK[0] - 2.95, 0.4); place(riser, R(T("surprise")) - 2.95, 0.45)
-place(uhh, R(T("vient", 340)) + 0.15, 0.2); place(crowd, R(T("personnes", 84)), 0.3)
+place(hit, HOOK[0], 0.5); place(riser, HOOK[0] - 2.95, 0.4); place(riser, R(234.6) - 2.95, 0.45)   # « coup de théâtre »
+place(crowd, R(119.9), 0.3); place(uhh, R(219.5) + 0.3, 0.2)                                   # Flamme won; dates cancelled
 sf.write(f"{WORK}/sfx.wav", sfx[:int(DUR * SR)], SR)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/voice_ins.wav", "-i", f"{WORK}/sfx.wav", "-filter_complex",
     "[1:a]highpass=f=70,acompressor=threshold=-22dB:ratio=3:attack=5:release=90:makeup=2dB,loudnorm=I=-14:TP=-1.5:LRA=7,"
