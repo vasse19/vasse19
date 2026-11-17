@@ -277,7 +277,7 @@ SCENES = [
         X(0.32, "UN ZÉNITH DE PARIS", CR, 220, 66, WHT), X(T("single"), "UN SINGLE D'OR SNEP", CR, 340, 66, GOLD),
         X(T("trophy"), "UN TROPHÉE HISTORIQUE", CR, 460, 66, WHT), X(T("album"), "UN ALBUM N°1", CR, 580, 66, YEL),
         X(T("combat"), "UN COMBAT DE BOXE", CR, 720, 84, RED), X(T("contre"), "CONTRE UN BOXEUR ITALIEN", CR, 840, 52, WHT, "box")]),
-    (10.85, 18.45, "affiche-ebimpe-26-dec.jpg", [C("affiche-ebimpe-26-dec.jpg", CL, 540, 520, T("26")),
+    (10.85, 18.45, "affiche-ebimpe-26-dec.jpg", [C("affiche-ebimpe-26-dec.jpg", CL, 540, 520, T("26"), out=T("ebimpe") + 0.9), C("stade-ebimpe-exterieur.jpg", CL, 540, 820, T("ebimpe") + 0.9),
         X(T("26"), "26 DÉCEMBRE 2026", CR, 300, 84, YEL), X(T("ebimpe"), "LE STADE EBIMPÉ", CR, 450, 96, WHT, "type"),
         X(T("ebimpe") + 1.0, "LE PLUS GROS STADE DE CÔTE D'IVOIRE", CR, 620, 46, WHT, "box")]),
     # --- 1. le Zénith ---
@@ -373,7 +373,7 @@ SCENES = [
     # --- 10. Nouveau Boss & Ebimpé ---
     (303.00, 323.85, "nouveau-boss.jpg", [C("nouveau-boss.jpg", 960, 430, 1500, out=310.7),
         X(306.46, "CE N'EST PAS UNE UTOPIE", 960, 830, 56, WHT, "box", out=310.7), X(308.6, "IL SORTIRA", 960, 950, 90, GOLD, out=310.7),
-        C("affiche-ebimpe-26-dec.jpg", CL, 540, 520, 310.8), X(310.8, "MA THÉORIE :", CR, 600, 60, WHT),
+        C("affiche-ebimpe-26-dec.jpg", CL, 540, 520, 310.8, out=318.6), C("stade-ebimpe-interieur.jpg", CL, 540, 820, 318.6), X(310.8, "MA THÉORIE :", CR, 600, 60, WHT),
         X(312.3, "UNE RÉÉDITION DE SORRY I'M BAD", CR, 700, 44, WHT, "box"), X(315.6, "AVANT EBIMPÉ", CR, 800, 70, RED),
         Nn(320.6, 321.9, 60000, CR, 930, 80, GRN, " PLACES")]),
     (323.85, 366.80, "grid", [X(323.9, "HIMRA EST CHAUD", 960, 150, 100, RED), E(323.9, "🔥", 1420, 150, 110),
