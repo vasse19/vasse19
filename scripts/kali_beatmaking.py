@@ -74,7 +74,7 @@ RAP = [(V(18.80), "rickross.jpg", "RICK ROSS"), (V(19.60), "2chainz.jpg", "2 CHA
 BM = [(V(42.96), "zaytoven.jpg", "ZAYTOVEN"), (V(44.08), "youngchop.jpg", "YOUNG CHOP"), (V(44.64), "metroboomin.webp", "METRO BOOMIN"),
       (V(45.60), "mikewill.jpg", "MIKE WILL MADE-IT"), (V(46.96), "southside.jpg", "SOUTHSIDE"), (V(47.52), "sonnydigital.jpg", "SONNY DIGITAL"),
       (V(48.48), "londonontrack.webp", "LONDON ON DA TRACK"), (V(49.68), "lexluger.webp", "LEX LUGER")]
-RAPI = [card_img(f"{WORK}/{f}", 420) for _, f, _ in RAP]; BMI = [card_img(f"{WORK}/{f}", 300) for _, f, _ in BM]
+RAPI = [card_img(f"{WORK}/{f}", 470) for _, f, _ in RAP]; BMI = [card_img(f"{WORK}/{f}", 320) for _, f, _ in BM]
 def grid(img, t, items, ims, cols, xs, ys, lsize):
     for n, ((t0, _, lbl), im) in enumerate(zip(items, ims)):
         if t < t0: continue
@@ -113,11 +113,11 @@ def draw(t):
     if kind == "rap":
         img = bg("paper_red", t)
         stack(img, t, [(V(16.3), "LES TYPE BEATS", WHT), (V(16.8), "SUR YOUTUBE", YEL)], 120, 210, 140)
-        grid(img, t, RAP, RAPI, 2, (290, 790), (720, 1380), 70); return img
+        grid(img, t, RAP, RAPI, 2, (290, 790), (700, 1340), 74); return img
     if kind == "bm":
         img = bg("black", t)
-        stack(img, t, [(V(41.4), "J'ÉTAIS FAN", WHT), (V(42.08), "DES BEATMAKERS", GOLD)], 110, 170, 130)
-        grid(img, t, BM, BMI, 2, (290, 790), (560, 920, 1280, 1640), 52); return img
+        stack(img, t, [(V(40.0), "J'ÉTAIS FAN", WHT), (V(42.08), "DES BEATMAKERS", GOLD)], 100, 140, 115)
+        grid(img, t, BM, BMI, 2, (290, 790), (480, 860, 1240, 1620), 60); return img
     if kind == "otb":
         img = bg("red", t); card(img, C2, t, a, 960); pop3d(img, NOTE, t, a + 0.3, 860, 1500); return img
     if kind == "end":
@@ -130,11 +130,11 @@ def draw(t):
         stack(img, t, [(V(4.16), "JE ME SUIS LANCÉ", WHT), (V(4.80), "DANS LE BEATMAKING", YEL)], 110, 330, 140)
         if t >= V(9.44): card(img, C1, t, V(9.44), 1000)
     elif kind == "c723": stack(img, t, [(V(14.40), "AU LYCÉE", YEL)], 170, 330, 0)
-    elif kind == "c722": stack(img, t, [(V(24.32), "J'ÉTAIS HYPÉ", YEL), (V(31.28), "LE BEAT", RED)], 150, 330, 190); pop3d(img, NOTE, t, V(31.28), 860, 760)
+    elif kind == "c722": stack(img, t, [(V(22.30), "J'ÉTAIS HYPÉ", YEL), (V(31.28), "LE BEAT", RED)], 150, 330, 190); pop3d(img, NOTE, t, V(31.28), 860, 760)
     elif kind == "c725": stack(img, t, [(V(32.72), "LE MIX", WHT), (V(33.68), "LES PAROLES", YEL), (V(37.84), "ÇA CHANGE LA DONNE", RED)], 130, 330, 165)
-    elif kind == "c721": stack(img, t, [(V(53.20), "ÉNORMÉMENT", WHT), (V(54.56), "M'ONT INSPIRÉ", YEL)], 140, 1350, 170)
+    elif kind == "c721": stack(img, t, [(V(50.60), "ÉNORMÉMENT", WHT), (V(54.56), "M'ONT INSPIRÉ", YEL)], 140, 1350, 170)
     elif kind == "c723b": stack(img, t, [(V(56.56), "UN CHALLENGE", YEL)], 150, 330, 0)
-    elif kind == "c722b": stack(img, t, [(V(62.80), "QUELQUES ÉPISODES", WHT), (V(64.48), "MON ÉVOLUTION", YEL), (V(65.52), "SOYEZ PRÊTS", RED)], 120, 330, 155)
+    elif kind == "c722b": stack(img, t, [(V(60.00), "QUELQUES ÉPISODES", WHT), (V(64.48), "MON ÉVOLUTION", YEL), (V(65.52), "SOYEZ PRÊTS", RED)], 120, 330, 155)
     elif kind == "c728b": stack(img, t, [(V(70.72), "LIKE", WHT), (V(71.20), "COMMENTE", YEL), (V(71.60), "PARTAGE", RED)], 150, 330, 180)
     return img
 
@@ -159,7 +159,7 @@ key = lambda w: w["w"].lower().strip(",.?!…« »")
 for w in words:
     sc = scene(w["s"])
     if w["nc"] or not sc[3]: continue
-    if sc[2] == "radio" and (w["s"] < 1.5 or 4.7 <= w["s"] < 9.0): continue      # the 3D cards already say it
+    if sc[2] == "radio" and (w["s"] < 1.5 or 4.7 <= w["s"]): continue      # the 3D cards already say it
     col = r"\c&H002A2AFF&\3c&H002A2AFF&" if key(w) in REDW else (r"\c&H00FFFFFF&\3c&H00FFFFFF&" if key(w).split()[0] in WHITE else "")
     txt = w["w"].upper().strip(",.?!… ") or w["w"]
     pop = r"\fscx72\fscy72\t(0,90,\fscx108\fscy108)\t(90,150,\fscx100\fscy100)"
