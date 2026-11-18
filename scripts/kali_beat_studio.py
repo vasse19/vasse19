@@ -49,8 +49,8 @@ def pop3d(img, im, t, t0, x, y, life=2.0):
 def overlay(img, t):
     b = (t - PHASE) / BAR
     if b < 2:
-        if t < bar(1): card(img, HOOK, t, 0.0, 560)
-        else: stack(img, t, [(bar(1), "INSPIRATION", WHT), (bar(1) + 2 * BEAT, "GTA VI", (255, 90, 200))], 150, 330, 180)
+        if t < bar(1): card(img, HOOK, t, 0.0, 1380)
+        else: stack(img, t, [(bar(1), "INSPIRATION", WHT), (bar(1) + 2 * BEAT, "GTA VI", (255, 90, 200))], 150, 1300, 180)
     elif b < 3: typewriter(img, t, bar(2) + BEAT, "FL STUDIO", 170, (255, 150, 40), 330, 10)
     elif b < 4: stack(img, t, [(bar(3) + BEAT, "LE BIG VASS", YEL), (bar(3) + 3 * BEAT, "EN STUDIO", WHT)], 160, 330, 190)
     elif b < 6: stack(img, t, [(bar(4) + BEAT, "ON LANCE", WHT), (bar(5), "LE BEAT", RED)], 170, 330, 200); pop3d(img, NOTE, t, bar(5), 840, 760)
