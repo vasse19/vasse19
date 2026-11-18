@@ -66,15 +66,18 @@ def radio(k):
     return img
 
 def popk(t, t0): return 1 + 0.3 * max(0, 1 - (t - t0) / 0.12) ** 2
-def card_img(path, box):
-    im = cv2.imread(path); s = box / max(im.shape[:2]); c = cv2.resize(im, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
+def card_img(path, box, square=False):
+    im = cv2.imread(path)
+    if square:                                   # centre crop (faces sit high: keep the top third) so every grid cell has the same size
+        h, w = im.shape[:2]; m = min(h, w); y0 = max(0, int((h - m) * 0.25)); x0 = (w - m) // 2; im = im[y0:y0 + m, x0:x0 + m]
+    s = box / max(im.shape[:2]); c = cv2.resize(im, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
     c[:6] = c[-6:] = c[:, :6] = c[:, -6:] = (60, 190, 255)
     return glow_rgba(np.dstack([c[..., ::-1].astype(np.float32) / 255, np.ones(c.shape[:2], np.float32)]), (255, 190, 60), 16, 1.0)
 RAP = [(V(18.80), "rickross.jpg", "RICK ROSS"), (V(19.60), "2chainz.jpg", "2 CHAINZ"), (V(20.48), "gucci.jpg", "GUCCI MANE"), (V(21.28), "kanye.jpg", "KANYE WEST")]
 BM = [(V(42.96), "zaytoven.jpg", "ZAYTOVEN"), (V(44.08), "youngchop.jpg", "YOUNG CHOP"), (V(44.64), "metroboomin.webp", "METRO BOOMIN"),
       (V(45.60), "mikewill.jpg", "MIKE WILL MADE-IT"), (V(46.96), "southside.jpg", "SOUTHSIDE"), (V(47.52), "sonnydigital.jpg", "SONNY DIGITAL"),
       (V(48.48), "londonontrack.webp", "LONDON ON DA TRACK"), (V(49.68), "lexluger.webp", "LEX LUGER")]
-RAPI = [card_img(f"{WORK}/{f}", 470) for _, f, _ in RAP]; BMI = [card_img(f"{WORK}/{f}", 320) for _, f, _ in BM]
+RAPI = [card_img(f"{WORK}/{f}", 470) for _, f, _ in RAP]; BMI = [card_img(f"{WORK}/{f}", 270, True) for _, f, _ in BM]
 def grid(img, t, items, ims, cols, xs, ys, lsize):
     for n, ((t0, _, lbl), im) in enumerate(zip(items, ims)):
         if t < t0: continue
@@ -117,7 +120,7 @@ def draw(t):
     if kind == "bm":
         img = bg("black", t)
         stack(img, t, [(V(40.0), "J'ÉTAIS FAN", WHT), (V(42.08), "DES BEATMAKERS", GOLD)], 100, 140, 115)
-        grid(img, t, BM, BMI, 2, (290, 790), (480, 860, 1240, 1620), 60); return img
+        grid(img, t, BM, BMI, 2, (290, 790), (500, 880, 1260, 1640), 56); return img
     if kind == "otb":
         img = bg("red", t); card(img, C2, t, a, 960); pop3d(img, NOTE, t, a + 0.3, 860, 1500); return img
     if kind == "end":
