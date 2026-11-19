@@ -64,8 +64,9 @@ def R0(t):
         acc += b - a
     return acc
 CLIPS = os.path.join(REPO, "assets/extraits/musique")
-INS = []
-INS_LOOK = {}
+INS = [(84.05, 7.6, "burna-boy-grammy-2021-victoire-16x9.mp4", 21.5)]   # his acceptance speech, with its own sound
+INS_LOOK = {84.05: ("twice-as-tall.jpg", "BURNA BOY · GRAMMY 2021", "SOURCE : GRAMMYS / RECORDING ACADEMY",
+                    [(0.1, 3.3, "« L'AFRIQUE EST DANS LA PLACE ! »"), (3.4, 7.6, "« UNE GRANDE VICTOIRE POUR MA GÉNÉRATION D'AFRICAINS »")])}
 def R(t): return R0(t) + sum(d for at, d, *_ in INS if t >= at)
 INS_OUT = [(R0(at) + sum(d2 for at2, d2, *_ in INS if at2 < at), d, clip, ss, at) for at, d, clip, ss in INS]
 DUR = sum(b - a for a, b in segs) + sum(x[1] for x in INS); N = int(DUR * FPS)
@@ -308,7 +309,8 @@ SCENES = [
         X(62.0, "2020 · MEILLEUR ALBUM DE MUSIQUE DU MONDE", CR, 510, 36, WHT, "box"),
         X(66.2, "IL PERD…", CR, 670, 96, RED), X(67.8, "MAIS IL NE LÂCHE RIEN", CR, 800, 62, YEL)]),
     # --- 3. la victoire ---
-    (69.70, 89.40, "twice-as-tall.jpg", [C("twice-as-tall.jpg", CL, 540, 560, out=76.9), C("burna-grammy-2021.jpg", CL, 540, 470, 76.9),
+    (69.70, 89.40, "twice-as-tall.jpg", [C("twice-as-tall.jpg", CL, 540, 560, out=76.9), C("burna-grammy-2021.jpg", CL, 540, 470, 76.9, out=79.4),
+        V("burna-boy-grammy-2021-victoire-16x9.mp4", 79.4, CL, 540, 820, ss=0.8, gain=0.12, credit="SOURCE : GRAMMYS / RECORDING ACADEMY"),
         X(69.8, "AOÛT 2020", CR, 210, 66, YEL), X(71.5, "TWICE AS TALL", CR, 340, 96, WHT, "type"),
         X(74.98, "« DEUX FOIS PLUS GRAND »", CR, 460, 48, WHT, "box"), X(76.98, "2021 : C'EST LA BONNE", CR, 590, 74, GOLD),
         X(79.4, "1ER GRAMMY", CR, 720, 110, YEL), P(79.4, "3d/lightning-gold.png", CR + 420, 700, 170),
@@ -351,11 +353,12 @@ SCENES = [
         C("burna-angelique-kidjo.jpg", 600, 520, 640, 175.7), C("youssou-ndour.jpg", 1360, 520, 330, 177.3),
         X(175.7, "ANGÉLIQUE KIDJO", 600, 840, 50, WHT, "box"), X(177.3, "YOUSSOU N'DOUR", 1360, 840, 50, WHT, "box"),
         X(179.5, "RESPECTÉS DEPUIS DES DÉCENNIES", 960, 970, 54, GOLD)]),
-    (182.90, 196.00, "i-told-them.jpg", [X(183.0, "3. SA MUSIQUE A CHANGÉ", 960, 110, 76, YEL),
+    (182.90, 196.00, "i-told-them.jpg", [V("burna-boy-i-told-them-tour-16x9.mp4", None, 960, 540, 1920, ss=3.0, mode="bg", gain=0.12),X(183.0, "3. SA MUSIQUE A CHANGÉ", 960, 110, 76, YEL),
         C("i-told-them.jpg", 600, 500, 420, 184.8), X(184.8, "PLUS HIP-HOP, MOINS AFROBEATS", 600, 790, 40, WHT, "box"),
         C("no-sign-of-weakness.jpg", 1320, 500, 420, 189.47), X(191.3, "SOLIDE, MAIS PEU DE RISQUES", 1320, 790, 40, WHT, "box")]),
     # --- 6. Dai Dai ---
-    (196.00, 211.20, "dai-dai.jpg", [C("dai-dai.jpg", CL, 540, 580),
+    (196.00, 211.20, "dai-dai.jpg", [C("dai-dai.jpg", CL, 540, 580, out=204.9),
+        V("burna-boy-nfl-paris-16x9.mp4", 204.9, CL, 540, 820, ss=0.0, gain=0.12),
         X(196.1, "14E NOMINATION", CR, 220, 92, GOLD), X(197.4, "16 NOVEMBRE", CR, 340, 58, WHT, "box"),
         X(T("day", 199), "« DAI DAI » · SHAKIRA", CR, 470, 64, YEL), X(201.5, "L'HYMNE DE LA COUPE DU MONDE 2026", CR, 580, 40, WHT),
         X(204.9, "N°1 EN FRANCE TOUT L'ÉTÉ", CR, 720, 56, WHT, "box"), E(205.2, "🇫🇷", CR, 820, 80), X(208.5, "MAIS REGARDEZ…", CR, 940, 66, RED)]),
