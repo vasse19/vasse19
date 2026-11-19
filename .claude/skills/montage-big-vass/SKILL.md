@@ -197,3 +197,14 @@ no heavy sharpening). 3D gold intro: `remotion/` composition `GoldIntro` (Remoti
   After rendering, re-transcribe the cut in short windows and compare with the source: a missing word at a window
   edge is usually the ASR, a missing word at a cut is a real clip to fix. If he says a cut is too chopped, rebuild on
   the full take he sends with fewer drops (`kali_biama_complet.py`).
+
+## « Preuves » animées : mix video essay × Kali (`scripts/proof_fx.py`)
+Studied from a Louaista video essay (« Kendrick Lamar Was Right About Drake… »): voice-over, every claim backed by an
+on-screen proof, hard cuts, real reaction clips with their own sound. He wants it mixed with the Kali style. Module:
+- `make_card` + `draw_stream_card`: song card (cover, title, artist, platform pill) that pops in with a 3D tilt, neon
+  counter of views / streams counting up (money-counter SFX, cash-ding at the end).
+- `tilt_shot` + `draw_article`: article / tweet capture slightly tilted in 3D, camera from wide to close-up on the headline,
+  yellow highlighter sweeping the key words, strong vignette, neon keyword at the bottom (camera-shutter, sparkle, hit).
+- On his red/black grid background with embers, burn transition between proofs; works in 16:9 and 9:16 (`Canvas(W, H)`).
+Demos: `assets/demos/preuves-kali-16x9.mp4`, `preuves-kali-9x16.mp4`. Needs HIS real captures (never fake an article or a
+platform page); counters must use real figures he gives.
