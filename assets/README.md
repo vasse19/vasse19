@@ -68,6 +68,9 @@
 | `extraits/musique/himra-clip-sorry-im-bad-16x9.mp4` | MUSIQUE | Extrait de clip de l'album *Sorry I'm Bad* (Rolls, jet, Paris), « MAINTENANT DISPONIBLE » à 23,3 s ; TikTok @machettehimra flouté, 24 s avec son |
 | `extraits/musique/himra-epic-records-promo-16x9.mp4` | MUSIQUE | Vidéo promo de la signature chez Epic Records France : Abidjan, appel « Epic Records » (≈35 s), bureaux Epic et disques d'or, carton final « HIMRA – Sorry I'm Bad – 29.05.26 – Epic / Sony Music » (45–53 s) ; pas de filigrane |
 | `extraits/musique/burna-boy-grammys-2024-brandy-16x9.mp4` | MUSIQUE | Burna Boy sur la scène des Grammys (4 février 2024) avec Brandy (« Sittin' On Top of the World »), 27,6 s ; logo Grammy flouté, créditer « SOURCE : GRAMMYS / RECORDING ACADEMY » |
+| `extraits/musique/burna-boy-grammy-2021-victoire-16x9.mp4` | MUSIQUE | Grammys 2021 : annonce « Global Music Album – Twice As Tall » (0–5 s) puis Burna Boy en visio : « Africa is in the house… big win for my generation of Africans » (21,5–29 s), « Grammy award winning Burna Boy » (41–44 s) ; créditer Grammys |
+| `extraits/musique/burna-boy-nfl-paris-16x9.mp4` | MUSIQUE | Burna Boy, mi-temps NFL au Stade de France (drapeaux français), 28 s, sans logo |
+| `extraits/musique/burna-boy-i-told-them-tour-16x9.mp4` | MUSIQUE | Concert « I TOLD THEM » (scène, lumières bleues), format large mis en 16:9 sur fond flouté, 32 s |
 | `extraits/culture/tapis-rouge-evenement.mp4` | CULTURE | Tapis rouge d'un événement, sans parole |
 | `extraits/culture/interview-monsieur-vass.mp4` | CULTURE | Son interview (image 16:9 au centre) : « je vais continuer à faire du contenu » (0–3,3 s), vidéos réactions, New Wave |
 | `extraits/sport/yan-diomande-but-montage.mov` | SPORT | Montage du but de Yan Diomandé (Real Madrid, n°25) : frappe 0,6–4 s, célébration 6 s, gros plans 19–22 s ; filigrane TikTok : recadrer à 78 % |
