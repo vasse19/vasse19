@@ -65,9 +65,11 @@ def R0(t):
     return acc
 CLIPS = os.path.join(REPO, "assets/extraits/musique")
 INS = [(41.95, 14.0, "../culture/molare-primud-didib-actualis-16x9.mp4", 0.3),      # Molare to the press
+       (75.95, 8.6, "../culture/didib-maison-primud-16x9.mp4", 0.4),          # Didi B réclame sa maison
        (80.30, 5.3, "../culture/molare-reagit-didib-maisons-c7-16x9.mp4", 9.65)]   # Molare on C7 : « quand on perd, on assume »
 INS_LOOK = {41.95: ("logo-primud-11.jpg", "MOLARE, PATRON DES PRIMUD", "SOURCE : ACTUALIS.CI",
                     [(8.2, 11.7, "« C'EST À TOI D'ACCEPTER OU DE REFUSER »"), (11.8, 14.0, "« SI TU REFUSES, ON NE TE MET PAS DANS LE COUP »")]),
+            75.95: ("didib-plateau.jpg", "DIDI B RÉCLAME SA MAISON DU PRIMUD D'OR", "SOURCE : TIKTOK / LE MANAÏCHE", []),
             80.30: ("didib-plateau.jpg", "MOLARE SUR C7 POUR LA CULTURE", "SOURCE : C7 POUR LA CULTURE / NOVA SCOPE",
                     [(1.4, 3.1, "« IL N'A PAS PARTICIPÉ, IL A PERDU »"), (3.1, 5.3, "« QUAND ON PERD, ON ASSUME »")])}
 def R(t): return R0(t) + sum(d for at, d, *_ in INS if t >= at)
@@ -288,7 +290,7 @@ CL, CR = 600, 1350                                    # card column / text colum
 NG, CI, GH, ZA, GB, FR, CO, US = "🇳🇬", "🇨🇮", "🇬🇭", "🇿🇦", "🇬🇧", "🇫🇷", "🇨🇴", "🇺🇸"
 SCENES = [
     # --- intro ---
-    (0.0, 15.85, "logo-primud-11.jpg", [C("logo-primud-11.jpg", CL, 540, 560, out=4.8), C("didib-plateau.jpg", CL, 540, 460, 4.8),
+    (0.0, 15.85, "logo-primud-11.jpg", [C("logo-primud-11.jpg", CL, 540, 560, out=4.8), V("../culture/didib-primud-dor-2023-16x9.mp4", 4.8, CL, 540, 820, ss=3.0, gain=0.1, credit="SOURCE : LOORECK LYRICS"),
         Nn(0.24, 1.3, 27, CR, 200, 110, GOLD, " CATÉGORIES"), X(1.6, "DES DIZAINES DE NOMMÉS", CR, 310, 52, WHT, "box"),
         X(3.0, "ET UN NOM ABSENT…", CR, 420, 64, WHT), X(4.8, "DIDI B", CR, 540, 120, YEL, "type"),
         X(6.2, "PRIMUD D'OR 2023", CR, 670, 54, GOLD, "box"), X(8.0, "PAS EN COMPÉTITION CETTE ANNÉE", CR, 770, 46, WHT),
@@ -325,7 +327,7 @@ SCENES = [
         X(103.23, "REFUSER LES PRIMUD, ÇA EXISTE", 480, 790, 44, YEL), X(105.15, "MAIS SMARTY A EXPLIQUÉ POURQUOI", 960, 1000, 54, RED)]),
     # --- 4. les hypothèses ---
     (107.50, 123.20, "stade-fhb-felicia.jpg", [X(107.63, "HYPOTHÈSE 1 : IL N'EN A PLUS BESOIN", 960, 90, 68, YEL),
-        C("stade-fhb-felicia.jpg", 330, 470, 480, 109.71), C("zenith-complet.jpg", 960, 470, 300, 111.0), C("logo-primud-11.jpg", 1590, 470, 340, 113.07),
+        C("stade-fhb-felicia.jpg", 330, 470, 480, 109.71), C("zenith-complet.jpg", 960, 470, 300, 111.0), V("../culture/didib-primud-dor-2023-16x9.mp4", 113.07, 1590, 470, 520, ss=32.0, gain=0.1),
         X(109.71, "FÉLICIA", 330, 760, 46, WHT, "box"), X(111.0, "ZÉNITH DE PARIS", 960, 760, 46, WHT, "box"), X(113.07, "PRIMUD D'OR 2023", 1590, 760, 46, WHT, "box"),
         X(116.09, "UNE CÉRÉMONIE LOCALE NE LUI APPORTE PLUS GRAND-CHOSE ?", 960, 880, 40, WHT), X(121.61, "LAISSER LA PLACE AUX AUTRES", 960, 980, 60, GOLD)]),
     (123.20, 136.70, "affiche-kiff-no-beat-28-nov.jpg", [C("affiche-kiff-no-beat-28-nov.jpg", CL, 540, 620),
