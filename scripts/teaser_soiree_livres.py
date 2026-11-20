@@ -24,7 +24,8 @@ add(3.4,     "vid", "v2", 8.6, 0.50)    # the talk, piece 2 (voice kept)
 add(1.5 * B, "pic", "p2", 0, 0.68)
 add(4.9,     "vid", "v2", 12.2, 0.58)   # piece 3, ends on the speaker with his book (voice kept)
 add(2 * B,   "pic", "p1", 0, 0.53)
-T_END = sum(s[1] for s in SEG); DUR = T_END + 2.9; N = int(DUR * FPS)
+TEXT = False   # he asked for no text and no big logo: only the video and the transitions
+T_END = sum(s[1] for s in SEG); DUR = T_END + (2.9 if TEXT else 0.4); N = int(DUR * FPS)
 VOICE = [(s[0], s[1], s[4]) for s in SEG if s[3] == "v2" and s[4] > 5]
 
 def vframes(name, t0, dur, cx):
@@ -65,6 +66,9 @@ def card(img, im, t, t0, y):
     paste(img, im, W / 2, y, 0.55 + 0.55 * min(k / 0.12, 1) - 0.1 * min(max(k - 0.12, 0) / 0.1, 1))
 S = [s[0] for s in SEG]
 def overlay(img, t):
+    if not TEXT:
+        if t >= T_END: img *= max(0.0, 1 - (t - T_END) / 0.4)          # short fade to black
+        return
     if t < S[1]: card(img, HOOK, t, 0.25, 1350)
     elif t < S[2]: stack(img, t, [(S[1] + 0.05, "UNE SOIRÉE", WHT), (S[1] + B, "ENTRE NOUS", YEL)], 150, 1460, 180)
     elif t < S[3]: stack(img, t, [(S[2] + 0.05, "DES LIVRES", GOLD)], 170, 1560, 0)
@@ -85,7 +89,7 @@ def trans(name):
     return np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3)
 TR = {"burn": (trans("burn-transition-12.mp4"), 11 / 30), "red": (trans("red-flash-39.mp4"), 17 / 30),
       "bw": (trans("bw-flash-33.mp4"), 4 / 23.976), "light": (trans("light-flash-23.mp4"), 5 / 23.976)}
-TRANS = [(S[1], "light"), (S[3], "red"), (S[4], "bw"), (S[6], "burn"), (S[8], "light"), (S[9], "bw"), (T_END, "burn")]
+TRANS = [(S[1], "light"), (S[3], "red"), (S[4], "bw"), (S[6], "burn"), (S[8], "light"), (S[9], "bw")] + ([(T_END, "burn")] if TEXT else [])
 
 VIDEO_ONLY = f"{WORK}/video_only.mp4"
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
@@ -145,7 +149,7 @@ for t0, d, kind, src, a, cx in SEG:
         env = np.ones(L, np.float32); env[i0:i1] = 0.3; env[i0 - r:i0] = np.linspace(1, 0.3, r); env[i1:i1 + r] = np.linspace(0.3, 1, r); mus *= env
 wh = [load(os.path.join(LIB, "sfx", f"whoosh-{m}.mp3")) for m in (1, 2, 3, 4)]
 for m, (t0, _) in enumerate(TRANS): place(fx, wh[m % 4], max(t0 - 0.13, 0), 0.25)
-place(fx, load(os.path.join(LIB, "sfx", "synth-hit.wav")), T_END, 0.5)
+if TEXT: place(fx, load(os.path.join(LIB, "sfx", "synth-hit.wav")), T_END, 0.5)
 mix = (mus * 0.8 + amb + fx)[:int(DUR * SR)]; mix /= np.abs(mix).max() + 1e-6
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", f"{WORK}/mix.wav"], input=(mix * 0.8).astype(np.float32).tobytes(), check=True)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/mix.wav", "-filter_complex",
