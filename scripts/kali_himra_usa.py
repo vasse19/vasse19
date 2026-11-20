@@ -87,6 +87,7 @@ def emoji(ch, size):
 HIM = card(f"{WORK}/himra.jpg", 900, (255, 190, 60))
 LIVE = card(f"{WORK}/live.jpg", 820, (255, 255, 255))
 EBI = card(f"{WORK}/ebimpe.jpg", 600, (255, 60, 60))
+LN = card(f"{WORK}/livenation.jpg", 900, (255, 255, 255))
 KAL_L = HIM
 DUO = KAL_L
 MYS = DUO
@@ -175,7 +176,7 @@ def draw(name, t, k):
         typewriter(img, t, R(9.2), "MARS – AVRIL 2027", 120, RED, 1560, 18)
     elif name == "livenation":
         stack(img, t, [(R(11.5), "ET EN PLUS", WHT), (R(12.6), "AVEC", WHT)], 130, 600, 170)
-        typewriter(img, t, R(13.0), "LIVE NATION", 190, YEL, 1000, 14)
+        if t >= R(13.0): paste(img, LN, W / 2, 1000, popk(t, R(13.0)) * settle(t - R(13.0)))
         stack(img, t, [(R(13.8), "DERRIÈRE", RED)], 130, 1200, 0)
     elif name == "villes":
         stack(img, t, [(R(14.4), "C'EST DU COSTAUD", YEL)], 110, 230, 0)
@@ -270,8 +271,8 @@ click = load(os.path.join(LIB, "sfx/synth-click.wav")); riser = load(os.path.joi
 burn_a = load(os.path.join(LIB, "transitions/burn-transition-12.mp4"))
 for a, b, n in SC[1:]: place(whoosh, a - 0.2, 0.2)
 for c in CARDS: place(hit, c[0], 0.45)
-for t0 in (R(4.5), R(7.7), R(8.3), R(15.8), R(16.4), R(16.9), R(17.5), R(18.2), R(19.2), R(30.1)): place(hit, t0, 0.22); place(whoosh, t0 - 0.12, 0.15)
-for t0, txt, cps in [(R(9.2), "MARS – AVRIL 2027", 18), (R(13.0), "LIVE NATION", 14), (R(31.5), "TICKETMASTER", 18)]:
+for t0 in (R(13.0), R(4.5), R(7.7), R(8.3), R(15.8), R(16.4), R(16.9), R(17.5), R(18.2), R(19.2), R(30.1)): place(hit, t0, 0.22); place(whoosh, t0 - 0.12, 0.15)
+for t0, txt, cps in [(R(9.2), "MARS – AVRIL 2027", 18), (R(31.5), "TICKETMASTER", 18)]:
     for j, ch in enumerate(txt):
         if ch != " ": place(click, t0 + j / cps, 0.22)
 place(riser, R(15.8) - 2.95, 0.45)
