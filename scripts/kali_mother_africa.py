@@ -122,7 +122,7 @@ def credit(img, handle):
 
 SCENES = [  # (start, end, name) in composite seconds
     (0.0, 2.85, "card"), (2.85, 11.6, "annonce"), (11.6, 13.45, "ecoutez"), (13.45, 22.05, "quavo"), (22.05, 27.1, "dates"),
-    (27.1, 34.55, "lineup"), (34.55, 38.5, "avis"), (38.5, END + 1, "end")]
+    (27.1, 35.0, "lineup"), (35.0, 38.5, "avis"), (38.5, END + 1, "end")]
 SC = [(R(a), R(b), n) for a, b, n in SCENES]
 def scene(t, i):
     for a, b, n in SC:
@@ -197,7 +197,7 @@ def draw(name, t, k):
         elif cur:
             paste(img, POST[cur[1]], W / 2, 980, popk(t, R(cur[0])) * settle(t - R(cur[0])))
     elif name == "avis":
-        stack(img, t, [(R(34.6), "VOUS Y SEREZ ?", YEL), (R(36.76), "DONNEZ VOTRE AVIS", WHT)], 130, 700, 190)
+        stack(img, t, [(R(35.0), "VOUS Y SEREZ ?", YEL), (R(36.76), "DONNEZ VOTRE AVIS", WHT)], 130, 700, 190)
         if t >= R(36.76): paste(img, emoji("💬", 200), W / 2, 1180, popk(t, R(36.76)))
     elif name == "card":
         tmp = np.zeros_like(img); paste(tmp, HIM, W / 2, 1000, 1.1 + 0.04 * k); img = img * 0.6 + tmp * 0.5
