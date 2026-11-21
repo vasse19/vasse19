@@ -87,7 +87,7 @@ def emoji(ch, size):
         _em[(ch, size)] = np.asarray(im).astype(np.float32) / 255
     return _em[(ch, size)]
 HIM = card(f"{WORK}/quavo.jpg", 820, (255, 150, 40))
-POST = {n: card(f"{WORK}/{n}.jpg", 760, (255, 150, 40)) for n in ("davido", "niska", "dopelym", "triangle-des-bermudes", "l2b", "la-mano-1-9", "theodora")}
+POST = {n: card(f"{WORK}/{n}.jpg", 760, (255, 150, 40)) for n in ("davido", "niska", "dopelym", "triangle-des-bermudes", "l2b", "la-mano-1-9", "theodora", "emmaa")}
 KAL_L = HIM
 DUO = KAL_L
 MYS = DUO
@@ -193,7 +193,7 @@ def draw(name, t, k):
         for t0, n in LINEUP:
             if t >= R(t0): cur = (t0, n)
         if t >= R(EMMA):
-            im, _ = neon("EMMA'A", 200, YEL); paste(img, im, W / 2, 950, popk(t, R(EMMA)))
+            paste(img, POST["emmaa"], W / 2, 980, popk(t, R(EMMA)) * settle(t - R(EMMA)))
         elif cur:
             paste(img, POST[cur[1]], W / 2, 980, popk(t, R(cur[0])) * settle(t - R(cur[0])))
     elif name == "avis":
@@ -281,7 +281,7 @@ burn_a = load(os.path.join(LIB, "transitions/burn-transition-12.mp4"))
 for a, b, n in SC[1:]: place(whoosh, a - 0.2, 0.2)
 for c in CARDS: place(hit, c[0], 0.45)
 shutter = load(os.path.join(LIB, "sfx/camera-shutter-short.mp3"))
-for t0, n in LINEUP: place(shutter, R(t0) - 0.15, 0.55)
+for t0, n in LINEUP + [(EMMA, "emmaa")]: place(shutter, R(t0) - 0.15, 0.55)
 for t0 in (R(5.92), R(10.32), R(25.8), R(33.8), R(36.76)): place(hit, t0, 0.25); place(whoosh, t0 - 0.12, 0.15)
 for j, ch in enumerate("27 & 28 DÉCEMBRE"):
     if ch != " ": place(click, R(23.4) + j / 16, 0.22)
