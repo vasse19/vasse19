@@ -84,6 +84,7 @@ HOOK = block("TELLEMENT DE", "COMÉDIENS", 1000, 560)
 CARD2 = block("BANDE DE", "COMÉDIENS", 1000, 640)
 END = block("LE BIG", "VASS", 900, 600)
 LOGO = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 560)
+LOGO_S = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 200)   # his logo, top left, on every shot
 
 def counter(img, t, t0, t1):
     p = min(max((t - t0) / (t1 - t0), 0), 1); p = 1 - (1 - p) ** 3
@@ -91,6 +92,10 @@ def counter(img, t, t0, t1):
     im, _ = neon(txt, 210 if n < 1_000_000 else 230, YEL if n < 1_000_000 else GOLD); paste(img, im, W / 2, 900, popk(t, t1) if t >= t1 else 1.0)
 
 def draw(t):
+    img = draw_(t)
+    if SHOTS[shot(t)[0]][1] != "end": paste(img, LOGO_S, 130, 130, 1.0)
+    return img
+def draw_(t):
     i, k = shot(t); s0, src, _ = SHOTS[i]
     if src == "count":
         img = bg("black", t)
@@ -175,16 +180,28 @@ for n in range(0 if SKIP else N):
 if enc: enc.stdin.close(); enc.wait()
 
 # ---------- sound: his voice as recorded (limiter only) + La B7's clips as a quiet bed + whooshes + counter SFX ----------
+SFX = [(21.6, "riser-metallic-transition.mp3", 0.45, (2.6, 5.3), "end"), (40.9, "riser-metallic-transition.mp3", 0.4, (3.0, 5.3), "end"),
+       (1.68, "synth-hit.wav", 0.55, None, ""), (17.66, "synth-hit.wav", 0.6, None, ""), (40.95, "synth-hit.wav", 0.6, None, ""),
+       (45.5, "synth-hit.wav", 0.55, None, ""), (18.2, "camera-shutter-short.mp3", 0.5, None, ""),
+       (9.44, "sparkle.mp3", 0.35, (0, 1.3), ""), (11.60, "camera-shutter-short.mp3", 0.45, None, ""), (32.48, "sparkle.mp3", 0.35, (0, 1.3), ""),
+       (24.5, "cash-ding.mp3", 0.5, None, ""), (28.80, "synth-click.wav", 0.6, None, ""), (43.60, "sparkle.mp3", 0.3, (0, 1.2), "")]
+def sfx_chain(m, t, f, v, tr, mode):
+    d = (tr[1] - tr[0]) if tr else float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", os.path.join(LIB, "sfx", f)]))
+    st = max(t - d, 0) if mode == "end" else t
+    trim = f"atrim={tr[0]}:{tr[1]},asetpts=N/SR/TB,afade=t=in:d=0.4,afade=t=out:st={d - 0.15}:d=0.15," if tr else ""
+    return f"[{5 + len(TRANS) + m}:a]aresample=48000,{trim}adelay={int(st * 1000)}|{int(st * 1000)},volume={v}[s{m}]"
+sx = ";".join(sfx_chain(m, *e) for m, e in enumerate(SFX))
+sins = sum([["-i", os.path.join(LIB, "sfx", e[1])] for e in SFX], [])
 wh = ";".join(f"[{5 + m}:a]adelay={int(max(t0 - 0.13, 0) * 1000)}|{int(max(t0 - 0.13, 0) * 1000)},volume=0.2[w{m}]" for m, (t0, _) in enumerate(TRANS))
 ins = sum([["-i", os.path.join(LIB, "sfx", f"whoosh-{(m % 4) + 1}.mp3")] for m in range(len(TRANS))], [])
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/voix.mp3", "-i", f"{WORK}/c1.mp4", "-i", f"{WORK}/c2.mp4",
-    "-i", os.path.join(LIB, "sfx", "money-counter.mp3"), *ins, "-filter_complex",
+    "-i", os.path.join(LIB, "sfx", "money-counter.mp3"), *ins, *sins, "-filter_complex",
     "[1:a]aresample=48000,asetpts=N/SR/TB[v];"
     "[2:a]aresample=48000,asetpts=N/SR/TB,afade=t=out:st=25.8:d=1[b1];[3:a]aresample=48000,asetpts=N/SR/TB,afade=t=in:d=1[b2];"
     "[b1][b2]acrossfade=d=1,loudnorm=I=-30:TP=-9,aresample=48000,"
     f"afade=t=out:st={DUR - 1.2}:d=1.2[bed];"
-    "[4:a]atrim=0:1.4,afade=t=out:st=1.1:d=0.3,adelay=22900|22900,volume=0.35[mc];" + wh + ";"
-    "[v][bed][mc]" + "".join(f"[w{m}]" for m in range(len(TRANS))) + f"amix=inputs={3 + len(TRANS)}:normalize=0:duration=first,apad=whole_dur={DUR},"
+    "[4:a]atrim=0:1.4,afade=t=out:st=1.1:d=0.3,adelay=22900|22900,volume=0.35[mc];" + wh + ";" + sx + ";"
+    "[v][bed][mc]" + "".join(f"[w{m}]" for m in range(len(TRANS))) + "".join(f"[s{m}]" for m in range(len(SFX))) + f"amix=inputs={3 + len(TRANS) + len(SFX)}:normalize=0:duration=first,apad=whole_dur={DUR},"
     "alimiter=limit=0.89:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-cutoff", "18000", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
