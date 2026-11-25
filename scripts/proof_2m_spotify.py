@@ -36,8 +36,11 @@ def full(t):
     img = bgi.copy(); img[y0:y0 + band.shape[0]] = band; return img
 
 # cover for the card: the shot in the boubou
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "39.5", "-i", REC, "-frames:v", "1", "-vf", "crop=576:604:0:58", f"{WORK}/cover.jpg"], check=True)
-CARD = make_card(f"{WORK}/cover.jpg", TITLE, SUB, "SPOTIFY", 1000)
+COVER = os.environ.get("COVER")                        # the real single cover if given, else the « PARTY » title frame
+if not COVER:
+    COVER = f"{WORK}/cover.jpg"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "39.5", "-i", REC, "-frames:v", "1", "-vf", "crop=576:604:0:58", COVER], check=True)
+CARD = make_card(COVER, TITLE, SUB, "SPOTIFY", 1000)
 HOOK = block("2 MILLIONS", "DE STREAMS", 980, 520)
 LOGO_S = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 200)
 
