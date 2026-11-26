@@ -1,8 +1,9 @@
-"""« Les 5 radios de GTA VI que tu dois écouter » Short (Kali style) from a voice file: GTA VI trailer shots (sent sideways:
-transpose=2, letterbox cropped) as a 16:9 band over a blurred copy, a 3D number card per radio, artist names in neon,
+"""« Les 5 radios de GTA VI que tu dois écouter » Short (Kali style) from a voice file: his GTA VI night-drive gameplay
+full screen in vertical (centre crop on the car, slowed to the voice length, game hint text blurred), a 3D number card
+and the station logo he sent per radio, artist names in neon,
 the Afrobank FM player screen + Burna Boy badge for N°2, word-by-word neon captions, his logo top left, library
 transitions, hits, riser into N°1, a light synthesized beat underneath. Voice kept as recorded (limiter only).
-usage: kali_gta6_top5.py WORK OUT.mp4   (WORK: voix.wav, w.json, trailer.mp4, player.mp4, burna.jpg)"""
+usage: kali_gta6_top5.py WORK OUT.mp4   (WORK: voix.wav, w.json, tk.mp4 gameplay, player.mp4, burna.jpg, logo_*.*)"""
 import sys, os, json, subprocess, numpy as np, cv2
 from scipy.signal import butter, sosfilt
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -38,8 +39,10 @@ def frames(path, t0, d, vf, w, h):
                          capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
 # shots: (voice time start, kind, trailer time)
-SHOTS = [(0.0, "tr", 159.0), (2.8, "tr", 7.5), (6.0, "tr", 14.5), (9.3, "tr", 34.0), (12.4, "tr", 83.5), (14.1, "tr", 41.0), (17.0, "tr", 110.5),
-         (19.8, "tr", 96.5), (21.8, "player", 18.0), (25.2, "tr", 138.5), (28.6, "tr", 145.5), (31.0, "tr", 76.0), (33.6, "tr", 159.0)]
+GAME = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f"{WORK}/tk.mp4"]))
+SLOW = (GAME - 0.2) / DUR                     # gameplay slowed a little so the drive lasts the whole voice
+SHOTS = [(0.0, "game", 0), (2.8, "game", 0), (9.3, "game", 0), (14.1, "game", 0), (19.8, "game", 0), (21.8, "player", 18.0),
+         (25.2, "game", 0), (33.6, "game", 0)]
 _c = {}
 def shot(t): i = max(j for j, s in enumerate(SHOTS) if s[0] <= t); return i, t - SHOTS[i][0]
 def footage(i, k):
@@ -47,17 +50,14 @@ def footage(i, k):
     if i not in _c:
         _c.clear()
         _c[i] = frames(f"{WORK}/player.mp4", a, d, "null", 700, 672) if kind == "player" else \
-                frames(f"{WORK}/trailer.mp4", a, d, "transpose=2,crop=iw:ih*0.84", W, BAND_H)
+                frames(f"{WORK}/tk.mp4", s0 * SLOW, d * SLOW + 0.2,
+                       f"delogo=x=545:y=676:w=190:h=28,setpts=PTS/{SLOW:.4f},scale=-2:{H}:flags=lanczos,crop={W}:{H},unsharp=5:5:0.5", W, H)
     c = _c[i]; f = c[min(int(k * FPS), len(c) - 1)].astype(np.float32) / 255
     if kind == "player":
         img = bg("black", s0 + k); paste(img, glow_rgba(np.dstack([f[..., ::-1], np.ones(f.shape[:2], np.float32)]), (40, 230, 110), 18, 0.8), W / 2, 900)
         return img
-    z = 1.0 + 0.05 * k / d
-    f = cv2.warpAffine(f, cv2.getRotationMatrix2D((W / 2, BAND_H / 2), 0, z), (W, BAND_H), borderMode=cv2.BORDER_REFLECT)
-    img = cv2.resize(cv2.GaussianBlur(cv2.resize(f, (108, 51)), (0, 0), 3), (W * 4, H))[:, W * 3 // 2:W * 5 // 2] * 0.42
-    img[BAND_Y:BAND_Y + BAND_H] = f
-    cv2.rectangle(img, (0, BAND_Y - 4), (W, BAND_Y), (0.25, 0.3, 1.0), -1); cv2.rectangle(img, (0, BAND_Y + BAND_H), (W, BAND_Y + BAND_H + 4), (0.25, 0.3, 1.0), -1)
-    return img
+    z = 1.0 + 0.04 * k / d + 0.04 * max(0, 1 - k / 0.15)
+    return cv2.warpAffine(f, cv2.getRotationMatrix2D((W / 2, H * 0.6), 0, z), (W, H), borderMode=cv2.BORDER_REFLECT)
 
 # ---------- graphics ----------
 def popk(t, t0): return 1 + 0.3 * max(0, 1 - (t - t0) / 0.12) ** 2
@@ -77,6 +77,17 @@ NUM = {5: (2.8, block("N°5", "BACKCOUNTRY", 980, 440)), 4: (9.3, block("N°4", 
        1: (25.2, block("N°1", "VCRR", 980, 440))}
 OUTRO = block("TA RADIO", "PRÉFÉRÉE ?", 980, 520)
 BURNA = badge(f"{WORK}/burna.jpg", 260)
+from PIL import Image
+def logo_card(path, size):
+    """Station logo he sent: square, rounded corners, white glow."""
+    im = Image.open(path).convert("RGB"); m = min(im.size)
+    im = im.crop(((im.width - m) // 2, (im.height - m) // 2, (im.width - m) // 2 + m, (im.height - m) // 2 + m)).resize((size, size), Image.LANCZOS)
+    rgb = np.asarray(im).astype(np.float32) / 255; a = np.zeros((size, size), np.uint8); r = 40
+    cv2.rectangle(a, (r, 0), (size - r - 1, size - 1), 255, -1); cv2.rectangle(a, (0, r), (size - 1, size - r - 1), 255, -1)
+    for cx, cy in ((r, r), (size - r - 1, r), (r, size - r - 1), (size - r - 1, size - r - 1)): cv2.circle(a, (cx, cy), r, 255, -1, cv2.LINE_AA)
+    return glow_rgba(np.dstack([rgb, a.astype(np.float32) / 255]), (255, 255, 255), 16, 0.7)
+LOGOS = {5: logo_card(f"{WORK}/logo_back.jpg", 470), 4: logo_card(f"{WORK}/logo_flash.webp", 470),
+         3: logo_card(f"{WORK}/logo_dirty.png", 470), 1: logo_card(f"{WORK}/logo_vcrr.jpg", 470)}
 LOGO_S = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 200)
 
 def draw(t):
@@ -86,14 +97,16 @@ def draw(t):
         n = min(m for m, (t0, _) in NUM.items() if t0 <= t)                   # radios count down 5 → 1
         t0, im = NUM[n]; y = 330 if SHOTS[i][1] == "player" else 420
         card(img, im, t, t0, y)
-        if n == 5: stack(img, t, [(5.4, "DE LA COUNTRY", WHT), (6.4, "LANA DEL REY", YEL), (7.6, "MORGAN WALLEN", YEL)], 90, 1360, 105)
-        if n == 4: stack(img, t, [(11.9, "LA RADIO POP CULTE", WHT), (12.7, "DE VICE CITY", PINK)], 95, 1380, 115)
-        if n == 3: stack(img, t, [(16.5, "TRICK DADDY", YEL), (17.4, "& TRINA", YEL), (18.9, "LE RAP DU SUD", RED)], 95, 1360, 110)
+        if n in LOGOS and t >= t0 + 0.35:
+            k = t - t0 - 0.35; paste(img, LOGOS[n], W / 2, 900, popk(t, t0 + 0.35) * (0.6 + 0.4 * min(k / 0.12, 1)) * (1 + 0.02 * k), min(k / 0.1, 1))
+        if n == 5: stack(img, t, [(5.4, "DE LA COUNTRY", WHT), (6.4, "LANA DEL REY", YEL), (7.6, "MORGAN WALLEN", YEL)], 90, 1290, 105)
+        if n == 4: stack(img, t, [(11.9, "LA RADIO POP CULTE", WHT), (12.7, "DE VICE CITY", PINK)], 95, 1310, 115)
+        if n == 3: stack(img, t, [(16.5, "TRICK DADDY", YEL), (17.4, "& TRINA", YEL), (18.9, "LE RAP DU SUD", RED)], 95, 1290, 110)
         if n == 2:
             if SHOTS[i][1] == "player":
                 if t >= 21.9: paste(img, BURNA, 880, 1190, popk(t, 21.9))
                 stack(img, t, [(21.9, "BURNA BOY", GOLD), (23.1, "AFROBEATS", GRN), (24.0, "& AMAPIANO", GRN)], 85, 1340, 95)
-        if n == 1: stack(img, t, [(27.6, "LE RAP D'AUJOURD'HUI", WHT), (28.8, "DRAKE", CYAN), (29.3, "MIGOS", CYAN)], 90, 1360, 105)
+        if n == 1: stack(img, t, [(27.6, "LE RAP D'AUJOURD'HUI", WHT), (28.8, "DRAKE", CYAN), (29.3, "MIGOS", CYAN)], 90, 1290, 105)
     else:
         card(img, OUTRO, t, 33.7, 420); stack(img, t, [(35.5, "DIS-LE EN COMMENTAIRE", YEL)], 95, 1420, 0)
         if t > DUR - 0.35: img *= max(0.0, (DUR - t) / 0.35)
@@ -134,8 +147,8 @@ def trans(name):
     return np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3)
 TR = {"burn": (trans("burn-transition-12.mp4"), 11 / 30), "red": (trans("red-flash-39.mp4"), 17 / 30),
       "bw": (trans("bw-flash-33.mp4"), 4 / 23.976), "light": (trans("light-flash-23.mp4"), 5 / 23.976)}
-TRANS = [(2.8, "red"), (6.0, "light"), (9.3, "bw"), (12.4, "light"), (14.1, "red"), (17.0, "light"), (19.8, "bw"), (21.8, "light"),
-         (25.2, "burn"), (28.6, "light"), (31.0, "bw"), (33.6, "red")]
+TRANS = [(2.8, "red"), (9.3, "bw"), (14.1, "red"), (19.8, "bw"), (21.8, "light"),
+         (25.2, "burn"), (33.6, "red")]
 
 VIDEO_ONLY = f"{WORK}/video_only.mp4"
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
