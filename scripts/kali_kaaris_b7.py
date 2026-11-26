@@ -1,4 +1,4 @@
-"""« Kaaris × La B7 » Short (Kali style): his voice note on what Kaaris does for La B7 (a song together out tomorrow, and a feat
+"""« Kaaris × La B7 » Short (Kali style): his voice note opening on Feuneu (« Feuneu fait le taf »), then what Kaaris does for La B7 (a song together out tomorrow, and a feat
 with Feuneu), with the song snippet from Kaaris' TikTok (@kaarisofficiel1, watermark blurred small, end card cut, credited)
 inserted with its own sound, the BGZ photo of the two, the studio videos, La B7's clips, Feuneu's photo, 3D cards,
 word-by-word neon captions, his logo top left, library transitions. His voice kept as recorded (limiter only).
@@ -21,7 +21,7 @@ def V(t):
     raise ValueError(t)
 
 # ---------- captions (his voice only; the song shows its own lyrics) ----------
-REN = [(0.0, "Kaaris,"), (17.08, "son"), (17.48, "avec Kaaris"), (21.46, "feat"), (22.18, "Feuneu."), (37.14, "Kaaris ×"),
+REN = [(0.0, "Feuneu,"), (17.08, "son"), (17.48, "avec Kaaris"), (21.46, "feat"), (22.18, "Feuneu."), (37.14, "Kaaris ×"),
        (42.22, "le Big Vass"), (42.78, "servir.")]
 RM = [0.16, 0.40, 42.46]
 NOCAP = [(2.55, 3.65)]                                 # unclear (« je lui tire mon bonnet » ?): no caption rather than a guess
@@ -47,7 +47,7 @@ def frames(path, t0, d, vf):
 TT = "delogo=x=5:y=468:w=165:h=90,delogo=x=440:y=775:w=134:h=92"      # TikTok watermark, both positions
 FILL = f"scale=-2:{H}:flags=lanczos,crop={W}:{H},unsharp=5:5:0.5"
 SCENES = [  # (output start, kind, source, src start, vf)
-    (0.0, "vid", "v1.mp4", 0.3, TT), (V(6.5), "pic", "k2a_b7.jpg", 0, ""), (V(10.6), "vid", "t2.mp4", 1.0, "null"),
+    (0.0, "pic", "feuneu2.jpg", 0, ""), (V(6.5), "pic", "k2a_b7.jpg", 0, ""), (V(10.6), "vid", "t2.mp4", 1.0, "null"),
     (V(15.0), "vid", "t1.mp4", 1.0, "null"), (O_SONG, "vid", "v1.mp4", SONG[0], TT), (V(19.35), "vid", "c2.mp4", 13.6, FILL),
     (V(20.6), "pic", "feuneu.jpg", 0, ""), (V(26.9), "vid", "c1.mp4", 13.0, FILL), (V(30.5), "vid", "c2.mp4", 9.2, FILL),
     (V(33.5), "vid", "c1.mp4", 2.4, FILL), (V(37.0), "pic", "k2a_b7.jpg", 0, ""), (V(40.4), "end", "k2a_b7.jpg", 0, "")]
@@ -75,7 +75,7 @@ def popk(t, t0): return 1 + 0.3 * max(0, 1 - (t - t0) / 0.12) ** 2
 def card(img, im, t, t0, y):
     k = t - t0
     if k >= 0: paste(img, im, W / 2, y, 0.55 + 0.55 * min(k / 0.12, 1) - 0.1 * min(max(k - 0.12, 0) / 0.1, 1))
-HOOK = block("KAARIS", "FAIT LE TAF", 1000, 560)
+HOOK = block("FEUNEU", "FAIT LE TAF", 1000, 560)
 DEMAIN = block("LE SON SORT", "DEMAIN", 1000, 520)
 VS = block("KAARIS", "× LA B7", 1000, 560)
 END = block("DIS-LE EN", "COMMENTAIRE", 1000, 560)
@@ -120,7 +120,7 @@ Style: W,Anton,130,&H0000E5FF,&H0000E5FF,&H00000000,&H99000000,0,0,0,0,100,100,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"""]
-WHITE = {"kaaris,", "kaaris ×", "avec kaaris", "b7,", "b7", "b7.", "feuneu.", "le big vass"}
+WHITE = {"feuneu,", "kaaris,", "kaaris ×", "avec kaaris", "b7,", "b7", "b7.", "feuneu.", "le big vass"}
 REDW = {"vision", "lourd,", "lourd", "pop", "demain,"}
 for w in words:
     i, _ = scene(w["s"])
