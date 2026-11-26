@@ -101,6 +101,7 @@ HOOK = block("LE SCOOP", "DU JOUR", 1000, 620)
 CARD = block("POUR OU", "CONTRE ?", 1000, 640)
 LOGO_S = rgba_file(os.path.join(REPO, "showreel/assets/logos/monsieur-vass.png"), 200)
 X, _ = neon("×", 300, GOLD)
+CREDIT, _ = neon("TikTok : @topdumomentofficiel1", 42, WHT)
 
 def draw(t):
     i, k = scene(t); kind = SCENES[i][1]; img = footage(i, k, t)
@@ -122,6 +123,7 @@ def draw(t):
     elif kind == "outro":
         card(img, CARD, t, V(39.7), 960)
         if t > DUR - 0.4: img *= max(0.0, (DUR - t) / 0.4)
+    if SCENES[i][2] and SCENES[i][2].endswith("free.mp4"): paste(img, CREDIT, W / 2, 1865)      # credit of the blurred TikTok account
     paste(img, LOGO_S, 130, 130)
     return img
 
