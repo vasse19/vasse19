@@ -74,6 +74,12 @@ if os.environ.get("EXPORT_WORDS"):                     # words with their time i
     json.dump({"words": out, "ins": INS_OUT}, open(os.environ["EXPORT_WORDS"], "w"), ensure_ascii=False); sys.exit()
 print(f"{len(segs)} segments, {DUR:.1f}s (from {END:.1f}s)", flush=True)
 voice = sf.read(f"{WORK}/voice_cut.wav")[0]
+# breath / room-noise gate (his recording was very quiet, so breaths came up with the loudness boost)
+_h = int(0.01 * SR); _db = 20 * np.log10(np.array([np.sqrt(np.mean(voice[i:i + _h] ** 2)) for i in range(0, len(voice), _h)]) + 1e-9)
+_db = np.convolve(_db, np.ones(5) / 5, mode="same"); _open = (_db > -40).astype(np.float32)
+_open = np.convolve(_open, np.ones(13), mode="same") > 0                     # ~60 ms hold either side of speech
+_g = np.where(_open, 1.0, 0.1).astype(np.float32); _g = np.convolve(_g, np.ones(3) / 3, mode="same")
+voice = voice * np.repeat(_g, _h)[:len(voice)]
 for at, d, *_ in sorted(INS, reverse=True):          # silence in his voice while the clip speaks
     i0 = int(R0(at) * SR); voice = np.concatenate([voice[:i0], np.zeros(int(d * SR)), voice[i0:]])
 sf.write(f"{WORK}/voice_ins.wav", voice, SR)
@@ -305,7 +311,7 @@ SCENES = [
         X(57.4, "LES IVOIRIENS PRIVÉS DE NOËL", CR, 450, 46, WHT, "box"), X(61.8, "LA VOIX DE SA GÉNÉRATION", CR, 590, 56, YEL),
         X(64.3, "RÉVÉLATION DE L'ANNÉE", CR, 730, 70, GOLD), P(64.3, "3d/lightning-gold.png", CR + 420, 720, 140)]),
     # --- 2. l'ascension ---
-    (69.40, 86.70, "petards-d-ados.jpg", [X(69.5, "ENSUITE, PLUS RIEN NE LES ARRÊTE", 960, 100, 64, YEL),
+    (69.40, 86.70, "petards-d-ados.jpg", [V("kiff-no-beat-clip-d-fete-de-rue-16x9.mp4", None, 960, 540, 1920, ss=8.0, mode="bg", gain=0.1), X(69.5, "ENSUITE, PLUS RIEN NE LES ARRÊTE", 960, 100, 64, YEL),
         X(71.7, "2012 : UNE MIXTAPE DE 20+ TITRES", 520, 280, 46, WHT, "box"), X(74.5, "+ UNE TOURNÉE NATIONALE", 520, 370, 46, WHT),
         C("petards-d-ados.jpg", 1360, 450, 470, 77.6), X(77.6, "PÉTARDS D'ADOS · 2014", 1360, 760, 46, YEL, "box"),
         X(80.5, "CUBISME · 2015", 520, 560, 80, GOLD), X(83.1, "DES INVITÉS DE TAILLE", 520, 700, 54, WHT)]),
@@ -313,10 +319,10 @@ SCENES = [
         C("cassper-nyovest.jpg", 600, 520, 420, 86.8), X(87.5, "CASSPER NYOVEST", 600, 800, 52, WHT, "box"), E(88.5, "🇿🇦", 600, 890, 70),
         C("burna-boy.jpg", 1320, 520, 360, 90.5), X(90.5, "BURNA BOY", 1320, 800, 52, WHT, "box"), E(91.0, "🇳🇬", 1320, 890, 70),
         X(93.9, "DIDI B : « UNE STRATÉGIE POUR CONQUÉRIR D'AUTRES PAYS »", 960, 1000, 40, GOLD)]),
-    (101.00, 124.70, "grid", [X(101.0, "MONTRER LA MUSIQUE IVOIRIENNE AU MONDE", 960, 200, 58, WHT),
+    (101.00, 124.70, "grid", [V("kiff-no-beat-clip-b-quartier-16x9.mp4", None, 960, 540, 1920, ss=1.0, mode="bg", gain=0.1), X(101.0, "MONTRER LA MUSIQUE IVOIRIENNE AU MONDE", 960, 200, 58, WHT),
         X(104.6, "COMME LES PEINTRES CUBISTES", 960, 360, 66, YEL), X(106.5, "INSPIRÉS DE L'ART AFRICAIN", 960, 460, 52, WHT, "box"),
         X(108.5, "« LES CUBISTES 2.0 »", 960, 640, 110, GOLD), P(108.5, "3d/lightning-gold.png", 1500, 620, 160)]),
-    (124.70, 136.80, "grid", [X(124.8, "À L'ÉPOQUE, DIDI B DISAIT :", 960, 260, 60, WHT),
+    (124.70, 136.80, "grid", [V("kiff-no-beat-clip-c-nuit-bleue-16x9.mp4", None, 960, 540, 1920, ss=18.0, mode="bg", gain=0.1), X(124.8, "À L'ÉPOQUE, DIDI B DISAIT :", 960, 260, 60, WHT),
         X(129.7, "« NOTRE OBJECTIF : UN GRAMMY »", 960, 460, 90, YEL), P(129.7, "3d/grammy.png", 960, 680, 200),
         X(132.4, "UNE VISION TRÈS LOINTAINE", 960, 900, 56, WHT, "box")]),
     # --- 3. DJ Arafat ---
@@ -363,7 +369,7 @@ SCENES = [
         C("mojotrone-2-history.jpg", 760, 460, 330, 314.0), Nn(315.0, 317.0, 50000000, 760, 690, 48, GRN, " ÉCOUTES"),
         C("stade-fhb-felicia.jpg", 1190, 460, 360, 319.1), X(319.1, "FÉLICIA · 2025", 1190, 690, 40, WHT, "box"),
         C("zenith-complet.jpg", 1600, 460, 260, 322.5), X(322.5, "ZÉNITH · 2026", 1600, 690, 40, WHT, "box")]),
-    (326.40, 352.30, "grid", [X(326.5, "ELOW'N", 600, 220, 100, YEL), X(327.6, "SON ALBUM EN NOVEMBRE", 600, 340, 46, WHT, "box"),
+    (326.40, 352.30, "grid", [V("kiff-no-beat-clip-e-verres-fete-16x9.mp4", None, 960, 540, 1920, ss=2.0, mode="bg", gain=0.1), X(326.5, "ELOW'N", 600, 220, 100, YEL), X(327.6, "SON ALBUM EN NOVEMBRE", 600, 340, 46, WHT, "box"),
         X(331.7, "15 TITRES EN INDÉPENDANT", 600, 450, 50, WHT),
         X(336.6, "JOOCHAR", 1320, 220, 100, YEL), X(338.0, "ENCHAÎNE LES PROJETS", 1320, 340, 46, WHT, "box"), X(340.0, "2025 · 2026", 1320, 450, 50, WHT),
         X(346.3, "BLACK K & EL JAY", 960, 680, 80, GOLD), X(348.0, "LEUR SON, ET SUR CELUI DES AUTRES", 960, 800, 46, WHT, "box")]),
@@ -382,7 +388,7 @@ SCENES = [
         X(391.4, "LE RÊVE : UN GRAMMY", CR, 650, 66, YEL), P(391.4, "3d/grammy.png", CR + 380, 640, 130),
         X(402.8, "ET APRÈS SAMEDI ?", CR, 790, 66, RED), X(404.0, "UN NOUVEL ALBUM ?", CR, 900, 70, GOLD)]),
     # --- question ---
-    (410.80, 433.40, "grid", [X(410.9, "VOTRE SON PRÉFÉRÉ DE KIFF NO BEAT ?", 960, 200, 70, YEL),
+    (410.80, 433.40, "grid", [V("kiff-no-beat-clip-a-bar-champagne-16x9.mp4", None, 960, 540, 1920, ss=1.0, mode="bg", gain=0.1), X(410.9, "VOTRE SON PRÉFÉRÉ DE KIFF NO BEAT ?", 960, 200, 70, YEL),
         X(414.3, "LE MIEN :", 960, 360, 56, WHT), X(415.0, "« APPROCHEZ REGARDEZ »", 960, 460, 72, GOLD), X(419.4, "« ÉTONNÉ »", 960, 570, 72, GOLD),
         X(421.6, "DITES-LE EN COMMENTAIRE", 960, 730, 60, WHT, "box"), E(421.6, "💬", 1420, 730, 90),
         X(427.2, "ABONNEZ-VOUS À MA PAGE FACEBOOK", 960, 880, 52, YEL)]),
