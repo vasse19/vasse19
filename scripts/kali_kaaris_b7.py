@@ -1,8 +1,8 @@
-"""« Kaaris × La B7 » Short (Kali style): his voice note opening on Feuneu (« Feuneu fait le taf »), then what Kaaris does for La B7 (a song together out tomorrow, and a feat
-with Feuneu), with the song snippet from Kaaris' TikTok (@kaarisofficiel1, watermark blurred small, end card cut, credited)
-inserted with its own sound, the BGZ photo of the two, the studio videos, La B7's clips, Feuneu's photo, 3D cards,
+"""« Kaaris × La B7 » Short (Kali style): his voice note opening on Feuneu (« Feuneu fait le taf »), then what Kaaris does for La B7 (a song together out tomorrow, and La B7's feat
+with L2B), with the song snippet from Kaaris' TikTok (@kaarisofficiel1, watermark blurred small, end card cut, credited)
+inserted with its own sound, the BGZ photo of the two, the studio videos, La B7's clips, the « La B7 × L2B » post, 3D cards,
 word-by-word neon captions, his logo top left, library transitions. His voice kept as recorded (limiter only).
-usage: kali_kaaris_b7.py WORK OUT.mp4   (WORK: voix.mp3, w.json, v1.mp4 song, k2a_b7.jpg, feuneu.jpg, t1/t2.mp4 studio, c1/c2.mp4 clips)"""
+usage: kali_kaaris_b7.py WORK OUT.mp4   (WORK: voix.mp3, w.json, v1.mp4 song, k2a_b7.jpg, feuneu2.jpg, b7_l2b.jpg, t1/t2.mp4 studio, c1/c2.mp4 clips)"""
 import sys, os, json, subprocess, numpy as np, cv2
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kali_fx import W, H, FPS, LIB, ANTON, YEL, RED, WHT, GRN, GOLD, paste, neon, stack, rgba_file, glow_rgba, bg, block
@@ -21,7 +21,7 @@ def V(t):
     raise ValueError(t)
 
 # ---------- captions (his voice only; the song shows its own lyrics) ----------
-REN = [(0.0, "Feuneu,"), (17.08, "son"), (17.48, "avec Kaaris"), (21.46, "feat"), (22.18, "Feuneu."), (37.14, "Kaaris ×"),
+REN = [(0.0, "Feuneu,"), (17.08, "son"), (17.48, "avec Kaaris"), (21.46, "feat"), (22.18, "L2B."), (37.14, "Kaaris ×"),
        (42.22, "le Big Vass"), (42.78, "servir.")]
 RM = [0.16, 0.40, 42.46]
 NOCAP = [(2.55, 3.65)]                                 # unclear (« je lui tire mon bonnet » ?): no caption rather than a guess
@@ -49,7 +49,7 @@ FILL = f"scale=-2:{H}:flags=lanczos,crop={W}:{H},unsharp=5:5:0.5"
 SCENES = [  # (output start, kind, source, src start, vf)
     (0.0, "pic", "feuneu2.jpg", 0, ""), (V(6.5), "pic", "k2a_b7.jpg", 0, ""), (V(10.6), "vid", "t2.mp4", 1.0, "null"),
     (V(15.0), "vid", "t1.mp4", 1.0, "null"), (O_SONG, "vid", "v1.mp4", SONG[0], TT), (V(19.35), "vid", "c2.mp4", 13.6, FILL),
-    (V(20.6), "pic", "feuneu.jpg", 0, ""), (V(26.9), "vid", "c1.mp4", 13.0, FILL), (V(30.5), "vid", "c2.mp4", 9.2, FILL),
+    (V(20.6), "pic", "b7_l2b.jpg", 0, ""), (V(26.9), "vid", "c1.mp4", 13.0, FILL), (V(30.5), "vid", "c2.mp4", 9.2, FILL),
     (V(33.5), "vid", "c1.mp4", 2.4, FILL), (V(37.0), "pic", "k2a_b7.jpg", 0, ""), (V(40.4), "end", "k2a_b7.jpg", 0, "")]
 _c = {}
 def scene(t): i = max(j for j, s in enumerate(SCENES) if s[0] <= t); return i, t - SCENES[i][0]
@@ -95,7 +95,7 @@ def draw(t):
         if t >= V(18.28): card(img, DEMAIN, t, V(18.28), 640)
     elif i == 4: stack(img, t, [(O_SONG + 0.1, "KAARIS × LA B7", GOLD)], 120, 330, 0)
     elif i == 5: stack(img, t, [(V(19.4), "MAIS EN PLUS…", WHT)], 130, 330, 0)
-    elif i == 6: stack(img, t, [(V(21.46), "UN FEAT AVEC", WHT), (V(22.18), "FEUNEU", YEL), (V(24.66), "DU TRÈS LOURD", RED)], 120, 300, 150)
+    elif i == 6: stack(img, t, [(V(21.46), "UN FEAT AVEC", WHT), (V(22.18), "L2B", YEL), (V(24.66), "DU TRÈS LOURD", RED)], 120, 300, 150)
     elif i in (7, 8): stack(img, t, [(V(29.26), "RESTE CONCENTRÉ", YEL), (V(30.14), "SUR SA MUSIQUE", WHT)], 115, 330, 145)
     elif i == 9: stack(img, t, [(V(33.5), "ÇA VA POP", GRN)], 170, 330, 0)
     elif i == 10: card(img, VS, t, V(37.14), 360)
@@ -120,7 +120,7 @@ Style: W,Anton,130,&H0000E5FF,&H0000E5FF,&H00000000,&H99000000,0,0,0,0,100,100,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"""]
-WHITE = {"feuneu,", "kaaris,", "kaaris ×", "avec kaaris", "b7,", "b7", "b7.", "feuneu.", "le big vass"}
+WHITE = {"feuneu,", "kaaris,", "kaaris ×", "avec kaaris", "b7,", "b7", "b7.", "l2b.", "le big vass"}
 REDW = {"vision", "lourd,", "lourd", "pop", "demain,"}
 for w in words:
     i, _ = scene(w["s"])
