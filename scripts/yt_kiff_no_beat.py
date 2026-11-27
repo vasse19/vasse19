@@ -523,10 +523,22 @@ for b_ in BURN_AT: place(burn_a, b_ - BURN_PEAK, 0.45)
 place(hit, HOOK[0], 0.5); place(riser, HOOK[0] - 2.95, 0.4); place(riser, R(244.7) - 2.95, 0.4)   # « mais ce soir-là… »
 place(crowd, R(170.8), 0.25); place(riser, R(369.3) - 2.95, 0.45)                                # Universal ; le retour
 sf.write(f"{WORK}/sfx.wav", sfx[:int(DUR * SR)], SR)
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/voice_ins.wav", "-i", f"{WORK}/sfx.wav", "-filter_complex",
+# royalty-free bed (scripts/bg_music.py, made from scratch): silent under clip audio, inserts and the Arafat scene, ducked under the voice
+subprocess.run([sys.executable, os.path.join(REPO, "scripts/bg_music.py"), f"{WORK}/bed_raw.wav", f"{DUR:.2f}"], check=True)
+bed = sf.read(f"{WORK}/bed_raw.wav", dtype="float32")[0][:, 0]; env = np.ones(len(bed), np.float32)
+mute = [(o0, o0 + d) for o0, d, *_ in INS_OUT] + [(R(253.4), R(271.0))]
+for a, b, bgs, els in SC:
+    for el in els:
+        if isinstance(el, V): mute.append((a if el.t0 is None else R(el.t0), b if el.out is None else R(el.out)))
+for m0, m1 in mute: env[max(0, int((m0 - 0.6) * SR)):int((m1 + 0.6) * SR)] = 0
+k = int(1.2 * SR); env = np.convolve(env, np.ones(k, np.float32) / k, "same")
+sf.write(f"{WORK}/bed.wav", bed * env, SR)
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", VIDEO_ONLY, "-i", f"{WORK}/voice_ins.wav", "-i", f"{WORK}/sfx.wav", "-i", f"{WORK}/bed.wav", "-filter_complex",
     "[1:a]highpass=f=70,acompressor=threshold=-22dB:ratio=3:attack=5:release=90:makeup=2dB,loudnorm=I=-14:TP=-1.5:LRA=7,"
     "aresample=48000,asetpts=N/SR/TB[vo];[2:a]aresample=48000,asetpts=N/SR/TB[fx];"
-    "[vo][fx]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.75:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
+    "[3:a]aresample=48000,asetpts=N/SR/TB,volume=0.3[bd];[vo]asplit[vo1][vo2];"
+    "[bd][vo2]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=400[bdk];"
+    "[vo1][fx][bdk]amix=inputs=3:normalize=0:duration=first,alimiter=limit=0.75:level=false,aformat=sample_fmts=s16:channel_layouts=stereo[a]",
     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-cutoff", "18000", "-ar", "48000",
     "-movflags", "+faststart", "-shortest", OUT], check=True)
 with open(os.path.splitext(OUT)[0] + "_chapitres.txt", "w") as f:
