@@ -294,7 +294,7 @@ SCENES = [
         X(0.72, "10 AOÛT 2019", CR, 230, 90, YEL), X(2.2, "PALAIS DE LA CULTURE", CR, 360, 62, WHT), X(3.4, "TREICHVILLE", CR, 460, 50, WHT, "box"),
         X(4.4, "5 RAPPEURS · SALLE PLEINE", CR, 600, 56, GOLD), X(6.9, "LE PUBLIC CHANTE TOUT", CR, 720, 52, WHT),
         X(10.0, "ET APRÈS… PLUS RIEN", CR, 870, 72, RED)]),
-    (12.60, 25.00, "kiff-no-beat.jpg", [C("kiff-no-beat.jpg", 960, 470, 900, out=19.0), C("affiche-kiff-no-beat-28-nov.jpg", 960, 500, 520, 19.0),
+    (12.60, 25.00, "kiff-no-beat-groupe.jpg", [C("kiff-no-beat-groupe.jpg", 960, 450, 960, out=19.0), C("affiche-kiff-no-beat-28-nov.jpg", 960, 500, 520, 19.0),
         X(15.16, "PAS DE SÉPARATION ANNONCÉE", 960, 930, 60, WHT, "box", out=19.0), X(17.08, "LE GROUPE S'EST ÉTEINT", 960, 1020, 60, RED, out=19.0),
         X(19.0, "ET SAMEDI, ILS REVIENNENT", 960, 90, 80, YEL), X(21.0, "COMMENT KIFF NO BEAT A DISPARU PENDANT 7 ANS", 960, 960, 44, WHT, "box")]),
     # --- 1. les débuts ---
@@ -336,12 +336,12 @@ SCENES = [
         X(159.4, "LEUR RÉPONSE :", CR, 690, 56, YEL), X(160.5, "« ON N'EST PAS LES DANSEURS D'ARAFAT »", CR, 800, 40, GOLD),
         X(163.0, "ÊTRE SON PROPRE PATRON", CR, 910, 52, WHT, "box")]),
     # --- 4. Universal ---
-    (165.90, 197.20, "kiff-no-beat.jpg", [X(165.9, "2017 : LA CONSÉCRATION", 960, 110, 80, YEL),
+    (165.90, 197.20, "kiff-no-beat-groupe.jpg", [X(165.9, "2017 : LA CONSÉCRATION", 960, 110, 80, YEL),
         X(168.7, "1ER GROUPE DE HIP-HOP AFRICAIN", 960, 260, 64, WHT), X(170.8, "SIGNÉ CHEZ UNIVERSAL", 960, 370, 84, GOLD),
         P(170.8, "3d/lightning-gold.png", 1560, 350, 160), X(175.0, "SELON PAM : 1ERS SIGNÉS CHEZ UNIVERSAL MUSIC AFRICA", 960, 490, 40, WHT, "box"),
         X(180.0, "QUI VIENT DE S'INSTALLER À ABIDJAN", 960, 570, 42, WHT),
         C("sidiki-diabate.jpg", 600, 800, 260, 186.0), X(186.0, "2018 : AVEC SIDIKI DIABATÉ", 600, 990, 40, WHT, "box"), E(186.5, "🇲🇱", 820, 800, 60),
-        X(192.9, "ET THE SHIN SEKAÏ", 1320, 800, 62, YEL), E(193.5, "🇫🇷", 1320, 900, 70)]),
+        C("the-shin-sekai-indefini.jpg", 1320, 800, 260, 192.9), X(192.9, "AVEC THE SHIN SEKAÏ", 1320, 990, 40, WHT, "box"), E(193.5, "🇫🇷", 1540, 800, 60)]),
     (197.20, 214.50, "bledard-is-the-new-fresh.jpg", [C("bledard-is-the-new-fresh.jpg", 400, 520, 520),
         X(197.3, "2019 · BLEDARD IS THE NEW FRESH", 1240, 110, 50, YEL),
         C("dadju.jpg", 960, 420, 250, 205.0), C("sofiane.jpg", 1260, 420, 290, 205.6), C("kaaris.jpg", 1560, 420, 250, 206.4), C("vegedream.jpg", 1260, 760, 220, 207.4),
@@ -359,7 +359,7 @@ SCENES = [
         X(254.5, "DJ ARAFAT NOUS QUITTE", 960, 880, 60, WHT, "box"), X(258.5, "TOUTE LA CÔTE D'IVOIRE SOUS LE CHOC", 960, 980, 46, WHT, out=262.0),
         X(262.1, "KIFF NO BEAT : PLUS DE GRAND CONCERT PENDANT 7 ANS", 960, 980, 42, YEL)]),
     # --- 6. les carrières solo ---
-    (271.00, 302.80, "kiff-no-beat.jpg", [X(271.1, "NOVEMBRE 2019 : LES SOLOS", 960, 100, 70, YEL),
+    (271.00, 302.80, "kiff-no-beat-5.jpg", [X(271.1, "NOVEMBRE 2019 : LES SOLOS", 960, 100, 70, YEL),
         X(272.5, "DIDI B", 330, 300, 70, WHT, "box"), X(277.7, "ELOW'N", 750, 300, 70, WHT, "box"), X(280.0, "EL JAY", 1170, 300, 70, WHT, "box"), X(282.5, "BLACK K", 1590, 300, 70, WHT, "box"),
         X(284.6, "LES FANS PANIQUENT", 960, 470, 70, RED), X(286.0, "LE GROUPE EST-IL FINI ?", 960, 570, 60, WHT),
         X(287.7, "LEUR RÉPONSE À LA TÉLÉ :", 960, 700, 50, WHT, "box"), X(288.8, "« UN PROGRAMME DE CARRIÈRES SOLO »", 960, 800, 56, GOLD),
@@ -382,7 +382,7 @@ SCENES = [
         X(369.3, "SAMEDI 28 NOVEMBRE", CR, 280, 80, YEL), X(371.0, "PARC DES EXPOSITIONS", CR, 410, 60, WHT, "box"),
         X(372.5, "LES 5 SUR SCÈNE", CR, 560, 84, GOLD), X(375.0, "7 ANS APRÈS", CR, 700, 96, RED)]),
     # --- 8. mon avis ---
-    (376.30, 410.80, "kiff-no-beat.jpg", [C("kiff-no-beat.jpg", 520, 540, 640),
+    (376.30, 410.80, "kiff-no-beat-groupe.jpg", [C("kiff-no-beat-groupe.jpg", 540, 540, 760),
         X(376.4, "MON AVIS :", CR, 180, 70, YEL), X(377.8, "ILS N'ONT JAMAIS DISPARU", CR, 290, 60, WHT),
         X(380.0, "UNE PAUSE, SANS SE DÉTRUIRE", CR, 400, 50, GOLD, "box"), X(384.1, "PAS DE CLASH · PAS DE PROCÈS", CR, 510, 48, WHT),
         X(391.4, "LE RÊVE : UN GRAMMY", CR, 650, 66, YEL), P(391.4, "3d/grammy.png", CR + 380, 640, 130),
